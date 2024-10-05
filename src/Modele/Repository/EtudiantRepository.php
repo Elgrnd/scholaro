@@ -1,9 +1,8 @@
 <?php
 namespace App\Sae\Modele\Repository;
 
-use App\Sae\Modele\Repository\ConnexionBaseDeDonnees;
 use App\Sae\Modele\DataObject\Etudiant;
-use PDOException;
+
 class EtudiantRepository extends AbstractDataRepository
 {
     /**
