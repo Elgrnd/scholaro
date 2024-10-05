@@ -1,5 +1,5 @@
 <?php
-namespace Configuration;
+namespace App\Sae\Configuration;
 class ConfigurationBaseDeDonnees {
 
     static private array $configurationBaseDeDonnees = array(
@@ -11,16 +11,16 @@ class ConfigurationBaseDeDonnees {
         'nomHote' => 'webinfo.iutmontp.univ-montp2.fr',
         // A l'IUT, vous avez une base de données nommee comme votre login
         // Sur votre machine, vous devrez creer une base de données
-        'nomBaseDeDonnees' => '',
+        'nomBaseDeDonnees' => 'SAE3A_Q2B',
         // À l'IUT, le port de MySQL est particulier : 3316
         // Ailleurs, on utilise le port par défaut : 3306
         'port' => '3316',
         // A l'IUT, c'est votre login
         // Sur votre machine, vous avez surement un compte 'root'
-        'login' => '',
+        'login' => 'tordeuxm',
         // A l'IUT, c'est le même mdp que PhpMyAdmin
         // Sur votre machine personelle, vous avez creez ce mdp a l'installation
-        'motDePasse' => ''
+        'motDePasse' => 'MahouTsukai'
     );
 
     static public function getLogin() : string {

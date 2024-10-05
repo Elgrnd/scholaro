@@ -1,6 +1,6 @@
 <?php
-namespace Modele\Repository;
-use Configuration\ConfigurationBaseDeDonnees as ConfigurationBaseDeDonnees;
+namespace App\Sae\Modele\Repository;
+use App\Sae\Configuration\ConfigurationBaseDeDonnees as ConfigurationBaseDeDonnees;
 use \PDO as PDO;
 Class ConnexionBaseDeDonnees  {
     private static ?ConnexionBaseDeDonnees $instance = null;
