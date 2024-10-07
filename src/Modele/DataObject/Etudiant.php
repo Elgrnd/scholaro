@@ -5,11 +5,11 @@ class Etudiant extends AbstractDataObject{
     private int $etudid;
     private string $codenip;
     private string $civ;
-    private string $nom;
-    private string $prenom;
+    private string $nomEtu;
+    private string $prenomEtu;
     private string $bac;
     private string $specialite;
-    private int $rgadmis;
+    private int $rg_admis;
     private string $avis;
 
     /**
@@ -28,11 +28,11 @@ class Etudiant extends AbstractDataObject{
         $this->etudid = $etudid;
         $this->codenip = $codenip;
         $this->civ = $civ;
-        $this->nom = $nom;
-        $this->prenom = $prenom;
+        $this->nomEtu = $nom;
+        $this->prenomEtu = $prenom;
         $this->bac = $bac;
         $this->specialite = $specialite;
-        $this->rgadmis = $rgadmis;
+        $this->rg_admis = $rgadmis;
         $this->avis = $avis;
     }
 
@@ -66,24 +66,24 @@ class Etudiant extends AbstractDataObject{
         $this->civ = $civ;
     }
 
-    public function getNom(): string
+    public function getNomEtu(): string
     {
-        return $this->nom;
+        return $this->nomEtu;
     }
 
-    public function setNom(string $nom): void
+    public function setNomEtu(string $nomEtu): void
     {
-        $this->nom = $nom;
+        $this->nomEtu = $nomEtu;
     }
 
-    public function getPrenom(): string
+    public function getPrenomEtu(): string
     {
-        return $this->prenom;
+        return $this->prenomEtu;
     }
 
-    public function setPrenom(string $prenom): void
+    public function setPrenomEtu(string $prenomEtu): void
     {
-        $this->prenom = $prenom;
+        $this->prenomEtu = $prenomEtu;
     }
 
     public function getBac(): string
@@ -108,12 +108,12 @@ class Etudiant extends AbstractDataObject{
 
     public function getRgadmis(): int
     {
-        return $this->rgadmis;
+        return $this->rg_admis;
     }
 
-    public function setRgadmis(int $rgadmis): void
+    public function setRgadmis(int $rg_admis): void
     {
-        $this->rgadmis = $rgadmis;
+        $this->rg_admis = $rg_admis;
     }
 
     public function getAvis(): string

@@ -8,7 +8,7 @@ foreach ($etudiants as $etudiant) {
     echo '<p>Id Etudiant : ' . $etudiant->getEtudid() . '</p>';
     echo '</div>';
     echo '<div class="etudiant-details">';
-    echo '<p>Nom : ' . $etudiant->getNom() . ' Prénom : ' . $etudiant->getPrenom() . '</p>';
+    echo '<p>Nom : ' . $etudiant->getNomEtu() . ' Prénom : ' . $etudiant->getPrenomEtu() . '</p>';
     echo '</div>';
     echo '</div>';
 }
