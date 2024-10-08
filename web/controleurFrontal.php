@@ -10,8 +10,8 @@ $chargeurDeClasse->register();
 $chargeurDeClasse->addNamespace("App\Sae", __DIR__ . '/../src');
 
 
-if (isset($_GET['controleur'])) {
-    $controleur = $_GET['controleur'];
+if (isset($_POST['controleur'])) {
+    $controleur = $_POST['controleur'];
 }else{
     $controleur = "etudiant";
 }
@@ -19,10 +19,10 @@ if (isset($_GET['controleur'])) {
 $nomDeClasseControleur = "App\\Sae\\Controleur\\Controleur". ucfirst($controleur);
 if(class_exists($nomDeClasseControleur)) {
 
-    if (!isset($_GET['action'])) {
+    if (!isset($_POST['action'])) {
         $action = "afficherListe";
     } else {
-        $action = $_GET['action'];
+        $action = $_POST['action'];
     }
     $methodes = get_class_methods($nomDeClasseControleur);
     if (in_array($action, $methodes)) {
