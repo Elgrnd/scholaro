@@ -12,7 +12,7 @@ class EtudiantRepository extends AbstractDataRepository
 
     protected function construireDepuisTableauSQL(array $objetFormatTableau): Etudiant
     {
-        return new Etudiant($objetFormatTableau['etudid'], $objetFormatTableau['codenip'], $objetFormatTableau['civ'] ,$objetFormatTableau['nom'], $objetFormatTableau['prenom'], $objetFormatTableau['bac'], $objetFormatTableau['specialite'], $objetFormatTableau['rgadmis'], $objetFormatTableau['avis']);
+        return new Etudiant($objetFormatTableau['etudid'], $objetFormatTableau['codenip'], $objetFormatTableau['civ'] ,$objetFormatTableau['nomEtu'], $objetFormatTableau['prenomEtu'], $objetFormatTableau['bac'], $objetFormatTableau['specialite'], $objetFormatTableau['rg_admis'], $objetFormatTableau['avis']);
     }
 
     /**
