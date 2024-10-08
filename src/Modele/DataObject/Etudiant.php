@@ -9,7 +9,7 @@ class Etudiant extends AbstractDataObject{
     private string $prenom;
     private string $bac;
     private string $specialite;
-    private int $rgadmis;
+    private int $rg_admis;
     private string $avis;
 
     /**
@@ -20,10 +20,10 @@ class Etudiant extends AbstractDataObject{
      * @param string $prenom
      * @param string $bac
      * @param string $specialite
-     * @param int $rgadmis
+     * @param int $rg_admis
      * @param string $avis
      */
-    public function __construct(int $etudid, string $codenip, string $civ, string $nom, string $prenom, string $bac, string $specialite, int $rgadmis, string $avis)
+    public function __construct(int $etudid, string $codenip, string $civ, string $nom, string $prenom, string $bac, string $specialite, int $rg_admis, string $avis)
     {
         $this->etudid = $etudid;
         $this->codenip = $codenip;
@@ -32,7 +32,7 @@ class Etudiant extends AbstractDataObject{
         $this->prenom = $prenom;
         $this->bac = $bac;
         $this->specialite = $specialite;
-        $this->rgadmis = $rgadmis;
+        $this->rg_admis = $rg_admis;
         $this->avis = $avis;
     }
 
@@ -106,14 +106,14 @@ class Etudiant extends AbstractDataObject{
         $this->specialite = $specialite;
     }
 
-    public function getRgadmis(): int
+    public function getRg_admis(): int
     {
-        return $this->rgadmis;
+        return $this->rg_admis;
     }
 
-    public function setRgadmis(int $rgadmis): void
+    public function setRg_admis(int $rg_admis): void
     {
-        $this->rgadmis = $rgadmis;
+        $this->rg_admis = $rg_admis;
     }
 
     public function getAvis(): string

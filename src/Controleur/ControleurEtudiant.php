@@ -4,6 +4,7 @@ namespace App\Sae\Controleur;
 
 
 use App\Sae\Modele\Repository\EtudiantRepository;
+use App\Sae\Modele\DataObject\Etudiant;
 
 class ControleurEtudiant
 {
@@ -39,6 +40,16 @@ class ControleurEtudiant
     public static function afficherErreur(string $erreur): void
     {
         self::afficherVue("vueGenerale.php", ["titre" => "Erreur", "cheminCorpsVue" => "etudiant/erreur.php", "erreur" => $erreur]);
+    }
+
+    public static function afficherVueImportation(): void
+    {
+        self::afficherVue("vueGenerale.php", ["titre" => "Importer des étudiants", "cheminCorpsVue" => "etudiant/vueImportationCSV.php"]);
+    }
+
+    public static function ajouterDepuisCSV(): void
+    {
+
     }
 
 }
