@@ -14,4 +14,10 @@ foreach ($etudiants as $etudiant) {
     echo '</div>';
     echo '</a>';
 }
+
+echo '<div class="etudiant-info">';
+echo '<div class="etudiant-id">';
+echo '<a href="controleurFrontal.php?controleur=etudiant&action=afficherVueImportation"> Importer des étudiants</a>';
+echo '</div>';
+echo '</div>';
 ?>
