@@ -2,6 +2,7 @@
 namespace App\Sae\Modele\Repository;
 
 use App\Sae\Modele\DataObject\Etudiant;
+use MongoDB\Driver\Exception\Exception;
 
 class EtudiantRepository extends AbstractDataRepository
 {
@@ -20,7 +21,32 @@ class EtudiantRepository extends AbstractDataRepository
      */
     protected function getNomTable(): string
     {
-        return 'Etudiant';
+        return 'etudiant';
+    }
+
+    protected function getNomClePrimaire(): string
+    {
+        return "etudid";
+    }
+
+
+    public function getNotesEtudiant(int $id) : ?array {
+        $sql = "SELECT * FROM etu_Note_Semestre WHERE etudid = :idTag";
+        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
+        $values = array(
+            "idTag" => $id,
+        );
+        $tab = array();
+        try {
+            $pdoStatement->execute($values);
+        }
+        catch (Exception $e){
+            return null;
+        }
+        foreach ($pdoStatement as $row) {
+            $tab[] = $row;
+        }
+        return $tab;
     }
 
 }

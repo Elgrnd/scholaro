@@ -5,6 +5,7 @@ namespace App\Sae\Controleur;
 
 use App\Sae\Modele\Repository\EtudiantRepository;
 
+
 class ControleurEtudiant
 {
     /**
@@ -13,7 +14,7 @@ class ControleurEtudiant
      * @return void fonctions à appeler pour afficher une vue
      */
 
-    private static function afficherVue(string $cheminVue,   array $parametres = []): void
+    private static function afficherVue(string $cheminVue, array $parametres = []): void
     {
         extract($parametres); // Crée des variables à partir du tableau $parametres
         require __DIR__ . "/../vue/$cheminVue"; // Charge la vue
@@ -29,6 +30,21 @@ class ControleurEtudiant
             self::afficherErreur("Aucun étudiant à afficher");
         } else {
             self::afficherVue("vueGenerale.php", ["titre" => "Liste des etudiants", "cheminCorpsVue" => "etudiant/afficherListe.php", "etudiants" => $etudiants]);
+        }
+    }
+
+    public static function afficherEtudiantPage(): void
+    {
+        if (isset($_GET['id'])) {
+            $etudiant = (new EtudiantRepository())->recupererParClePrimaire($_GET['id']);
+            if ($etudiant) {
+                $notes = (new EtudiantRepository())->getNotesEtudiant($_GET['id']);
+                self::afficherVue("vueGenerale.php", ["titre" => "page Etudiant", "cheminCorpsVue" => "etudiant/etudiantPage.php", "etudiant" => $etudiant, "notes"=> $notes]);
+            }else{
+                self::afficherErreur("L'id n'est pas celle d'un étudiant");
+            }
+        }else{
+            self::afficherErreur("L'id de l'étudiant n'a pas été transmis");
         }
     }
 
