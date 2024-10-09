@@ -22,7 +22,7 @@ class EtudiantRepository extends AbstractDataRepository
      */
     protected function getNomTable(): string
     {
-        return 'etudiant_temp';
+        return 'etudiant';
     }
 
     protected function getNomClePrimaire(): string
