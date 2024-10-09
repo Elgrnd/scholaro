@@ -37,7 +37,7 @@ foreach ($etudiants as $etudiant) {
     <td> <a href="?controleur=etudiant&action=afficherEtudiantPage&id='.$etudiant->getEtudid().'">' . $etudiant->getRgadmis() . '</a></td>
     <td> <a href="?controleur=etudiant&action=afficherEtudiantPage&id='.$etudiant->getEtudid().'">' . $etudiant->getAvis() . '</a></td>
     </tr>
-    
+     
     ';
 }
 
