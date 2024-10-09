@@ -1,7 +1,13 @@
 
-<div>
-    <h2 class="table-title">Liste Etudiant</h2>
+<div class="titre">
+    <div>
+        <h2 class="table-title">Liste Etudiant</h2>
+    </div>
+    <div>
+        <p ><a href="" class="padd">Importer des étudiants</a></p>
+    </div>
 </div>
+
 <table>
     <thead>
         <th>Id Etudiant</th>

@@ -38,7 +38,7 @@ tr:hover {
 }
 
 .table-title {
-    padding: 10px; /* Ajoute de l'espace autour du texte */
+    padding-left: 10px; /* Ajoute de l'espace autour du texte */
     margin-bottom: 0px; /* Espace entre le titre et le tableau */
 }
 
@@ -47,3 +47,13 @@ a {
     color: inherit; /* Conserve la couleur du texte de la cellule */
     display: block;
 }
+
+.titre {
+    display: flex;
+    justify-content: space-between;
+}
+
+.padd {
+    padding: 10px;
+}
+
