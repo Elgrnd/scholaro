@@ -94,11 +94,6 @@ class ControleurEtudiant
         self::afficherVue("vueGenerale.php", ["titre" => "Erreur", "cheminCorpsVue" => "etudiant/erreur.php", "erreur" => $erreur]);
     }
 
-    public static function afficherVueImportation(): void
-    {
-        self::afficherVue("vueGenerale.php", ["titre" => "Importer des étudiants", "cheminCorpsVue" => "etudiant/vueImportationCSV.php"]);
-    }
-
     public static function ajouterDepuisCSV(): void
     {
         if (isset($_FILES["file"]) && $_FILES['file']['error'] === UPLOAD_ERR_OK) {
