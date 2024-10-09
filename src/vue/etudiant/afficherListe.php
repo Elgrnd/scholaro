@@ -1,10 +1,20 @@
-
+<div class="marge">
 <div class="titre">
-    <div>
-        <h2 class="table-title">Liste Etudiant</h2>
+    <div class="table-title">
+        <h2 >Liste Etudiant</h2>
     </div>
-    <div>
-        <p ><a href="?controleur=etudiant&action=afficherVueImportation" class="padd">Importer des étudiants</a></p>
+    <div class="bouton-importation">
+        <form action="controleurFrontal.php" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="controleur" value="etudiant">
+            <input type="hidden" name="action" value="ajouterDepuisCSV">
+            <div>
+                <input type="file" id="file" name="file" accept=".csv" style="display: none;" onchange="this.form.submit()">
+                <label for="file" >
+                    Importer Etudiant (.csv)
+                </label>
+            </div>
+        </form>
+
     </div>
 </div>
 
@@ -44,4 +54,6 @@ foreach ($etudiants as $etudiant) {
 ?>
 </tbody>
 </table>
+
+</div>
 
