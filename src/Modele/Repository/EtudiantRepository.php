@@ -1,6 +1,7 @@
 <?php
 namespace App\Sae\Modele\Repository;
 
+use App\Sae\Modele\DataObject\AbstractDataObject;
 use App\Sae\Modele\DataObject\Etudiant;
 use MongoDB\Driver\Exception\Exception;
 
@@ -29,7 +30,10 @@ class EtudiantRepository extends AbstractDataRepository
         return "etudid";
     }
 
-
+    /**
+     * @param int $id
+     * @return array|null retourne toutes les notes d'un étudiant s'il en a sinon renvoie null
+     */
     public function getNotesEtudiant(int $id) : ?array {
         $sql = "SELECT * FROM etu_Note_Semestre WHERE etudid = :idTag";
         $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
@@ -49,4 +53,23 @@ class EtudiantRepository extends AbstractDataRepository
         return $tab;
     }
 
+    protected function getNomColonnes(): array
+    {
+        return ["etudid", "codenip", "civ", "nomEtu", "prenomEtu", "bac", "specialite", "rg_admis", "avis"];
+    }
+
+    protected function formatTableauSQL(AbstractDataObject $objet): array
+    {
+        return array(
+            "etudidTag"=> $objet->getEtudid(),
+            "codenipTag" => $objet->getCodenip(),
+            "civTag" => $objet->getCiv(),
+            "nomEtuTag" => $objet->getNomEtu(),
+            "prenomEtuTag" => $objet->getPrenomEtu(),
+            "bacTag"=> $objet->getBac(),
+            "specialiteTag" => $objet->getSpecialite(),
+            "rg_admisTag" => $objet->getRgadmis(),
+            "avisTag"=> $objet->getAvis()
+        );
+    }
 }
