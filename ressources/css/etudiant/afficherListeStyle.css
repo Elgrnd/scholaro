@@ -1,58 +1,59 @@
-/* Le lien prend la taille exacte du contenu et reste aligné à gauche */
-.etudiant-link {
-    text-decoration: none; /* Retire le soulignement des liens */
-    color: inherit; /* Garde la couleur du texte intacte */
-    display: block; /* Force le lien à occuper toute la largeur et être sur une nouvelle ligne */
-    max-width: 600px; /* Limite à la même taille que .etudiant-info */
-    margin: 0 0 20px 0; /* Aligne à gauche et ajoute de l'espace en dessous de chaque étudiant */
-    padding: 0; /* Supprime tout espace autour du lien */
-    overflow: hidden; /* Empêche tout débordement */
+/* Style général du tableau */
+table {
+    width: 100%; /* Prend toute la largeur de la page */
+    border-collapse: collapse; /* Fusionne les bordures */
+    border-radius: 8px; /* Arrondit les coins du tableau */
+    overflow: hidden; /* Assure que les coins arrondis sont appliqués correctement */
 }
 
-/* Le div interne garde ses styles */
-.etudiant-info {
+
+/* Style des cellules du tableau */
+th, td {
+    text-align: center; /* Centre le texte */
+    padding: 8px; /* Ajoute un peu d'espace autour du texte */
+}
+
+td {
+    border: 1px solid #000; /* Bordures noires */
+}
+
+/* Couleur de fond pour les lignes */
+tr:nth-child(even) {
+    background-color: #f2f2f2; /* Gris pour les lignes paires */
+}
+
+tr:nth-child(odd) {
+    background-color: #ffffff; /* Blanc pour les lignes impaires */
+}
+
+/* Style pour les en-têtes */
+th {
+    background-color: rgb(255, 86, 96); /* Couleur de fond des en-têtes */
+    color: white; /* Couleur du texte des en-têtes */
+}
+
+/* Effet de survol pour les lignes, en excluant la première ligne */
+tr:hover {
+    background-color: #d9d9d9; /* Gris clair au survol */
+}
+
+.table-title {
+    padding-left: 10px; /* Ajoute de l'espace autour du texte */
+    margin-bottom: 0px; /* Espace entre le titre et le tableau */
+}
+
+a {
+    text-decoration: none;
+    color: inherit; /* Conserve la couleur du texte de la cellule */
+    display: block;
+}
+
+.titre {
     display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    border: 2px solid #000;
+    justify-content: space-between;
+}
+
+.padd {
     padding: 10px;
-    box-sizing: border-box; /* Pour inclure les bordures dans la largeur totale */
-    margin: 0; /* Supprime toute marge externe */
-    width: 100%; /* 100% de la taille max du lien */
-    transition: background-color 0.3s ease; /* Ajoute une transition sur le fond */
-    position: relative; /* Nécessaire pour positionner correctement le trait */
 }
 
-/* Ajoute un changement de fond au survol */
-.etudiant-info:hover {
-    background-color: #f0f0f0;
-}
-
-/* Garde les styles pour les différentes sections */
-.etudiant-id {
-    padding-right: 20px;
-}
-
-/* Séparation des détails */
-.etudiant-details {
-    padding-left: 20px;
-}
-
-/* Le trait vertical entre ID et les détails */
-.etudiant-info::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 30%; /* Positionne le trait à environ 30% de la largeur du rectangle */
-    width: 1px; /* Largeur du trait */
-    background-color: #000; /* Couleur du trait */
-}
-
-/* Texte dans les paragraphes à l'intérieur du lien */
-.etudiant-link p {
-    margin: 0; /* Retire toute marge interne des paragraphes */
-    padding: 0; /* Supprime les marges internes des paragraphes */
-    color: inherit;
-    text-decoration: none; /* Empêche tout soulignement du texte */
-}
