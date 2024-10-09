@@ -1,23 +1,47 @@
+
+<div class="titre">
+    <div>
+        <h2 class="table-title">Liste Etudiant</h2>
+    </div>
+    <div>
+        <p ><a href="?controleur=etudiant&action=ajouterDepuisCSV" class="padd">Importer des étudiants</a></p>
+    </div>
+</div>
+
+<table>
+    <thead>
+        <th>Id Etudiant</th>
+        <th>Civilité</th>
+        <th>Nom</th>
+        <th>Prenom</th>
+        <th>Bac</th>
+        <th>Rang admission</th>
+        <th>Avis</th>
+    </thead>
+
+
+<tbody>
 <?php
 /**
  * @var \App\Sae\Modele\DataObject\Etudiant[] $etudiants
  */
 foreach ($etudiants as $etudiant) {
-    echo '<a href="?controleur=etudiant&action=afficherEtudiantPage&id='.$etudiant->getEtudid().'" class="etudiant-link">';
-    echo '<div class="etudiant-info">';
-    echo '<div class="etudiant-id">';
-    echo '<p>Id Etudiant : ' . $etudiant->getEtudid() . '</p>';
-    echo '</div>';
-    echo '<div class="etudiant-details">';
-    echo '<p>Nom : ' . $etudiant->getNomEtu() . ' Prénom : ' . $etudiant->getPrenomEtu() . '</p>';
-    echo '</div>';
-    echo '</div>';
-    echo '</a>';
+    echo '
+   <tr>
+   
+    <td> <a href="?controleur=etudiant&action=afficherEtudiantPage&id='.$etudiant->getEtudid().'">'. $etudiant->getEtudid() . '</a></td>
+    <td><a href="?controleur=etudiant&action=afficherEtudiantPage&id='.$etudiant->getEtudid().'">'. $etudiant->getCiv() . '</a></td>
+    <td> <a href="?controleur=etudiant&action=afficherEtudiantPage&id='.$etudiant->getEtudid().'">' . $etudiant->getNomEtu() . '</a> </td> 
+    <td> <a href="?controleur=etudiant&action=afficherEtudiantPage&id='.$etudiant->getEtudid().'">' . $etudiant->getPrenomEtu() . '</a></td>
+    <td> <a href="?controleur=etudiant&action=afficherEtudiantPage&id='.$etudiant->getEtudid().'">' . $etudiant->getBac() . '</a></td>
+    <td> <a href="?controleur=etudiant&action=afficherEtudiantPage&id='.$etudiant->getEtudid().'">' . $etudiant->getRgadmis() . '</a></td>
+    <td> <a href="?controleur=etudiant&action=afficherEtudiantPage&id='.$etudiant->getEtudid().'">' . $etudiant->getAvis() . '</a></td>
+    </tr>
+     
+    ';
 }
 
-echo '<div class="etudiant-info">';
-echo '<div class="etudiant-id">';
-echo '<a href="controleurFrontal.php?controleur=etudiant&action=afficherVueImportation"> Importer des étudiants</a>';
-echo '</div>';
-echo '</div>';
 ?>
+</tbody>
+</table>
+
