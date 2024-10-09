@@ -5,8 +5,8 @@ class Etudiant extends AbstractDataObject{
     private int $etudid;
     private string $codenip;
     private string $civ;
-    private string $nom;
-    private string $prenom;
+    private string $nomEtu;
+    private string $prenomEtu;
     private string $bac;
     private string $specialite;
     private int $rg_admis;
@@ -23,13 +23,13 @@ class Etudiant extends AbstractDataObject{
      * @param int $rg_admis
      * @param string $avis
      */
-    public function __construct(int $etudid, string $codenip, string $civ, string $nom, string $prenom, string $bac, string $specialite, int $rg_admis, string $avis)
+    public function __construct(int $etudid, string $codenip, string $civ, string $nomEtu, string $prenomEtu, string $bac, string $specialite, int $rg_admis, string $avis)
     {
         $this->etudid = $etudid;
         $this->codenip = $codenip;
         $this->civ = $civ;
-        $this->nom = $nom;
-        $this->prenom = $prenom;
+        $this->nomEtu = $nomEtu;
+        $this->prenomEtu = $prenomEtu;
         $this->bac = $bac;
         $this->specialite = $specialite;
         $this->rg_admis = $rg_admis;
@@ -68,22 +68,22 @@ class Etudiant extends AbstractDataObject{
 
     public function getNom(): string
     {
-        return $this->nom;
+        return $this->nomEtu;
     }
 
-    public function setNom(string $nom): void
+    public function setNom(string $nomEtu): void
     {
-        $this->nom = $nom;
+        $this->nomEtu = $nomEtu;
     }
 
     public function getPrenom(): string
     {
-        return $this->prenom;
+        return $this->prenomEtu;
     }
 
-    public function setPrenom(string $prenom): void
+    public function setPrenom(string $prenomEtu): void
     {
-        $this->prenom = $prenom;
+        $this->prenomEtu = $prenomEtu;
     }
 
     public function getBac(): string

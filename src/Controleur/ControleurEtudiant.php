@@ -14,7 +14,7 @@ class ControleurEtudiant
      * @return void fonctions à appeler pour afficher une vue
      */
 
-    private static function afficherVue(string $cheminVue,   array $parametres = []): void
+    private static function afficherVue(string $cheminVue, array $parametres = []): void
     {
         extract($parametres); // Crée des variables à partir du tableau $parametres
         require __DIR__ . "/../vue/$cheminVue"; // Charge la vue
@@ -49,7 +49,45 @@ class ControleurEtudiant
 
     public static function ajouterDepuisCSV(): void
     {
+        if (isset($_FILES["file"]) && $_FILES['file']['error'] === UPLOAD_ERR_OK) {
+            $filename = $_FILES["file"]["tmp_name"];
+            if ($_FILES["file"]["size"] > 0) {
+                $file = fopen($filename, "r");
+                $header = fgetcsv($file, 10000, ',');
 
+                foreach ($header as $index => $colName) {
+                    if ($colName === 'Nom') {
+                        $header[$index] = 'Nom1';
+                        break;
+                    }
+                }
+
+                while (($data = fgetcsv($file, 10000, ",")) !== FALSE) {
+                    $ligne = array_combine($header, $data);
+
+                    $etudid = $ligne["etudid"];
+                    $code_nip = $ligne["code_nip"];
+                    $civ = $ligne["Civ."];
+                    $nomEtu = $ligne["Nom1"];
+                    $prenomEtu = $ligne["Prénom"];
+                    $bac = $ligne["Bac"];
+                    $specialite = $ligne["Spécialité"];
+                    $rg_admis = $ligne["Rg. Adm."];
+
+                    if ($etudid == "") {
+                        break;
+                    }
+
+                    $etudiant = new Etudiant((int)$etudid, $code_nip, $civ, $nomEtu, $prenomEtu, $bac, $specialite, (int)$rg_admis, "");
+                    (new EtudiantRepository())->ajouter($etudiant);
+                }
+                fclose($file);
+            }
+            $etudiants = (new EtudiantRepository())->recuperer();
+            self::afficherVue("vueGenerale.php", ["titre" => "Etudiants importés avec succès", "cheminCorpsVue" => "etudiant/etudiantsImportes.php", "etudiants" => $etudiants]);
+        } else {
+            self::afficherErreur("Erreur lors de l'importation du fichier");
+        }
     }
 
 }

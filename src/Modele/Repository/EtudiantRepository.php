@@ -22,7 +22,7 @@ class EtudiantRepository extends AbstractDataRepository
      */
     protected function getNomTable(): string
     {
-        return 'etudiant_temp';
+        return 'etudiant';
     }
 
     protected function getNomClePrimaire(): string
@@ -32,7 +32,7 @@ class EtudiantRepository extends AbstractDataRepository
 
     protected function getNomColonnes(): array
     {
-        return ["etudid", "codenip", "civ", "nom", "prenom", "bac", "specialite", "rg_admis", "avis"];
+        return ["etudid", "codenip", "civ", "nomEtu", "prenomEtu", "bac", "specialite", "rg_admis", "avis"];
     }
 
     protected function formatTableauSQL(AbstractDataObject $objet): array
@@ -41,8 +41,8 @@ class EtudiantRepository extends AbstractDataRepository
             "etudidTag" => $objet->getEtudid(),
             "codenipTag" => $objet->getCodenip(),
             "civTag" => $objet->getCiv(),
-            "nomTag" => $objet->getNom(),
-            "prenomTag" => $objet->getPrenom(),
+            "nomEtuTag" => $objet->getNom(),
+            "prenomEtuTag" => $objet->getPrenom(),
             "bacTag" => $objet->getBac(),
             "specialiteTag" => $objet->getSpecialite(),
             "rg_admisTag" => $objet->getRg_admis(),
