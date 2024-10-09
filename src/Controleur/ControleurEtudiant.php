@@ -3,6 +3,8 @@
 namespace App\Sae\Controleur;
 
 
+use App\Sae\Modele\DataObject\Agregation;
+use App\Sae\Modele\Repository\AgregationRepository;
 use App\Sae\Modele\Repository\EtudiantRepository;
 use App\Sae\Modele\DataObject\Etudiant;
 
@@ -34,6 +36,9 @@ class ControleurEtudiant
         }
     }
 
+    /**
+     * @return void affiche les détails d'un étudiant
+     */
     public static function afficherEtudiantPage(): void
     {
         if (isset($_GET['id'])) {
@@ -47,6 +52,38 @@ class ControleurEtudiant
         }else{
             self::afficherErreur("L'id de l'étudiant n'a pas été transmis");
         }
+    }
+
+    public static function creerAgregation()
+    {
+        if(isset($_GET['nomAgregation'], $_GET['etuid'])) {
+            $diviseur = 0;
+            $cumul = 0;
+            for ($i = 0; $i < $_GET['id']; $i++) {
+                if (isset($_GET['noteCheck' . $i])) {
+                    $cumul += $_GET['noteagreger' . $i];
+                    $diviseur += 1;
+                }
+            }
+            if ($diviseur != 0) {
+                $res = $cumul / $diviseur;
+                $agregation = new Agregation(null, $_GET['nomAgregation'], $res, (new EtudiantRepository())->recupererParClePrimaire($_GET['etuid']));
+                (new AgregationRepository())->ajouter($agregation);
+                $notes = (new EtudiantRepository())->getNotesEtudiant($agregation->getEtudiant()->getEtudid());
+                self::afficherVue("vueGenerale.php", ["titre" => "page Etudiant", "cheminCorpsVue" => "etudiant/agregationCreee.php", "etudiant" => $agregation->getEtudiant(), "notes"=> $notes]);
+            }else{
+                self::afficherErreur("Aucune note sélectionnée");
+            }
+        }else{
+            self::afficherErreur("Données manquantes");
+        }
+    }
+
+    private static function construireDepuisFormulaire(array $tableauDonneesFormulaire): Trajet{
+        var_dump($tableauDonneesFormulaire);
+        $id = $tableauDonneesFormulaire["id"] ?? null;
+        echo $id;
+        return new Trajet($id, $tableauDonneesFormulaire['depart'], $tableauDonneesFormulaire['arrivee'], new DateTime($tableauDonneesFormulaire['date']), $tableauDonneesFormulaire['prix'], (new UtilisateurRepository())->recupererParClePrimaire($tableauDonneesFormulaire['conducteurLogin']), ($tableauDonneesFormulaire["nonFumeur"]));
     }
 
     /**
