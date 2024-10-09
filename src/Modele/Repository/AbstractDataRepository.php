@@ -18,6 +18,7 @@ abstract class AbstractDataRepository
 
     public function recuperer() : ?array
     {
+        $tableauObjets = [];
         $pdoStatement = ConnexionBaseDeDonnees::getPdo()->query('SELECT * FROM '. $this->getNomTable());
         foreach ($pdoStatement as $objetFormatTableau) {
             $tableauObjets[] = $this->construireDepuisTableauSQL($objetFormatTableau);

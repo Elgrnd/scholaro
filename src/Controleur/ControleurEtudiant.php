@@ -29,11 +29,9 @@ class ControleurEtudiant
     public static function afficherListe(): void
     {
         $etudiants = (new EtudiantRepository())->recuperer();
-        if (empty($etudiants)) {
-            self::afficherErreur("Aucun étudiant à afficher");
-        } else {
-            self::afficherVue("vueGenerale.php", ["titre" => "Liste des etudiants", "cheminCorpsVue" => "etudiant/afficherListe.php", "etudiants" => $etudiants]);
-        }
+
+        self::afficherVue("vueGenerale.php", ["titre" => "Liste des etudiants", "cheminCorpsVue" => "etudiant/afficherListe.php", "etudiants" => $etudiants]);
+
     }
 
     /**
@@ -45,18 +43,18 @@ class ControleurEtudiant
             $etudiant = (new EtudiantRepository())->recupererParClePrimaire($_GET['id']);
             if ($etudiant) {
                 $notes = (new EtudiantRepository())->getNotesEtudiant($_GET['id']);
-                self::afficherVue("vueGenerale.php", ["titre" => "page Etudiant", "cheminCorpsVue" => "etudiant/etudiantPage.php", "etudiant" => $etudiant, "notes"=> $notes]);
-            }else{
+                self::afficherVue("vueGenerale.php", ["titre" => "page Etudiant", "cheminCorpsVue" => "etudiant/etudiantPage.php", "etudiant" => $etudiant, "notes" => $notes]);
+            } else {
                 self::afficherErreur("L'id n'est pas celle d'un étudiant");
             }
-        }else{
+        } else {
             self::afficherErreur("L'id de l'étudiant n'a pas été transmis");
         }
     }
 
     public static function creerAgregation()
     {
-        if(isset($_GET['nomAgregation'], $_GET['etuid'])) {
+        if (isset($_GET['nomAgregation'], $_GET['etuid'])) {
             $diviseur = 0;
             $cumul = 0;
             for ($i = 0; $i < $_GET['id']; $i++) {
@@ -70,16 +68,17 @@ class ControleurEtudiant
                 $agregation = new Agregation(null, $_GET['nomAgregation'], $res, (new EtudiantRepository())->recupererParClePrimaire($_GET['etuid']));
                 (new AgregationRepository())->ajouter($agregation);
                 $notes = (new EtudiantRepository())->getNotesEtudiant($agregation->getEtudiant()->getEtudid());
-                self::afficherVue("vueGenerale.php", ["titre" => "page Etudiant", "cheminCorpsVue" => "etudiant/agregationCreee.php", "etudiant" => $agregation->getEtudiant(), "notes"=> $notes]);
-            }else{
+                self::afficherVue("vueGenerale.php", ["titre" => "page Etudiant", "cheminCorpsVue" => "etudiant/agregationCreee.php", "etudiant" => $agregation->getEtudiant(), "notes" => $notes]);
+            } else {
                 self::afficherErreur("Aucune note sélectionnée");
             }
-        }else{
+        } else {
             self::afficherErreur("Données manquantes");
         }
     }
 
-    private static function construireDepuisFormulaire(array $tableauDonneesFormulaire): Trajet{
+    private static function construireDepuisFormulaire(array $tableauDonneesFormulaire): Trajet
+    {
         var_dump($tableauDonneesFormulaire);
         $id = $tableauDonneesFormulaire["id"] ?? null;
         echo $id;
@@ -127,7 +126,7 @@ class ControleurEtudiant
                     $specialite = $ligne["Spécialité"];
                     $rg_admis = $ligne["Rg. Adm."];
 
-                    if ($etudid == "") {
+                    if (!ctype_digit(substr($etudid, 0, 1))) {
                         break;
                     }
 
