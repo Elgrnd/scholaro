@@ -4,7 +4,7 @@
         <h2 class="table-title">Liste Etudiant</h2>
     </div>
     <div>
-        <p ><a href="?controleur=etudiant&action=ajouterDepuisCSV" class="padd">Importer des étudiants</a></p>
+        <p ><a href="?controleur=etudiant&action=afficherVueImportation" class="padd">Importer des étudiants</a></p>
     </div>
 </div>
 
