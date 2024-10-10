@@ -28,9 +28,6 @@
                     <a href="controleurFrontal.php?action=afficherListe">LISTE</a>
                 </li>
                 <li>
-                    <a href="#">IMPORTATION</a>
-                </li>
-                <li>
                     <a href="#"><img class="logout" src="../ressources/images/logout.png" alt="se déconnecter"/></a>
                 </li>
             </ul>
