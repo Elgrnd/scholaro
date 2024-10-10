@@ -41,13 +41,13 @@ foreach ($etudiants as $etudiant) {
     echo '
    <tr>
    
-    <td> <a href="?controleur=etudiant&action=afficherEtudiantPage&id='.$etudiant->getEtudid().'">'. $etudiant->getEtudid() . '</a></td>
-    <td><a href="?controleur=etudiant&action=afficherEtudiantPage&id='.$etudiant->getEtudid().'">'. htmlspecialchars($etudiant->getCiv()) . '</a></td>
-    <td> <a href="?controleur=etudiant&action=afficherEtudiantPage&id='.$etudiant->getEtudid().'">' . htmlspecialchars($etudiant->getNomEtu()) . '</a> </td> 
-    <td> <a href="?controleur=etudiant&action=afficherEtudiantPage&id='.$etudiant->getEtudid().'">' . htmlspecialchars($etudiant->getPrenomEtu()) . '</a></td>
-    <td> <a href="?controleur=etudiant&action=afficherEtudiantPage&id='.$etudiant->getEtudid().'">' . htmlspecialchars($etudiant->getBac()) . '</a></td>
-    <td> <a href="?controleur=etudiant&action=afficherEtudiantPage&id='.$etudiant->getEtudid().'">' . htmlspecialchars($etudiant->getRgadmis()) . '</a></td>
-    <td> <a href="?controleur=etudiant&action=afficherEtudiantPage&id='.$etudiant->getEtudid().'">' . htmlspecialchars($etudiant->getAvis()) . '</a></td>
+    <td> <a href="?controleur=etudiant&action=afficherEtudiantPage&id='.rawurlencode($etudiant->getEtudid()).'">'. $etudiant->getEtudid() . '</a></td>
+    <td> <a href="?controleur=etudiant&action=afficherEtudiantPage&id='.rawurlencode($etudiant->getEtudid()).'">'. htmlspecialchars($etudiant->getCiv()) . '</a></td>
+    <td> <a href="?controleur=etudiant&action=afficherEtudiantPage&id='.rawurlencode($etudiant->getEtudid()).'">' . htmlspecialchars($etudiant->getNomEtu()) . '</a> </td> 
+    <td> <a href="?controleur=etudiant&action=afficherEtudiantPage&id='.rawurlencode($etudiant->getEtudid()).'">' . htmlspecialchars($etudiant->getPrenomEtu()) . '</a></td>
+    <td> <a href="?controleur=etudiant&action=afficherEtudiantPage&id='.rawurlencode($etudiant->getEtudid()).'">' . htmlspecialchars($etudiant->getBac()) . '</a></td>
+    <td> <a href="?controleur=etudiant&action=afficherEtudiantPage&id='.rawurlencode($etudiant->getEtudid()).'">' . htmlspecialchars($etudiant->getRgadmis()) . '</a></td>
+    <td> <a href="?controleur=etudiant&action=afficherEtudiantPage&id='.rawurlencode($etudiant->getEtudid()).'">' . htmlspecialchars($etudiant->getAvis()) . '</a></td>
     </tr>
      
     ';
