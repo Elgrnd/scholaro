@@ -44,7 +44,7 @@
 </main>
 <footer>
     <div class="footer-container">
-        <p class="co"> Copyright © 2023 All rights reserved </p>
+        <p class="co"> Copyright © 2024 All rights reserved </p>
     </div>
 </footer>
 </body>
