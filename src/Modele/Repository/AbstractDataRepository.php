@@ -63,4 +63,20 @@ abstract class AbstractDataRepository
         }
         return $this->construireDepuisTableauSQL($objetFormatTableau);
     }
+
+    public function supprimer(string $clefPrimaire): bool
+    {
+
+        $sql = 'DELETE FROM ' . $this->getNomTable() . ' WHERE ' . $this->getNomClePrimaire() . ' = :clefTag';
+        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
+        $values = array(
+            "clefTag" => $clefPrimaire,
+        );
+        try {
+            $pdoStatement->execute($values);
+        } catch (PDOException $e) {
+            return false;
+        }
+        return true;
+    }
 }

@@ -2,9 +2,9 @@
 /**
  * @var \App\Sae\Modele\DataObject\Etudiant $etudiant
  */
-echo "<p>echo </p>";
+
 $idEtu = $etudiant->getEtudid();
-echo $idEtu;
+
 
 if (!empty($notes)) {
 echo "<p>Note élève</p>
@@ -34,8 +34,18 @@ $id = 0;
 } else {
     echo "<p> l'étudiant n'a pas de notes</p>";
 }
-
-echo '<p> Avis </p>';
-echo '<p>' . $etudiant->getAvis() . ' </p>'
+if($etudiant->getAvis() != null) {
+    echo '<p> Avis </p>';
+    echo '<p>' . $etudiant->getAvis() . ' </p>';
+}
+/**
+ *@var $notesAgregees \App\Sae\Modele\DataObject\Agregation[]
+ */
+if(!empty($notesAgregees)){
+    echo "<p>notes Agregater de l'élève </p>";
+    foreach ($notesAgregees as $noteAgregee) {
+        echo '<p> Nom : '.$noteAgregee->getNomAgregation() .'  Note : '.$noteAgregee->getNoteAgregation() .' Supprimer l\'agregation <a href="?controleur=etudiant&action=supprimerAgregation&idNoteAgregee=' . rawurldecode($noteAgregee->getIdAgregation()) . '&etudid='.$etudiant->getEtudid().'"> supprimer </a></p>';
+    }
+}
 ?>
 
