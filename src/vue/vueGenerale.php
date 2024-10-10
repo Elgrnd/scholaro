@@ -46,9 +46,9 @@
     ?>
 </main>
 <footer>
-    <p>
-        Site de sae
-    </p>
+    <div class="footer-container">
+        <p class="co"> Copyright © 2023 All rights reserved </p>
+    </div>
 </footer>
 </body>
 </html>
