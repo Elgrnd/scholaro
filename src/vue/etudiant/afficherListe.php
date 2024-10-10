@@ -30,12 +30,12 @@ foreach ($etudiants as $etudiant) {
    <tr>
    
     <td> <a href="?controleur=etudiant&action=afficherEtudiantPage&id='.$etudiant->getEtudid().'">'. $etudiant->getEtudid() . '</a></td>
-    <td><a href="?controleur=etudiant&action=afficherEtudiantPage&id='.$etudiant->getEtudid().'">'. $etudiant->getCiv() . '</a></td>
-    <td> <a href="?controleur=etudiant&action=afficherEtudiantPage&id='.$etudiant->getEtudid().'">' . $etudiant->getNomEtu() . '</a> </td> 
-    <td> <a href="?controleur=etudiant&action=afficherEtudiantPage&id='.$etudiant->getEtudid().'">' . $etudiant->getPrenomEtu() . '</a></td>
-    <td> <a href="?controleur=etudiant&action=afficherEtudiantPage&id='.$etudiant->getEtudid().'">' . $etudiant->getBac() . '</a></td>
-    <td> <a href="?controleur=etudiant&action=afficherEtudiantPage&id='.$etudiant->getEtudid().'">' . $etudiant->getRgadmis() . '</a></td>
-    <td> <a href="?controleur=etudiant&action=afficherEtudiantPage&id='.$etudiant->getEtudid().'">' . $etudiant->getAvis() . '</a></td>
+    <td><a href="?controleur=etudiant&action=afficherEtudiantPage&id='.$etudiant->getEtudid().'">'. htmlspecialchars($etudiant->getCiv()) . '</a></td>
+    <td> <a href="?controleur=etudiant&action=afficherEtudiantPage&id='.$etudiant->getEtudid().'">' . htmlspecialchars($etudiant->getNomEtu()) . '</a> </td> 
+    <td> <a href="?controleur=etudiant&action=afficherEtudiantPage&id='.$etudiant->getEtudid().'">' . htmlspecialchars($etudiant->getPrenomEtu()) . '</a></td>
+    <td> <a href="?controleur=etudiant&action=afficherEtudiantPage&id='.$etudiant->getEtudid().'">' . htmlspecialchars($etudiant->getBac()) . '</a></td>
+    <td> <a href="?controleur=etudiant&action=afficherEtudiantPage&id='.$etudiant->getEtudid().'">' . htmlspecialchars($etudiant->getRgadmis()) . '</a></td>
+    <td> <a href="?controleur=etudiant&action=afficherEtudiantPage&id='.$etudiant->getEtudid().'">' . htmlspecialchars($etudiant->getAvis()) . '</a></td>
     </tr>
      
     ';
