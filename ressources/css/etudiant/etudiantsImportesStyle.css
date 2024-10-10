@@ -1,4 +1,4 @@
-body {
+body{
     margin: 0px;
 }
 
@@ -82,4 +82,10 @@ a {
 /* Changement de couleur au survol */
 .bouton-importation:hover {
     background-color: #a9a9a9; /* Couleur grisâtre au survol */
+}
+
+.validation {
+    width: 100%;
+    background-color: green;
+    padding: 5px;
 }

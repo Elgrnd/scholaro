@@ -9,20 +9,35 @@ $chargeurDeClasse->register();
 // enregistrement d'une association "espace de nom" → "dossier"
 $chargeurDeClasse->addNamespace("App\Sae", __DIR__ . '/../src');
 
-
-if (isset($_GET['controleur'])) {
-    $controleur = $_GET['controleur'];
-}else{
-    $controleur = "etudiant";
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    if (!isset($_POST['controleur'])) {
+        $controleur = "etudiant";
+    } else {
+        $controleur = $_POST['controleur'];
+    }
+} else {
+    if (isset($_GET['controleur'])) {
+        $controleur = $_GET['controleur'];
+    } else {
+        $controleur = "etudiant";
+    }
 }
 
 $nomDeClasseControleur = "App\\Sae\\Controleur\\Controleur". ucfirst($controleur);
 if(class_exists($nomDeClasseControleur)) {
 
-    if (!isset($_GET['action'])) {
-        $action = "afficherListe";
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        if (!isset($_POST['action'])) {
+            $action = "afficherListe";
+        } else {
+            $action = $_POST['action'];
+        }
     } else {
-        $action = $_GET['action'];
+        if (!isset($_GET['action'])) {
+            $action = "afficherListe";
+        } else {
+            $action = $_GET['action'];
+        }
     }
     $methodes = get_class_methods($nomDeClasseControleur);
     if (in_array($action, $methodes)) {
