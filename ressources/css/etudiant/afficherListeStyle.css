@@ -18,7 +18,8 @@ table {
 /* Style des cellules du tableau */
 th, td {
     text-align: center; /* Centre le texte */
-    padding: 8px; /* Ajoute un peu d'espace autour du texte */
+    padding-top: 8px; /* Ajoute un peu d'espace autour du texte */
+    padding-bottom: 8px; /* Ajoute un peu d'espace autour du texte */
 }
 
 td {
