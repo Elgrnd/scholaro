@@ -43,7 +43,8 @@ class ControleurEtudiant
             $etudiant = (new EtudiantRepository())->recupererParClePrimaire($_GET['id']);
             if ($etudiant) {
                 $notes = (new EtudiantRepository())->getNotesEtudiant($_GET['id']);
-                self::afficherVue("vueGenerale.php", ["titre" => "page Etudiant", "cheminCorpsVue" => "etudiant/etudiantPage.php", "etudiant" => $etudiant, "notes" => $notes]);
+                $notesAgregees = (new EtudiantRepository())->recupererNotesAgregees($_GET['id']);
+                self::afficherVue("vueGenerale.php", ["titre" => "page Etudiant", "cheminCorpsVue" => "etudiant/etudiantPage.php", "etudiant" => $etudiant, "notes" => $notes, "notesAgregees" => $notesAgregees]);
             } else {
                 self::afficherErreur("L'id n'est pas celle d'un étudiant");
             }
@@ -68,7 +69,8 @@ class ControleurEtudiant
                 $agregation = new Agregation(null, $_GET['nomAgregation'], $res, (new EtudiantRepository())->recupererParClePrimaire($_GET['etuid']));
                 (new AgregationRepository())->ajouter($agregation);
                 $notes = (new EtudiantRepository())->getNotesEtudiant($agregation->getEtudiant()->getEtudid());
-                self::afficherVue("vueGenerale.php", ["titre" => "page Etudiant", "cheminCorpsVue" => "etudiant/agregationCreee.php", "etudiant" => $agregation->getEtudiant(), "notes" => $notes]);
+                $notesAgregees = (new EtudiantRepository())->recupererNotesAgregees($agregation->getEtudiant()->getEtudid());
+                self::afficherVue("vueGenerale.php", ["titre" => "page Etudiant", "cheminCorpsVue" => "etudiant/agregationCreee.php", "etudiant" => $agregation->getEtudiant(), "notes" => $notes, "notesAgregees" => $notesAgregees]);
             } else {
                 self::afficherErreur("Aucune note sélectionnée");
             }
@@ -77,12 +79,21 @@ class ControleurEtudiant
         }
     }
 
-    private static function construireDepuisFormulaire(array $tableauDonneesFormulaire): Trajet
+    public static function supprimerAgregation(): void
     {
-        var_dump($tableauDonneesFormulaire);
-        $id = $tableauDonneesFormulaire["id"] ?? null;
-        echo $id;
-        return new Trajet($id, $tableauDonneesFormulaire['depart'], $tableauDonneesFormulaire['arrivee'], new DateTime($tableauDonneesFormulaire['date']), $tableauDonneesFormulaire['prix'], (new UtilisateurRepository())->recupererParClePrimaire($tableauDonneesFormulaire['conducteurLogin']), ($tableauDonneesFormulaire["nonFumeur"]));
+        if (isset($_GET["idNoteAgregee"])) {
+            $test = (new AgregationRepository())->supprimer($_GET['idNoteAgregee']);
+            if ($test) {
+                $etudiant = (new EtudiantRepository())->recupererParClePrimaire($_GET['etudid']);
+                $notes = (new EtudiantRepository())->getNotesEtudiant($etudiant->getEtudid());
+                $notesAgregees = (new EtudiantRepository())->recupererNotesAgregees($etudiant->getEtudid());
+                self::afficherVue("vueGenerale.php", ["titre" => "page Etudiant", "cheminCorpsVue" => "etudiant/agregationSuppr.php", "etudiant" => $etudiant, "notes" => $notes, "notesAgregees" => $notesAgregees]);
+            } else {
+                self::afficherErreur("Agregation inconnu");
+            }
+        } else {
+            self::afficherErreur("Données manquantes");
+        }
     }
 
     /**

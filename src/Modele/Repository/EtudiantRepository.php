@@ -53,6 +53,28 @@ class EtudiantRepository extends AbstractDataRepository
         return $tab;
     }
 
+    /**
+     * @param $etuid
+     * @return array|null retourne la liste des notes agrégées
+     */
+    public function recupererNotesAgregees($etuid) : ?array
+    {
+        $sql = "Select * from agregation where etudid = :etudidTag";
+        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
+        $values = array(
+            "etudidTag" => $etuid,
+        );
+        $tab = array();
+        try {
+            $pdoStatement->execute($values);
+        }catch (Exception $e){
+            return null;
+        }
+        foreach ($pdoStatement as $row) {
+            $tab[] = (new AgregationRepository())->construireDepuisTableauSQL($row);
+        }
+        return $tab;
+    }
     protected function getNomColonnes(): array
     {
         return ["etudid", "codenip", "civ", "nomEtu", "prenomEtu", "bac", "specialite", "rg_admis", "avis"];
