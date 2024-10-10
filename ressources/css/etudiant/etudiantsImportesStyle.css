@@ -2,10 +2,19 @@ body{
     margin: 0px;
 }
 
+
+main {
+    margin-top: 80px;
+    margin-left: 0px;
+}
+
 .marge {
     margin: 10px;
 }
 
+.supprimer:active{
+    visibility: hidden;
+}
 /* Style général du tableau */
 table {
     width: 100%; /* Prend toute la largeur de la page */

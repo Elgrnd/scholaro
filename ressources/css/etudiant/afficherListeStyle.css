@@ -84,3 +84,8 @@ a {
 .bouton-importation:hover {
     background-color: #a9a9a9; /* Couleur grisâtre au survol */
 }
+
+.pas-etudiant {
+    margin: 20px;
+    text-align: center;
+}

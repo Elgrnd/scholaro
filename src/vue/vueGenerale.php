@@ -11,8 +11,8 @@
          * @var string $cheminCorpsVue
          */
         ?></title>
-    <link href="../ressources/css/<?= str_replace(".php", "Style.css", $cheminCorpsVue)?>" rel="stylesheet">
     <link rel="stylesheet" href="../ressources/css/vueGeneraleStyle.css" />
+    <link href="../ressources/css/<?= str_replace(".php", "Style.css", $cheminCorpsVue)?>" rel="stylesheet">
 </head>
 <body>
 <header>

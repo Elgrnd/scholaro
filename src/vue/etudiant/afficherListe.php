@@ -1,7 +1,7 @@
 <div class="marge">
 <div class="titre">
     <div class="table-title">
-        <h2 >Liste Etudiant</h2>
+        <h1 >Liste Etudiant</h1>
     </div>
     <div class="bouton-importation">
         <form action="controleurFrontal.php" method="post" enctype="multipart/form-data">
@@ -35,6 +35,8 @@
 /**
  * @var \App\Sae\Modele\DataObject\Etudiant[] $etudiants
  */
+
+
 foreach ($etudiants as $etudiant) {
     echo '
    <tr>
@@ -51,9 +53,13 @@ foreach ($etudiants as $etudiant) {
     ';
 }
 
+
 ?>
 </tbody>
 </table>
-
+    <?php
+    if (empty($etudiants)){
+        echo '<h3 class="pas-etudiant">Il n\'y a aucun étudiant, veuillez en importer</h3>';
+    } ?>
 </div>
 
