@@ -38,6 +38,10 @@
 
 
 foreach ($etudiants as $etudiant) {
+    $etudiantAvis = $etudiant->getAvis();
+    if ($etudiantAvis == "") {
+        $etudiantAvis = "Pas d'avis";
+    }
     echo '
    <tr>
    
@@ -47,7 +51,7 @@ foreach ($etudiants as $etudiant) {
     <td> <a href="?controleur=etudiant&action=afficherEtudiantPage&id='.rawurlencode($etudiant->getEtudid()).'">' . htmlspecialchars($etudiant->getPrenomEtu()) . '</a></td>
     <td> <a href="?controleur=etudiant&action=afficherEtudiantPage&id='.rawurlencode($etudiant->getEtudid()).'">' . htmlspecialchars($etudiant->getBac()) . '</a></td>
     <td> <a href="?controleur=etudiant&action=afficherEtudiantPage&id='.rawurlencode($etudiant->getEtudid()).'">' . htmlspecialchars($etudiant->getRgadmis()) . '</a></td>
-    <td> <a href="?controleur=etudiant&action=afficherEtudiantPage&id='.rawurlencode($etudiant->getEtudid()).'">' . htmlspecialchars($etudiant->getAvis()) . '</a></td>
+    <td> <a href="?controleur=etudiant&action=afficherEtudiantPage&id='.rawurlencode($etudiant->getEtudid()).'">' . htmlspecialchars($etudiantAvis) . '</a></td>
     </tr>
      
     ';
