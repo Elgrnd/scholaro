@@ -6,6 +6,10 @@
 }
 /* Header */
 
+html::-webkit-scrollbar {
+    display: none;
+}
+
 header {
     position: fixed;
     top: 0;
