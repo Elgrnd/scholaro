@@ -2,7 +2,14 @@
 /**
  * @var \App\Sae\Modele\DataObject\Etudiant $etudiant
  */
-
+$nomEtudiant = htmlspecialchars($etudiant->getNomEtu());
+$prenomEtudiant = htmlspecialchars($etudiant->getPrenomEtu());
+$codenip = htmlspecialchars($etudiant->getCodenip());
+$civ = htmlspecialchars($etudiant->getCiv());
+$bac = htmlspecialchars($etudiant->getBac());
+$specialite = htmlspecialchars($etudiant->getSpecialite());
+$rang_admis = htmlspecialchars($etudiant->getRgadmis());
+$avis = htmlspecialchars($etudiant->getAvis());
 $idEtu = $etudiant->getEtudid();
 
 
