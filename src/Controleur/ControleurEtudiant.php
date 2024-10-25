@@ -55,14 +55,13 @@ class ControleurEtudiant
 
     public static function creerAgregation()
     {
-        if (isset($_GET['nomAgregation'], $_GET['etuid'])) {
+        if (isset($_REQUEST['nomAgregation'], $_REQUEST['etuid'])) {
             $diviseur = 0;
             $cumul = 0;
-            for ($i = 0; $i < $_GET['id']; $i++) {
-                if (isset($_GET['noteCheck' . $i])) {
-                    $cumul += $_GET['noteagreger' . $i];
-                    $diviseur += 1;
-                    //echo $_GET['coeff'.$i];
+            for ($i = 0; $i < $_REQUEST['id']; $i++) {
+                if (isset($_REQUEST['noteCheck' . $i])) {
+                    $cumul += ($_REQUEST['noteagreger' . $i] * $_REQUEST['coeff' . $i]);
+                    $diviseur += $_REQUEST['coeff' . $i];
 
                 }
             }
