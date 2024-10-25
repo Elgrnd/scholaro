@@ -62,6 +62,8 @@ class ControleurEtudiant
                 if (isset($_GET['noteCheck' . $i])) {
                     $cumul += $_GET['noteagreger' . $i];
                     $diviseur += 1;
+                    //echo $_GET['coeff'.$i];
+
                 }
             }
             if ($diviseur != 0) {
