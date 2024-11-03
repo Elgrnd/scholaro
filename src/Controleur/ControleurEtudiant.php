@@ -70,11 +70,12 @@ class ControleurEtudiant
                 $idAgregation = (new AgregationRepository())->ajouter($agregation);
                 $agregation->setIdAgregation($idAgregation);
                 for ($i = 0 ; $i < $_REQUEST['id']; $i++){
-                    if(is_int($_REQUEST['idNom'.$i])) {
-                        echo "int";
-                        echo $_REQUEST['idNom'.$i];
-                    }else{
-                        (new EtudiantRepository())->enregistrerRessource($_REQUEST['idNom'.$i], $agregation->getIdAgregation(), $_REQUEST['coeff'.$i]);
+                    if (isset($_REQUEST['noteCheck' . $i]) && $_REQUEST['noteCheck' . $i] > 0) {
+                        if (ctype_digit($_REQUEST['idNom' . $i])) {
+                            (new EtudiantRepository())->enregistrerAgregationAgregee($agregation->getIdAgregation(), $_REQUEST['idNom' . $i], $_REQUEST['coeff'.$i]);
+                        } else {
+                            (new EtudiantRepository())->enregistrerRessource($_REQUEST['idNom' . $i], $agregation->getIdAgregation(), $_REQUEST['coeff' . $i]);
+                        }
                     }
                 }
                 $notes = (new EtudiantRepository())->getNotesEtudiant($agregation->getEtudiant()->getEtudid());

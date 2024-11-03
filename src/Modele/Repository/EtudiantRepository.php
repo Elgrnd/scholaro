@@ -76,6 +76,12 @@ class EtudiantRepository extends AbstractDataRepository
         return $tab;
     }
 
+    /**
+     * @param string $nomRessource
+     * @param int $idAgregation
+     * @param float $coef
+     * @return bool|null permet d'insérer dans la bd les données correspondant à la table ressource_Agregation
+     */
     public function enregistrerRessource(string $nomRessource, int $idAgregation,float $coef) : ?bool{
         $sql = "INSERT INTO ressource_Agregation (nomRessource, idAgregation, coefficient) 
             VALUES (:nomRessourceTag, :idAgregationTag, :coefficientTag)";
@@ -92,6 +98,30 @@ class EtudiantRepository extends AbstractDataRepository
         }
         return true;
     }
+
+    /**
+     * @param string $idAgregation
+     * @param int $idAgregationAgregee
+     * @param float $coef
+     * @return bool|null permet d'insérer dans la bd les données agregation_AgregationAgregee
+     */
+    public function enregistrerAgregationAgregee(string $idAgregation, int $idAgregationAgregee,float $coef) : ?bool{
+        $sql = "INSERT INTO agregation_AgregationAgregee (idAgregation, idAgregationAgregee, coefficient) 
+            VALUES (:idAgregationTag, :idAgregationAgregeeTag, :coefficientTag)";
+        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
+        $values = array(
+            "idAgregationTag" => $idAgregation,
+            "idAgregationAgregeeTag" => $idAgregationAgregee,
+            "coefficientTag" => $coef
+        );
+        $pdoStatement->execute($values);
+        $objetFormatTableau = $pdoStatement->fetch();
+        if ($objetFormatTableau == null) {
+            return null;
+        }
+        return true;
+    }
+
     protected function getNomColonnes(): array
     {
         return ["etudid", "codenip", "civ", "nomEtu", "prenomEtu", "bac", "specialite", "rg_admis", "avis"];

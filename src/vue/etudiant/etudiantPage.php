@@ -35,7 +35,7 @@ $id = 0;
                 <input type="checkbox" name="noteCheck'.$id.'" id="noteAgregationId'.$id.'"/>
                 <input type="hidden" value='.$noteAgregee->getNoteAgregation().' name="noteagreger'.$id.'" id="AgregationaAgreger'.$id.'"/>
                 <input type="number" name="coeff'.$id.'" value="1" id="coefAgregation'.$id.'"/>
-                <input type="hidden" name="idNom$'.$id.'" value='.$noteAgregee->getIdAgregation().'>  
+                <input type="hidden" name="idNom'.$id.'" value='.$noteAgregee->getIdAgregation().'>  
             </p>';
             $id+= 1;
         }
