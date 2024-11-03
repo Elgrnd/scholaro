@@ -25,7 +25,7 @@ abstract class AbstractDataRepository
         }
         return $tableauObjets;
     }
-    public function ajouter(AbstractDataObject $objet): void
+    public function ajouter(AbstractDataObject $objet)
     {
         $nomTable = $this->getNomTable();
         $nomsColonnes = join(",", $this->getNomColonnes());
@@ -36,9 +36,11 @@ abstract class AbstractDataRepository
         $colonnesTag = substr($colonnesTag, 0, -2);
 
         $sql = "INSERT INTO $nomTable ($nomsColonnes) VALUES ($colonnesTag)";
-        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
+        $pdo = ConnexionBaseDeDonnees::getPdo();
+        $pdoStatement = $pdo->prepare($sql);
         $values = $this->formatTableauSQL($objet);
         $pdoStatement->execute($values);
+        return $pdo->lastInsertId();
     }
     public function recupererParClePrimaire(string $clefPrimTag): ?AbstractDataObject
     {

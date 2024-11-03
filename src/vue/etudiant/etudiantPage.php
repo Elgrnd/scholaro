@@ -20,7 +20,7 @@ $id = 0;
                 <input type='checkbox' name='noteCheck$id' id='noteId$id'/>
                 <input type='hidden' value='$note[3]' name='noteagreger$id' id='noteaAgreger$id'/>
                 <input type='number' name='coeff$id' value='1' id='coefNote$id'/>
-                
+                <input type='hidden' name='idNom$id' value='$note[2]'/>
             </p>";
         $id+= 1;
     }
@@ -34,7 +34,8 @@ $id = 0;
                 <label for="noteAgregationId'.$id.'"> Agrégée l\'agregation</label> :
                 <input type="checkbox" name="noteCheck'.$id.'" id="noteAgregationId'.$id.'"/>
                 <input type="hidden" value='.$noteAgregee->getNoteAgregation().' name="noteagreger'.$id.'" id="AgregationaAgreger'.$id.'"/>
-                <input type="number" name="coeff'.$id.'" value="1" id="coefAgregation'.$id.'"/>  
+                <input type="number" name="coeff'.$id.'" value="1" id="coefAgregation'.$id.'"/>
+                <input type="hidden" name="idNom$'.$id.'" value='.$noteAgregee->getIdAgregation().'>  
             </p>';
             $id+= 1;
         }

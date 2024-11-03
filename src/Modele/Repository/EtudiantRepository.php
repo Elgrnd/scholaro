@@ -75,6 +75,23 @@ class EtudiantRepository extends AbstractDataRepository
         }
         return $tab;
     }
+
+    public function enregistrerRessource(string $nomRessource, int $idAgregation,float $coef) : ?bool{
+        $sql = "INSERT INTO ressource_Agregation (nomRessource, idAgregation, coefficient) 
+            VALUES (:nomRessourceTag, :idAgregationTag, :coefficientTag)";
+        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
+        $values = array(
+            "nomRessourceTag" => $nomRessource,
+            "idAgregationTag" => $idAgregation,
+            "coefficientTag" => $coef
+        );
+        $pdoStatement->execute($values);
+        $objetFormatTableau = $pdoStatement->fetch();
+        if ($objetFormatTableau == null) {
+            return null;
+        }
+        return true;
+    }
     protected function getNomColonnes(): array
     {
         return ["etudid", "codenip", "civ", "nomEtu", "prenomEtu", "bac", "specialite", "rg_admis", "avis"];

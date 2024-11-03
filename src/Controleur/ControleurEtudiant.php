@@ -59,16 +59,24 @@ class ControleurEtudiant
             $diviseur = 0;
             $cumul = 0;
             for ($i = 0; $i < $_REQUEST['id']; $i++) {
-                if (isset($_REQUEST['noteCheck' . $i])) {
+                if (isset($_REQUEST['noteCheck' . $i]) && $_REQUEST['noteCheck' . $i] > 0) {
                     $cumul += ($_REQUEST['noteagreger' . $i] * $_REQUEST['coeff' . $i]);
                     $diviseur += $_REQUEST['coeff' . $i];
-
                 }
             }
             if ($diviseur != 0) {
                 $res = $cumul / $diviseur;
                 $agregation = new Agregation(null, $_GET['nomAgregation'], $res, (new EtudiantRepository())->recupererParClePrimaire($_GET['etuid']));
-                (new AgregationRepository())->ajouter($agregation);
+                $idAgregation = (new AgregationRepository())->ajouter($agregation);
+                $agregation->setIdAgregation($idAgregation);
+                for ($i = 0 ; $i < $_REQUEST['id']; $i++){
+                    if(is_int($_REQUEST['idNom'.$i])) {
+                        echo "int";
+                        echo $_REQUEST['idNom'.$i];
+                    }else{
+                        (new EtudiantRepository())->enregistrerRessource($_REQUEST['idNom'.$i], $agregation->getIdAgregation(), $_REQUEST['coeff'.$i]);
+                    }
+                }
                 $notes = (new EtudiantRepository())->getNotesEtudiant($agregation->getEtudiant()->getEtudid());
                 $notesAgregees = (new EtudiantRepository())->recupererNotesAgregees($agregation->getEtudiant()->getEtudid());
                 self::afficherVue("vueGenerale.php", ["titre" => "page Etudiant", "cheminCorpsVue" => "etudiant/agregationCreee.php", "etudiant" => $agregation->getEtudiant(), "notes" => $notes, "notesAgregees" => $notesAgregees]);
