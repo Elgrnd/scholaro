@@ -35,4 +35,15 @@ class ConnexionUtilisateur
     public static function estUtilisateur($login): bool {
         return self::estConnecte() && self::getLoginUtilisateurConnecte() == $login;
     }
+
+    public static function estAdministrateur() : bool {
+        if (!self::estConnecte()) {
+            return false;
+        }
+        $utilisateur = (new UtilisateurRepository())->recupererParClePrimaire(self::getLoginUtilisateurConnecte());
+        if ($utilisateur == null) {
+            return false;
+        }
+        return $utilisateur->isEstAdmin();
+    }
 }
