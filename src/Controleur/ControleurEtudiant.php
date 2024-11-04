@@ -3,6 +3,8 @@
 namespace App\Sae\Controleur;
 
 
+use App\Sae\Lib\ConnexionUtilisateur;
+use App\Sae\Lib\MotDePasse;
 use App\Sae\Modele\DataObject\Agregation;
 use App\Sae\Modele\Repository\AgregationRepository;
 use App\Sae\Modele\Repository\EtudiantRepository;
@@ -99,7 +101,7 @@ class ControleurEtudiant extends ControleurGenerique
      * @param string $erreur message d'erreur à afficher
      * @return void afficher la page d'erreur
      */
-    public static function afficherErreur(string $erreur): void
+    public static function afficherErreur(string $erreur = ""): void
     {
         ControleurGenerique::afficherVue("vueGenerale.php", ["titre" => "Erreur", "cheminCorpsVue" => "etudiant/erreur.php", "erreur" => $erreur]);
     }
@@ -130,12 +132,13 @@ class ControleurEtudiant extends ControleurGenerique
                     $bac = $ligne["Bac"];
                     $specialite = $ligne["Spécialité"];
                     $rg_admis = $ligne["Rg. Adm."];
+                    $mdpHache = MotDePasse::hacher($ligne["code_nip"]);
 
                     if (!ctype_digit(substr($etudid, 0, 1))) {
                         break;
                     }
 
-                    $etudiant = new Etudiant((int)$etudid, $code_nip, $civ, $nomEtu, $prenomEtu, $bac, $specialite, (int)$rg_admis, "");
+                    $etudiant = new Etudiant((int)$etudid, $code_nip, $civ, $nomEtu, $prenomEtu, $bac, $specialite, (int)$rg_admis, "", $mdpHache);
                     (new EtudiantRepository())->ajouter($etudiant);
                 }
                 fclose($file);
@@ -145,6 +148,35 @@ class ControleurEtudiant extends ControleurGenerique
         } else {
             self::afficherErreur("Erreur lors de l'importation du fichier");
         }
+    }
+
+    public static function afficherFormulaireConnexion(): void
+    {
+        self::afficherVue("vueGenerale.php", ["titre" => "Connexion", "cheminCorpsVue" => "formulaireConnexion.php"]);
+    }
+
+    public static function connecter(): void
+    {
+        if (!isset($_REQUEST['login']) || !isset($_REQUEST['mdp'])) {
+            self::afficherErreur("Login et/ou mot de passe manquant(s)");
+            return;
+        }
+
+        $etudiant = (new EtudiantRepository())->recupererParClePrimaire($_REQUEST['login']);
+        if ($etudiant === null || !\App\Sae\Lib\MotDePasse::verifier($_REQUEST['mdp'], $etudiant->getMdpHache())) {
+            self::afficherErreur("Login et/ou mot de passe incorrect(s)");
+            return;
+        }
+
+        ConnexionUtilisateur::connecter($etudiant->getEtudid());
+        self::afficherVue("vueGenerale.php", ["titre" => "Connexion réussie !", "cheminCorpsVue" => "etudiant/etudiantConnecte.php", "etudiant" => $etudiant]);
+    }
+
+    public static function deconnecter(): void
+    {
+        ConnexionUtilisateur::deconnecter();
+        $etudiants = (new EtudiantRepository())->recuperer();
+        self::afficherVue("vueGenerale.php", ["titre" => "Déconnexion réussie !", "cheminCorpsVue" => "etudiant/etudiantDeconnecte.php", "etudiants" => $etudiants]);
     }
 
 }

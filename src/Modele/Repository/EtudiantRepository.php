@@ -14,7 +14,16 @@ class EtudiantRepository extends AbstractDataRepository
 
     protected function construireDepuisTableauSQL(array $objetFormatTableau): Etudiant
     {
-        return new Etudiant($objetFormatTableau['etudid'], $objetFormatTableau['codenip'], $objetFormatTableau['civ'] ,$objetFormatTableau['nomEtu'], $objetFormatTableau['prenomEtu'], $objetFormatTableau['bac'], $objetFormatTableau['specialite'], $objetFormatTableau['rg_admis'], $objetFormatTableau['avis']);
+        return new Etudiant($objetFormatTableau['etudid'],
+            $objetFormatTableau['codenip'],
+            $objetFormatTableau['civ'],
+            $objetFormatTableau['nomEtu'],
+            $objetFormatTableau['prenomEtu'],
+            $objetFormatTableau['bac'],
+            $objetFormatTableau['specialite'],
+            $objetFormatTableau['rg_admis'],
+            $objetFormatTableau['avis'],
+            $objetFormatTableau['mdpHache']);
     }
 
     /**
@@ -124,7 +133,7 @@ class EtudiantRepository extends AbstractDataRepository
 
     protected function getNomColonnes(): array
     {
-        return ["etudid", "codenip", "civ", "nomEtu", "prenomEtu", "bac", "specialite", "rg_admis", "avis"];
+        return ["etudid", "codenip", "civ", "nomEtu", "prenomEtu", "bac", "specialite", "rg_admis", "avis", "mdpHache"];
     }
 
     protected function formatTableauSQL(AbstractDataObject $objet): array
@@ -138,7 +147,8 @@ class EtudiantRepository extends AbstractDataRepository
             "bacTag"=> $objet->getBac(),
             "specialiteTag" => $objet->getSpecialite(),
             "rg_admisTag" => $objet->getRgadmis(),
-            "avisTag"=> $objet->getAvis()
+            "avisTag"=> $objet->getAvis(),
+            "mdpHacheTag" => $objet->getMdpHache()
         );
     }
 }
