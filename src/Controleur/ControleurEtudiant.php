@@ -9,19 +9,8 @@ use App\Sae\Modele\Repository\EtudiantRepository;
 use App\Sae\Modele\DataObject\Etudiant;
 
 
-class ControleurEtudiant
+class ControleurEtudiant extends ControleurGenerique
 {
-    /**
-     * @param string $cheminVue Le chemin de la vue à utiliser
-     * @param array $parametres des paramètres supplémentaire pour des informations spécifiques aux pages
-     * @return void fonctions à appeler pour afficher une vue
-     */
-
-    private static function afficherVue(string $cheminVue, array $parametres = []): void
-    {
-        extract($parametres); // Crée des variables à partir du tableau $parametres
-        require __DIR__ . "/../vue/$cheminVue"; // Charge la vue
-    }
 
     /**
      * @return void afficher la liste des étudiants
@@ -30,7 +19,7 @@ class ControleurEtudiant
     {
         $etudiants = (new EtudiantRepository())->recuperer();
 
-        self::afficherVue("vueGenerale.php", ["titre" => "Liste des etudiants", "cheminCorpsVue" => "etudiant/afficherListe.php", "etudiants" => $etudiants]);
+        ControleurGenerique::afficherVue("vueGenerale.php", ["titre" => "Liste des etudiants", "cheminCorpsVue" => "etudiant/liste.php", "etudiants" => $etudiants]);
 
     }
 
@@ -44,7 +33,7 @@ class ControleurEtudiant
             if ($etudiant) {
                 $notes = (new EtudiantRepository())->getNotesEtudiant($_GET['id']);
                 $notesAgregees = (new EtudiantRepository())->recupererNotesAgregees($_GET['id']);
-                self::afficherVue("vueGenerale.php", ["titre" => "page Etudiant", "cheminCorpsVue" => "etudiant/etudiantPage.php", "etudiant" => $etudiant, "notes" => $notes, "notesAgregees" => $notesAgregees]);
+                ControleurGenerique::afficherVue("vueGenerale.php", ["titre" => "page Etudiant", "cheminCorpsVue" => "etudiant/etudiantPage.php", "etudiant" => $etudiant, "notes" => $notes, "notesAgregees" => $notesAgregees]);
             } else {
                 self::afficherErreur("L'id n'est pas celle d'un étudiant");
             }
@@ -80,7 +69,7 @@ class ControleurEtudiant
                 }
                 $notes = (new EtudiantRepository())->getNotesEtudiant($agregation->getEtudiant()->getEtudid());
                 $notesAgregees = (new EtudiantRepository())->recupererNotesAgregees($agregation->getEtudiant()->getEtudid());
-                self::afficherVue("vueGenerale.php", ["titre" => "page Etudiant", "cheminCorpsVue" => "etudiant/agregationCreee.php", "etudiant" => $agregation->getEtudiant(), "notes" => $notes, "notesAgregees" => $notesAgregees]);
+                ControleurGenerique::afficherVue("vueGenerale.php", ["titre" => "page Etudiant", "cheminCorpsVue" => "etudiant/agregationCreee.php", "etudiant" => $agregation->getEtudiant(), "notes" => $notes, "notesAgregees" => $notesAgregees]);
             } else {
                 self::afficherErreur("Aucune note sélectionnée");
             }
@@ -97,7 +86,7 @@ class ControleurEtudiant
                 $etudiant = (new EtudiantRepository())->recupererParClePrimaire($_GET['etudid']);
                 $notes = (new EtudiantRepository())->getNotesEtudiant($etudiant->getEtudid());
                 $notesAgregees = (new EtudiantRepository())->recupererNotesAgregees($etudiant->getEtudid());
-                self::afficherVue("vueGenerale.php", ["titre" => "page Etudiant", "cheminCorpsVue" => "etudiant/agregationSuppr.php", "etudiant" => $etudiant, "notes" => $notes, "notesAgregees" => $notesAgregees]);
+                ControleurGenerique::afficherVue("vueGenerale.php", ["titre" => "page Etudiant", "cheminCorpsVue" => "etudiant/agregationSuppr.php", "etudiant" => $etudiant, "notes" => $notes, "notesAgregees" => $notesAgregees]);
             } else {
                 self::afficherErreur("Agregation inconnu");
             }
@@ -110,9 +99,9 @@ class ControleurEtudiant
      * @param string $erreur message d'erreur à afficher
      * @return void afficher la page d'erreur
      */
-    public static function afficherErreur(string $erreur): void
+    protected static function afficherErreur(string $erreur): void
     {
-        self::afficherVue("vueGenerale.php", ["titre" => "Erreur", "cheminCorpsVue" => "etudiant/erreur.php", "erreur" => $erreur]);
+        ControleurGenerique::afficherVue("vueGenerale.php", ["titre" => "Erreur", "cheminCorpsVue" => "etudiant/erreur.php", "erreur" => $erreur]);
     }
 
     public static function ajouterDepuisCSV(): void
@@ -152,7 +141,7 @@ class ControleurEtudiant
                 fclose($file);
             }
             $etudiants = (new EtudiantRepository())->recuperer();
-            self::afficherVue("vueGenerale.php", ["titre" => "Etudiants importés avec succès", "cheminCorpsVue" => "etudiant/etudiantsImportes.php", "etudiants" => $etudiants]);
+            ControleurGenerique::afficherVue("vueGenerale.php", ["titre" => "Etudiants importés avec succès", "cheminCorpsVue" => "etudiant/etudiantsImportes.php", "etudiants" => $etudiants]);
         } else {
             self::afficherErreur("Erreur lors de l'importation du fichier");
         }
