@@ -43,9 +43,9 @@ class AgregationRepository extends AbstractDataRepository
     public function listeRessourcesAgregees(int $idAgregation, int $etudid): array
     {
         $sql = "SELECT r.nomRessource, note, coefficient 
-        FROM ressource_Agregation a 
+        FROM agregerRessource a 
         JOIN ressource r ON a.nomRessource = r.nomRessource 
-        JOIN etu_Note_Semestre e ON e.nomRessource = r.nomRessource WHERE idAgregation = :idAgregationTag AND etudid = :etudidTag";
+        JOIN noter e ON e.nomRessource = r.nomRessource WHERE idAgregation = :idAgregationTag AND etudid = :etudidTag";
         $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
         $values = array("idAgregationTag" => $idAgregation,
             "etudidTag" => $etudid);
@@ -64,7 +64,7 @@ class AgregationRepository extends AbstractDataRepository
     public function listeAgregationsAgregees(int $idAgregation): array
     {
         $sql = "SELECT aa.idAgregationAgregee, nomAgregation, noteAgregation, coefficient 
-        FROM agreger_agregation aa
+        FROM agregerAgregation aa
         JOIN agregation a ON a.idAgregation = aa.idAgregationAgregee
         WHERE aa.idAgregation = :idAgregationTag";
         $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
