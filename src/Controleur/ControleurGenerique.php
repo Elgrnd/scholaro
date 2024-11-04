@@ -15,4 +15,13 @@ class ControleurGenerique
         extract($parametres); // Crée des variables à partir du tableau $parametres
         require __DIR__ . "/../vue/$cheminVue"; // Charge la vue
     }
+
+    /**
+     * @param string $erreur message d'erreur à afficher
+     * @return void afficher la page d'erreur
+     */
+    public static function afficherErreur(string $erreur = ""): void
+    {
+        ControleurGenerique::afficherVue("vueGenerale.php", ["titre" => "Erreur", "cheminCorpsVue" => "etudiant/erreur.php", "erreur" => $erreur]);
+    }
 }
