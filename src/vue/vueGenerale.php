@@ -25,7 +25,10 @@
                     <a href="controleurFrontal.php?action=afficherListe">ACCUEIL</a>
                 </li>
                 <li>
-                    <a href="controleurFrontal.php?action=afficherListe">LISTE</a>
+                    <a href="controleurFrontal.php?action=afficherListe">LISTE ETUDIANTS</a>
+                </li>
+                <li>
+                    <a href="controleurFrontal.php?action=afficherListe&controleur=agregation">LISTE AGREGATIONS</a>
                 </li>
                 <li>
                     <a href="#"><img class="logout" src="../ressources/images/logout.png" alt="se déconnecter"/></a>
