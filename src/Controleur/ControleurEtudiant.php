@@ -99,7 +99,7 @@ class ControleurEtudiant extends ControleurGenerique
      * @param string $erreur message d'erreur à afficher
      * @return void afficher la page d'erreur
      */
-    protected static function afficherErreur(string $erreur): void
+    public static function afficherErreur(string $erreur): void
     {
         ControleurGenerique::afficherVue("vueGenerale.php", ["titre" => "Erreur", "cheminCorpsVue" => "etudiant/erreur.php", "erreur" => $erreur]);
     }
