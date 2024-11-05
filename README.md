@@ -36,7 +36,8 @@ Créez un fichier de configuration d’environnement pour stocker les variables 
 Modifiez .env pour inclure les informations spécifiques à votre environnement :
 
     nano .env
-    Enregistrez et quittez.
+    
+Enregistrez et quittez.
 
 <h3>6. Démarrage du serveur</h3>
 
@@ -55,20 +56,21 @@ Accédez à l'URL de votre serveur pour vérifier que le site web est correcteme
 Note : Assurez-vous que le conteneur serveurWebIUT dispose des ports réseau ouverts pour autoriser l'accès externe si nécessaire.
 
 <h2>URL du site</h2>
-/home/ann2/lyfoungn/public_html
+
+    https://webinfo.iutmontp.univ-montp2.fr/~lyfoungn/sae3a-base/web/controleurFrontal.php
 
 <h2> Login / mot de passe </h2>
-Professeur : pallejax / ok
-
-Etudiant : 99 / 22000151
+    Professeur (admin): pallejax / ok
+    Professeur (non admin) pallejan / okok
+    Etudiant : 99 / 22000151
 
 <h2> Fonctionnalités </h2>
-1 - Importation Etudiant en xlsx
+    1 - Importation des informations des étudiants en .csv
 
-2 - Agregation de Note
+    2 - Agrégations de notes
 
-3 - Agregation d'agregation
+    3 - Agrégations d'agrégations
 
-4 - Connection d'un professeur
+    4 - Connexion d'un professeur
 
-5 - Connection d'un étudiant
+    5 - Connexion d'un étudiant
