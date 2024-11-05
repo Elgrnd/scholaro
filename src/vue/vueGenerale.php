@@ -30,9 +30,15 @@
                 <li>
                     <a href="controleurFrontal.php?action=afficherListe&controleur=agregation">LISTE AGREGATIONS</a>
                 </li>
-                <li>
-                    <a href="#"><img class="logout" src="../ressources/images/logout.png" alt="se déconnecter"/></a>
-                </li>
+                <?php if (!\App\Sae\Lib\ConnexionUtilisateur::estConnecte()) {
+                    echo "<li>
+                    <a href='controleurFrontal.php?action=afficherFormulaireConnexion'>SE CONNECTER</a>
+                </li>";
+                } else {
+                    echo "<li>
+                    <a href='controleurFrontal.php?action=deconnecter'><img class='logout' src='../ressources/images/logout.png' alt='se déconnecter'/></a>
+                </li>";
+                }?>
             </ul>
         </div>
     </nav>

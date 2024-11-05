@@ -15,7 +15,13 @@ class ControleurGenerique
         extract($parametres); // Crée des variables à partir du tableau $parametres
         require __DIR__ . "/../vue/$cheminVue"; // Charge la vue
     }
-    public static function afficherConnexion(): void {
-        self::afficherVue('vueGenerale.php', ["titre" => "Connexion", "cheminCorpsVue" => "formulaireConnexion.php"]);
+
+    /**
+     * @param string $erreur message d'erreur à afficher
+     * @return void afficher la page d'erreur
+     */
+    protected static function afficherErreur(string $erreur = ""): void
+    {
+        ControleurGenerique::afficherVue("vueGenerale.php", ["titre" => "Erreur", "cheminCorpsVue" => "etudiant/erreur.php", "erreur" => $erreur]);
     }
 }
