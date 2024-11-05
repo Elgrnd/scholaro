@@ -1,13 +1,14 @@
-# Base de Donne
+# Base de Données
 
-<h2>Modèle entité association</h2>
+<h2>Modèle entité-association</h2>
 <img src="/ressources/images/bdsae.png">
 
-<h2>Détail</h2>
-Nom de la base de donnée : SAE3A_Q2B
+<h2>Détails</h2>
 
-Trigger : aucun
+    Nom de la base de donnée : SAE3A_Q2B
 
-procédure stockée : aucun
+    Triggers : Aucun
 
-fonction stockée : aucun
+    Procédures stockées : Aucune
+
+    Fonctions stockées : Aucunes
