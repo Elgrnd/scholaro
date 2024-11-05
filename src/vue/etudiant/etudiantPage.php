@@ -53,7 +53,7 @@
             $id+= 1;
         }
         if(!empty($notesAgregees)){
-            echo "<h3> Notes agrégées de l'élève : </h3>";
+            echo "<h3> Notes agrégées : </h3>";
             foreach ($notesAgregees as $noteAgregee) {
                 echo '
                 <p> Nom : '.$noteAgregee->getNomAgregation() .'  Note : '.$noteAgregee->getNoteAgregation() .'<a href="?controleur=etudiant&action=supprimerAgregation&idNoteAgregee=' . rawurldecode($noteAgregee->getIdAgregation()) . '&etudid='.$etudiant->getEtudid().'"> Supprimer l\'agregation  </a></p>
