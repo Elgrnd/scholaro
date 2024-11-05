@@ -2,6 +2,7 @@
 require_once __DIR__ . '/../src/Lib/Psr4AutoloaderClass.php';
 
 use App\Sae\Controleur\ControleurEtudiant as ControleurEtudiant;
+use App\Sae\Lib\ChoixControleur;
 
 // initialisation en activant l'affichage de débogage
 $chargeurDeClasse = new App\Sae\Lib\Psr4AutoloaderClass(false);
@@ -23,7 +24,6 @@ if (isset($_REQUEST['controleur'])) {
 // Vérifier si la classe du contrôleur existe, sinon afficher une erreur
 if (!class_exists($nomDeClasseControleur)) {
     $nomDeClasseControleur = 'App\Sae\Controleur\ControleurEtudiant';
-    echo 'ratio1';
     $action = 'afficherErreur';
 } else {
     // Si l'action est définie, la vérifier et l'utiliser

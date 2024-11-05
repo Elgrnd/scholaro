@@ -16,7 +16,6 @@ class ProfesseurRepository extends AbstractDataRepository
     protected function construireDepuisTableauSQL(array $objetFormatTableau): Professeur
     {
         return new Professeur(
-            $objetFormatTableau["idProf"],
             $objetFormatTableau["nomProf"],
             $objetFormatTableau["prenomProf"],
             $objetFormatTableau["loginProf"],
@@ -35,19 +34,18 @@ class ProfesseurRepository extends AbstractDataRepository
 
     protected function getNomClePrimaire(): string
     {
-        return "idProf";
+        return "loginProf";
     }
 
     protected function getNomColonnes(): array
     {
-        return ["idProf", "nomProf", "prenomProf", "loginProf", "mdpHache", "estAdmin"];
+        return ["nomProf", "prenomProf", "loginProf", "mdpHache", "estAdmin"];
     }
 
     protected function formatTableauSQL(AbstractDataObject $objet): array
     {
         $val = $objet->isEstAdmin() ? 1 : 0;
         return array(
-            "idProf" => $objet->getIdProf(),
             "nomProf" => $objet->getNomProf(),
             "prenomProf" => $objet->getPrenomProf(),
             "loginProf" => $objet->getLoginProf(),

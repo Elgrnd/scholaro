@@ -165,14 +165,13 @@ class ControleurEtudiant extends ControleurGenerique
             self::afficherErreur("Erreur lors de l'importation du fichier");
         }
     }
-
-    public static function afficherFormulaireConnexion(): void
-    {
-        self::afficherVue("vueGenerale.php", ["titre" => "Connexion", "cheminCorpsVue" => "formulaireConnexion.php"]);
-    }
-
     public static function connecter(): void
     {
+        if ($_REQUEST['choix_controleur'] != 'etudiant') {
+            self::afficherErreur("Vous n'êtes pas un professeur ou une école");
+            return;
+        }
+
         if (!isset($_REQUEST['login']) || !isset($_REQUEST['mdp'])) {
             self::afficherErreur("Login et/ou mot de passe manquant(s)");
             return;

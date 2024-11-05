@@ -5,7 +5,6 @@ namespace App\Sae\Modele\DataObject;
 use App\Sae\Modele\DataObject\AbstractDataObject;
 
 class Professeur extends AbstractDataObject {
-    private int $idProf;
     private string $nomProf;
     private string $prenomProf;
     private string $loginProf;
@@ -14,31 +13,19 @@ class Professeur extends AbstractDataObject {
 
 
     /**
-     * @param int $idProf
      * @param string $nomProf
      * @param string $prenomProf
      * @param string $loginProf
      * @param string $mdpHache
      * @param bool $estAdmin
      */
-    public function __construct(int $idProf, string $nomProf, string $prenomProf, string $loginProf, string $mdpHache, bool $estAdmin)
+    public function __construct(string $nomProf, string $prenomProf, string $loginProf, string $mdpHache, bool $estAdmin)
     {
-        $this->idProf = $idProf;
         $this->nomProf = $nomProf;
         $this->prenomProf = $prenomProf;
         $this->loginProf = $loginProf;
         $this->mdpHache = $mdpHache;
         $this->estAdmin = $estAdmin;
-    }
-
-    public function getIdProf(): int
-    {
-        return $this->idProf;
-    }
-
-    public function setIdProf(int $idProf): void
-    {
-        $this->idProf = $idProf;
     }
 
     public function getNomProf(): string

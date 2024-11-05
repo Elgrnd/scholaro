@@ -2,6 +2,8 @@
 
 namespace App\Sae\Controleur;
 
+use App\Sae\Lib\ChoixControleur;
+
 class ControleurGenerique
 {
 
@@ -14,5 +16,10 @@ class ControleurGenerique
     {
         extract($parametres); // Crée des variables à partir du tableau $parametres
         require __DIR__ . "/../vue/$cheminVue"; // Charge la vue
+    }
+
+    public static function afficherFormulaireConnexion(): void
+    {
+        self::afficherVue("vueGenerale.php", ["titre" => "Connexion", "cheminCorpsVue" => "formulaireConnexion.php"]);
     }
 }

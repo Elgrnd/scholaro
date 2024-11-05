@@ -1,6 +1,6 @@
 <?php
 
-namespace App\SAE\Modele\HTTP;
+namespace App\Sae\Modele\HTTP;
 
 class Cookie
 {
