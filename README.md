@@ -58,7 +58,7 @@ Note : Assurez-vous que le conteneur serveurWebIUT dispose des ports réseau ouv
 /home/ann2/lyfoungn/public_html
 
 <h2> Login / mot de passe </h2>
-Professeur : pallejax / 
+Professeur : pallejax / ok
 
 Etudiant : 99 / 22000151
 
