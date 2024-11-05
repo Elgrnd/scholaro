@@ -86,7 +86,7 @@
 
     if($etudiant->getAvis() != null) {
         echo '<p> Avis </p>';
-        echo '<p>' . $etudiant->getAvis() . ' </p>';
+        echo '<p>' . htmlspecialchars($etudiant->getAvis()) . ' </p>';
     }
     ?>
 </div>

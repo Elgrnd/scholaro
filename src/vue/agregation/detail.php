@@ -3,7 +3,7 @@
 /**
  * @var \App\Sae\Modele\DataObject\Agregation $agregation
  */
-echo '<p> Nom agragation : '. $agregation->getNomAgregation() .' </p> <p> Note : '. $agregation->getNoteAgregation() . "</p>";
+echo '<p> Nom agragation : '. htmlspecialchars($agregation->getNomAgregation()) .' </p> <p> Note : '. $agregation->getNoteAgregation() . "</p>";
 
 ?>
 
@@ -21,7 +21,7 @@ if (!empty($listeRessources)) {
 if(!empty($listeAgregations)){
     echo "<h3>liste agregations :</h3>";
     foreach ($listeAgregations as $agregation) {
-        echo "<div class='cont' <p> id :" . $agregation[0] . ' </p> <p> Nom :' . $agregation[1] . ' </p> <p> Note : ' . $agregation[2] .'</p> <p> Coefficient : ' .$agregation[3] . "</p> </div>";
+        echo "<div class='cont' <p> id :" . $agregation[0] . ' </p> <p> Nom :' . htmlspecialchars($agregation[1]) . ' </p> <p> Note : ' . $agregation[2] .'</p> <p> Coefficient : ' .$agregation[3] . "</p> </div>";
     }
 }
 ?>
