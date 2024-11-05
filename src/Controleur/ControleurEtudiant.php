@@ -184,14 +184,13 @@ class ControleurEtudiant extends ControleurGenerique
         }
 
         ConnexionUtilisateur::connecter($etudiant->getEtudid());
-        self::afficherVue("vueGenerale.php", ["titre" => "Connexion réussie !", "cheminCorpsVue" => "etudiant/etudiantConnecte.php", "etudiant" => $etudiant]);
+        self::afficherVue("vueGenerale.php", ["titre" => "Connexion réussie !", "cheminCorpsVue" => "etudiant/etudiantConnecte.php"]);
     }
 
     public static function deconnecter(): void
     {
         ConnexionUtilisateur::deconnecter();
-        $etudiants = (new EtudiantRepository())->recuperer();
-        self::afficherVue("vueGenerale.php", ["titre" => "Déconnexion réussie !", "cheminCorpsVue" => "etudiant/etudiantDeconnecte.php", "etudiants" => $etudiants]);
+        self::afficherVue("vueGenerale.php", ["titre" => "Déconnexion réussie !", "cheminCorpsVue" => "etudiant/etudiantDeconnecte.php"]);
     }
 
 
