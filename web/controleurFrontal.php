@@ -9,7 +9,7 @@ $chargeurDeClasse->register();
 // enregistrement d'une association "espace de nom" → "dossier"
 $chargeurDeClasse->addNamespace("App\Sae", __DIR__ . '/../src');
 
-$action = 'afficherListe';
+$action = 'afficherFormulaireConnexion';
 $nomDeClasseControleur = '';
 
 // Vérifier si 'controleur' est défini et construire le nom de la classe du contrôleur
