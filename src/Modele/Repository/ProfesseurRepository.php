@@ -1,9 +1,10 @@
 <?php
 
-namespace Modele\Repository;
+namespace App\Sae\Modele\Repository;
 
+use App\Sae\Modele\DataObject\AbstractDataObject;
 use App\Sae\Modele\Repository\AbstractDataRepository;
-use Modele\DataObject\Professeur;
+use App\Sae\Modele\DataObject\Professeur;
 
 class ProfesseurRepository extends AbstractDataRepository
 {

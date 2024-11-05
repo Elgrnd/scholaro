@@ -1,6 +1,6 @@
 <?php
 
-namespace Modele\DataObject;
+namespace App\Sae\Modele\DataObject;
 
 use App\Sae\Modele\DataObject\AbstractDataObject;
 

@@ -3,7 +3,7 @@
 namespace App\Sae\Lib;
 
 use App\Sae\Modele\HTTP\Session;
-use Modele\Repository\ProfesseurRepository;
+use App\Sae\Modele\Repository\ProfesseurRepository;
 
 class ConnexionUtilisateur
 {
