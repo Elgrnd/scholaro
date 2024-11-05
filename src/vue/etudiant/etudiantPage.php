@@ -16,7 +16,7 @@ $id = 0;
     foreach ($notes as $note) {
         echo "<br>";
         echo "Nom $note[2] : Note $note[3] <p>
-                <label for='noteId$id'> Agrégée la note</label> :
+                <label for='noteId$id'> Agréger la note ?</label> :
                 <input type='checkbox' name='noteCheck$id' id='noteId$id'/>
                 <input type='hidden' value='$note[3]' name='noteagreger$id' id='noteaAgreger$id'/>
                 <input type='number' name='coeff$id' value='1' id='coefNote$id'/>
@@ -31,7 +31,7 @@ $id = 0;
             echo '<br> 
             <p> Nom : '.$noteAgregee->getNomAgregation() .'  Note : '.$noteAgregee->getNoteAgregation() .'<a href="?controleur=etudiant&action=supprimerAgregation&idNoteAgregee=' . rawurldecode($noteAgregee->getIdAgregation()) . '&etudid='.$etudiant->getEtudid().'"> Supprimer l\'agregation  </a></p>
                 <p>
-                <label for="noteAgregationId'.$id.'"> Agrégée l\'agregation</label> :
+                <label for="noteAgregationId'.$id.'"> Agréger l\'agregation ?</label> :
                 <input type="checkbox" name="noteCheck'.$id.'" id="noteAgregationId'.$id.'"/>
                 <input type="hidden" value='.$noteAgregee->getNoteAgregation().' name="noteagreger'.$id.'" id="AgregationaAgreger'.$id.'"/>
                 <input type="number" name="coeff'.$id.'" value="1" id="coefAgregation'.$id.'"/>
@@ -43,7 +43,7 @@ $id = 0;
     foreach ($notes as $note) {}
     echo "<br> 
             <p>
-                <label for='nomA_id'>Nom de l'agragation</label> :
+                <label for='nomA_id'>Nom de l'agrégation</label> :
                 <input type='text' placeholder='Nom Agregation' name='nomAgregation' id='nomA_id' required/>
                 <input type='hidden' name='action' value='creerAgregation'>
                 <input type='hidden' name='controleur' value='etudiant'>
@@ -54,7 +54,7 @@ $id = 0;
 </fieldset>
     </form>";
 } else {
-    echo "<p> l'étudiant n'a pas de notes</p>";
+    echo "<p> L'étudiant n'a pas de notes</p>";
 }
 
 if($etudiant->getAvis() != null) {

@@ -16,13 +16,11 @@
         foreach ($agregations as $agregation) {
             echo '
    <tr>
-    <td>'.$agregation->getIdAgregation().' </td>
-    <td>'.$agregation->getNomAgregation().'</td>
-    <td>'.$agregation->getNoteAgregation().'</td> 
-    <td>'.$agregation->getEtudiant()->getEtudid().' </td>
-    </tr>
-     
-    ';
+    <td> <a href="?controleur=agregation&action=afficherDetail&id=' . rawurlencode($agregation->getIdAgregation()) . '">' . $agregation->getIdAgregation() . '</a></td>
+    <td><a href="?controleur=agregation&action=afficherDetail&id=' . rawurlencode($agregation->getIdAgregation()) . '">' . htmlspecialchars($agregation->getNomAgregation()) . '</td>
+    <td><a href="?controleur=agregation&action=afficherDetail&id=' . rawurlencode($agregation->getIdAgregation()) . '">' . htmlspecialchars($agregation->getNoteAgregation()) . '</td> 
+    <td><a href="?controleur=agregation&action=afficherDetail&id=' . rawurlencode($agregation->getIdAgregation()) . '">' . htmlspecialchars($agregation->getEtudiant()->getEtudid()) . ' </td>
+    </tr>';
         }
         ?>
         </tbody>
