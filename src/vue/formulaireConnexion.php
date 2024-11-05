@@ -10,20 +10,16 @@
             <label class="InputAddOn-item" for="mdp_id">Mot de passe&#42;</label>
             <input class="InputAddOn-field" type="password" value="" placeholder="" name="mdp" id="mdp_id" required>
         </p>
-        <form action="controleurFrontal.php" method="get">
-            <input type='hidden' name='action' value='enregistrerControleur'>
-            <p class="InputAddOn">
-                <input class="InputAddOn-field" type="radio" id="etudiantId" name="choix_controleur" value="etudiant" onchange="this.form.submit()">
-                <label class="InputAddOn-item" for="etudiantId">Étudiant</label>
-            </p>
-            <p class="InputAddOn">
-                <input class="InputAddOn-field" type="radio" id="professeurId" name="choix_controleur"
-                       value="professeur" onchange="this.form.submit()">
-                <label class="InputAddOn-item" for="professeurId">Professeur</label>
-            </p>
-        </form>
+        <p class="InputAddOn">
+            <input class="InputAddOn-field" type="radio" id="etudiantId" name="choix_controleur" value="etudiant">
+            <label class="InputAddOn-item" for="etudiantId">Étudiant</label>
+        </p>
+        <p class="InputAddOn">
+            <input class="InputAddOn-field" type="radio" id="professeurId" name="choix_controleur" value="professeur">
+            <label class="InputAddOn-item" for="professeurId">Professeur</label>
+        </p>
         <p>
-            <input type="submit" value="Envoyer"/>
+            <input type="submit" value="Envoyer" />
         </p>
     </fieldset>
 </form>
