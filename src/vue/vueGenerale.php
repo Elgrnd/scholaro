@@ -37,7 +37,7 @@
                 if (ConnexionUtilisateur::estEtudiant()) {
                     $login = rawurlencode(ConnexionUtilisateur::getLoginUtilisateurConnecte());
                     echo "<li>
-                            <a href=\"controleurFrontal.php?action=afficherEtudiantPage&id=$login\">PROFIL</a>
+                            <a href=\"controleurFrontal.php?action=afficherEtudiantPage&id=$login&controleur=etudiant\">PROFIL</a>
                           </li>";
                 }
                 if (!ConnexionUtilisateur::estConnecte()) {
