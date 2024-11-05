@@ -15,4 +15,7 @@ class ControleurGenerique
         extract($parametres); // Crée des variables à partir du tableau $parametres
         require __DIR__ . "/../vue/$cheminVue"; // Charge la vue
     }
+    public static function afficherConnexion(): void {
+        self::afficherVue('vueGenerale.php', ["titre" => "Connexion", "cheminCorpsVue" => "formulaireConnexion.php"]);
+    }
 }
