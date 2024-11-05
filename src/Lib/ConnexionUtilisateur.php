@@ -3,6 +3,7 @@
 namespace App\Sae\Lib;
 
 use App\Sae\Modele\HTTP\Session;
+use App\Sae\Modele\Repository\EtudiantRepository;
 use App\Sae\Modele\Repository\ProfesseurRepository;
 
 class ConnexionUtilisateur
@@ -46,5 +47,14 @@ class ConnexionUtilisateur
             return false;
         }
         return $utilisateur->isEstAdmin();
+    }
+
+    public static function estEtudiant() : bool
+    {
+        if (!self::estConnecte()) {
+            return false;
+        }
+        $utilisateur = (new EtudiantRepository())->recupererParClePrimaire(self::getLoginUtilisateurConnecte());
+        return $utilisateur != null;
     }
 }

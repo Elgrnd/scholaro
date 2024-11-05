@@ -21,16 +21,26 @@
         <img class="logo" src="../ressources/images/logo_IUT.png" alt="logo" />
         <div class="nav_links">
             <ul>
-                <li>
-                    <a href="controleurFrontal.php?action=afficherListe">ACCUEIL</a>
+                <?php
+
+                    use App\Sae\Lib\ConnexionUtilisateur;
+                    use App\Sae\Modele\Repository\EtudiantRepository;
+
+                if (ConnexionUtilisateur::estAdministrateur()) {
+                    echo "<li>
+                    <a href='controleurFrontal.php?action=afficherListe'>LISTE ETUDIANTS</a>
                 </li>
                 <li>
-                    <a href="controleurFrontal.php?action=afficherListe">LISTE ETUDIANTS</a>
-                </li>
-                <li>
-                    <a href="controleurFrontal.php?action=afficherListe&controleur=agregation">LISTE AGREGATIONS</a>
-                </li>
-                <?php if (!\App\Sae\Lib\ConnexionUtilisateur::estConnecte()) {
+                    <a href='controleurFrontal.php?action=afficherListe&controleur=agregation'>LISTE AGREGATIONS</a>
+                </li>";
+                }
+                if (ConnexionUtilisateur::estEtudiant()) {
+                    $login = rawurlencode(ConnexionUtilisateur::getLoginUtilisateurConnecte());
+                    echo "<li>
+                            <a href=\"controleurFrontal.php?action=afficherEtudiantPage&id=$login\">PROFIL</a>
+                          </li>";
+                }
+                if (!ConnexionUtilisateur::estConnecte()) {
                     echo "<li>
                     <a href='controleurFrontal.php?action=afficherFormulaireConnexion'>SE CONNECTER</a>
                 </li>";
