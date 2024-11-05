@@ -179,7 +179,7 @@ class ControleurEtudiant extends ControleurGenerique
         }
 
         $etudiant = (new EtudiantRepository())->recupererParClePrimaire($_REQUEST['login']);
-        if ($etudiant === null || !\App\Sae\Lib\MotDePasse::verifier($_REQUEST['mdp'], $etudiant->getMdpHache())) {
+        if ($etudiant === null || !MotDePasse::verifier($_REQUEST['mdp'], $etudiant->getMdpHache())) {
             self::afficherErreur("Login et/ou mot de passe incorrect(s)");
             return;
         }
