@@ -23,10 +23,14 @@ class ControleurProfesseur extends ControleurGenerique
         }
 
         ConnexionUtilisateur::connecter($professeur->getLoginProf());
-        self::afficherVue("vueGenerale.php", ["titre" => "Connexion réussie !", "cheminCorpsVue" => "etudiant/etudiantConnecte.php", "professeur" => $professeur]);
+        self::afficherVue("vueGenerale.php", ["titre" => "Connexion réussie !", "cheminCorpsVue" => "professeur/professeurConnecte.php"]);
     }
 
-    
+    public static function deconnecter(): void
+    {
+        ConnexionUtilisateur::deconnecter();
+        self::afficherVue("vueGenerale.php", ["titre" => "Déconnexion réussie !", "cheminCorpsVue" => "professeur/professeurDeconnecte.php"]);
+    }
 
     /**
      * @param string $erreur message d'erreur à afficher
