@@ -17,16 +17,13 @@ $nomDeClasseControleur = '';
 if (isset($_REQUEST['controleur'])) {
     $controleur = ucfirst($_REQUEST['controleur']);
     $nomDeClasseControleur = "App\Sae\Controleur\Controleur" . $controleur;
-} else if (ChoixControleur::existe()){
-    $nomDeClasseControleur = "App\Covoiturage\Controleur\Controleur" . ucfirst(ChoixControleur::lire());
-}else {
+} else {
     $nomDeClasseControleur = "App\Sae\Controleur\ControleurEtudiant";
 }
 
 // Vérifier si la classe du contrôleur existe, sinon afficher une erreur
 if (!class_exists($nomDeClasseControleur)) {
     $nomDeClasseControleur = 'App\Sae\Controleur\ControleurEtudiant';
-    echo 'ratio1';
     $action = 'afficherErreur';
 } else {
     // Si l'action est définie, la vérifier et l'utiliser

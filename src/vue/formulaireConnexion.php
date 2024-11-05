@@ -11,11 +11,11 @@
             <input class="InputAddOn-field" type="password" value="" placeholder="" name="mdp" id="mdp_id" required>
         </p>
         <p class="InputAddOn">
-            <input class="InputAddOn-field" type="radio" id="etudiantId" name="choix_controleur" value="etudiant">
+            <input class="InputAddOn-field" type="radio" id="etudiantId" name="controleur" value="etudiant">
             <label class="InputAddOn-item" for="etudiantId">Étudiant</label>
         </p>
         <p class="InputAddOn">
-            <input class="InputAddOn-field" type="radio" id="professeurId" name="choix_controleur" value="professeur">
+            <input class="InputAddOn-field" type="radio" id="professeurId" name="controleur" value="professeur">
             <label class="InputAddOn-item" for="professeurId">Professeur</label>
         </p>
         <p>
