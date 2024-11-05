@@ -2,9 +2,10 @@
 
 namespace Modele\Repository;
 
+use App\Sae\Modele\Repository\AbstractDataRepository;
 use Modele\DataObject\Professeur;
 
-class ProfesseurRepository
+class ProfesseurRepository extends AbstractDataRepository
 {
     /**
      * @param array $objetFormatTableau
