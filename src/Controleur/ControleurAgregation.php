@@ -38,8 +38,4 @@ class ControleurAgregation extends ControleurGenerique
         }
     }
 
-    public static function afficherErreur(string $erreur): void
-    {
-        ControleurGenerique::afficherVue("vueGenerale.php", ["titre" => "Erreur", "cheminCorpsVue" => "agregation/erreur.php", "erreur" => $erreur]);
-    }
 }
