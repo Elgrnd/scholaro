@@ -2,7 +2,7 @@
 <?php
 /**
  * @var \App\Sae\Modele\DataObject\Agregation $agregation
- */docs
+ */
 echo '<p> Nom agragation : '. $agregation->getNomAgregation() .' </p> <p> Note : '. $agregation->getNoteAgregation() . "</p>";
 
 ?>
