@@ -35,7 +35,7 @@ abstract class AbstractDataRepository
         }
         $colonnesTag = substr($colonnesTag, 0, -2);
 
-        $sql = "INSERT INTO $nomTable ($nomsColonnes) VALUES ($colonnesTag)";
+        $sql = "INSERT IGNORE INTO $nomTable ($nomsColonnes) VALUES ($colonnesTag)";
         $pdo = ConnexionBaseDeDonnees::getPdo();
         $pdoStatement = $pdo->prepare($sql);
         $values = $this->formatTableauSQL($objet);
