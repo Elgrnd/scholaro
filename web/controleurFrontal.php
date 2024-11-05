@@ -2,6 +2,7 @@
 require_once __DIR__ . '/../src/Lib/Psr4AutoloaderClass.php';
 
 use App\Sae\Controleur\ControleurEtudiant as ControleurEtudiant;
+use App\Sae\Lib\ChoixControleur;
 
 // initialisation en activant l'affichage de débogage
 $chargeurDeClasse = new App\Sae\Lib\Psr4AutoloaderClass(false);
@@ -16,7 +17,9 @@ $nomDeClasseControleur = '';
 if (isset($_REQUEST['controleur'])) {
     $controleur = ucfirst($_REQUEST['controleur']);
     $nomDeClasseControleur = "App\Sae\Controleur\Controleur" . $controleur;
-} else {
+} else if (ChoixControleur::existe()){
+    $nomDeClasseControleur = "App\Covoiturage\Controleur\Controleur" . ucfirst(ChoixControleur::lire());
+}else {
     $nomDeClasseControleur = "App\Sae\Controleur\ControleurEtudiant";
 }
 
