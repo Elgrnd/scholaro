@@ -179,7 +179,7 @@ class ControleurEtudiant extends ControleurGenerique
         }
 
         $etudiant = (new EtudiantRepository())->recupererParClePrimaire($_REQUEST['login']);
-        if ($etudiant === null || !\App\Sae\Lib\MotDePasse::verifier($_REQUEST['mdp'], $etudiant->getMdpHache())) {
+        if ($etudiant === null || !MotDePasse::verifier($_REQUEST['mdp'], $etudiant->getMdpHache())) {
             self::afficherErreur("Login et/ou mot de passe incorrect(s)");
             return;
         }
@@ -195,4 +195,13 @@ class ControleurEtudiant extends ControleurGenerique
         self::afficherVue("vueGenerale.php", ["titre" => "Déconnexion réussie !", "cheminCorpsVue" => "etudiant/etudiantDeconnecte.php", "etudiants" => $etudiants]);
     }
 
+
+    /**
+     * @param string $erreur message d'erreur à afficher
+     * @return void afficher la page d'erreur
+     */
+    public static function afficherErreur(string $erreur = ""): void
+    {
+        ControleurGenerique::afficherVue("vueGenerale.php", ["titre" => "Erreur", "cheminCorpsVue" => "etudiant/erreur.php", "erreur" => $erreur]);
+    }
 }

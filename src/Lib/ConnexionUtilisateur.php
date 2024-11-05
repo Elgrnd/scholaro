@@ -3,6 +3,7 @@
 namespace App\Sae\Lib;
 
 use App\Sae\Modele\HTTP\Session;
+use App\Sae\Modele\Repository\ProfesseurRepository;
 
 class ConnexionUtilisateur
 {
@@ -40,7 +41,7 @@ class ConnexionUtilisateur
         if (!self::estConnecte()) {
             return false;
         }
-        $utilisateur = (new UtilisateurRepository())->recupererParClePrimaire(self::getLoginUtilisateurConnecte());
+        $utilisateur = (new ProfesseurRepository())->recupererParClePrimaire(self::getLoginUtilisateurConnecte());
         if ($utilisateur == null) {
             return false;
         }

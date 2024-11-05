@@ -1,10 +1,12 @@
 <?php
 
-namespace Modele\Repository;
+namespace App\Sae\Modele\Repository;
 
-use Modele\DataObject\Professeur;
+use App\Sae\Modele\DataObject\AbstractDataObject;
+use App\Sae\Modele\Repository\AbstractDataRepository;
+use App\Sae\Modele\DataObject\Professeur;
 
-class ProfesseurRepository
+class ProfesseurRepository extends AbstractDataRepository
 {
     /**
      * @param array $objetFormatTableau
