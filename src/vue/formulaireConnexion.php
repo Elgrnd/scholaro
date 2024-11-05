@@ -21,5 +21,8 @@
         <p>
             <input type="submit" value="Envoyer" />
         </p>
+        <h5 class="champs">
+            * champs requis
+        </h5>
     </fieldset>
 </form>
