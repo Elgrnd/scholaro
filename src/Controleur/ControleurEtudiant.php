@@ -38,11 +38,11 @@ class ControleurEtudiant extends ControleurGenerique
             self::afficherErreur("Vous n'êtes pas connectés");
             return;
         }
-        if (!isset($_GET['id'])) {
+        if (!isset($_REQUEST['id'])) {
             self::afficherErreur("L'id de l'étudiant n'a pas été transmis");
             return;
         }
-        $etudiant = (new EtudiantRepository())->recupererParClePrimaire($_GET['id']);
+        $etudiant = (new EtudiantRepository())->recupererParClePrimaire($_REQUEST['id']);
         if (!$etudiant) {
             self::afficherErreur("L'id n'est pas celle d'un étudiant");
             return;
@@ -51,8 +51,8 @@ class ControleurEtudiant extends ControleurGenerique
             self::afficherErreur("Les détails d'un étudiant ne peuvent être vu que par lui même et un administrateur.");
             return;
         }
-        $notes = (new EtudiantRepository())->getNotesEtudiant($_GET['id']);
-        $notesAgregees = (new EtudiantRepository())->recupererNotesAgregees($_GET['id']);
+        $notes = (new EtudiantRepository())->getNotesEtudiant($_REQUEST['id']);
+        $notesAgregees = (new EtudiantRepository())->recupererNotesAgregees($_REQUEST['id']);
         ControleurGenerique::afficherVue("vueGenerale.php", ["titre" => "page Etudiant", "cheminCorpsVue" => "etudiant/etudiantPage.php", "etudiant" => $etudiant, "notes" => $notes, "notesAgregees" => $notesAgregees]);
     }
 
@@ -79,7 +79,7 @@ class ControleurEtudiant extends ControleurGenerique
             return;
         }
         $res = $cumul / $diviseur;
-        $agregation = new Agregation(null, $_GET['nomAgregation'], $res, (new EtudiantRepository())->recupererParClePrimaire($_GET['etuid']));
+        $agregation = new Agregation(null, $_REQUEST['nomAgregation'], $res, (new EtudiantRepository())->recupererParClePrimaire($_REQUEST['etuid']));
         $idAgregation = (new AgregationRepository())->ajouter($agregation);
         $agregation->setIdAgregation($idAgregation);
         for ($i = 0 ; $i < $_REQUEST['id']; $i++){
@@ -103,16 +103,16 @@ class ControleurEtudiant extends ControleurGenerique
             self::afficherErreur("Uniquement disponible pour un administrateur.");
             return;
         }
-        if (!isset($_GET["idNoteAgregee"])) {
+        if (!isset($_REQUEST["idNoteAgregee"])) {
             self::afficherErreur("Données manquantes");
             return;
         }
-        $test = (new AgregationRepository())->supprimer($_GET['idNoteAgregee']);
+        $test = (new AgregationRepository())->supprimer($_REQUEST['idNoteAgregee']);
         if (!$test) {
             self::afficherErreur("Agregation inconnu");
             return;
           }
-        $etudiant = (new EtudiantRepository())->recupererParClePrimaire($_GET['etudid']);
+        $etudiant = (new EtudiantRepository())->recupererParClePrimaire($_REQUEST['etudid']);
         $notes = (new EtudiantRepository())->getNotesEtudiant($etudiant->getEtudid());
         $notesAgregees = (new EtudiantRepository())->recupererNotesAgregees($etudiant->getEtudid());
         ControleurGenerique::afficherVue("vueGenerale.php", ["titre" => "page Etudiant", "cheminCorpsVue" => "etudiant/agregationSuppr.php", "etudiant" => $etudiant, "notes" => $notes, "notesAgregees" => $notesAgregees]);
