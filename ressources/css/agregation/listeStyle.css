@@ -1,20 +1,11 @@
-body{
+body {
     margin: 0px;
-}
-
-
-main {
-    margin-top: 80px;
-    margin-left: 0px;
 }
 
 .marge {
     margin: 10px;
 }
 
-.supprimer:active{
-    visibility: hidden;
-}
 /* Style général du tableau */
 table {
     width: 100%; /* Prend toute la largeur de la page */
@@ -27,7 +18,8 @@ table {
 /* Style des cellules du tableau */
 th, td {
     text-align: center; /* Centre le texte */
-    padding: 8px; /* Ajoute un peu d'espace autour du texte */
+    padding-top: 8px; /* Ajoute un peu d'espace autour du texte */
+    padding-bottom: 8px; /* Ajoute un peu d'espace autour du texte */
 }
 
 td {
@@ -74,6 +66,7 @@ a {
     display: flex;
     justify-content: space-between; /* Aligner les éléments de manière espacée */
     align-items: center; /* Centrer verticalement */
+    margin-bottom: 15px;
 }
 
 /* Style pour le bouton d'importation */
@@ -93,8 +86,7 @@ a {
     background-color: #a9a9a9; /* Couleur grisâtre au survol */
 }
 
-.validation {
-    width: 100%;
-    background-color: green;
-    padding: 5px;
+.pas-etudiant {
+    margin: 20px;
+    text-align: center;
 }

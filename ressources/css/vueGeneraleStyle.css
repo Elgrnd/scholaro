@@ -4,11 +4,24 @@
     text-decoration: none;
     list-style: none;
 }
-/* Header */
 
 html::-webkit-scrollbar {
     display: none;
 }
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Header */
 
 header {
     position: fixed;
@@ -59,7 +72,8 @@ header {
 
 /* Main */
 main {
-    margin: 115px 10px 20px 10px;
+    margin: 100px 10px 20px 10px;
+    flex-grow: 1;
 }
 
 /* Footer */
@@ -69,7 +83,6 @@ footer {
     bottom: 0;
     left: 0;
     right: 0;
-
 }
 
 .footer-container {

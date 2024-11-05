@@ -2,6 +2,7 @@
 require_once __DIR__ . '/../src/Lib/Psr4AutoloaderClass.php';
 
 use App\Sae\Controleur\ControleurEtudiant as ControleurEtudiant;
+use App\Sae\Lib\ChoixControleur;
 
 // initialisation en activant l'affichage de débogage
 $chargeurDeClasse = new App\Sae\Lib\Psr4AutoloaderClass(false);
@@ -9,44 +10,34 @@ $chargeurDeClasse->register();
 // enregistrement d'une association "espace de nom" → "dossier"
 $chargeurDeClasse->addNamespace("App\Sae", __DIR__ . '/../src');
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    if (!isset($_POST['controleur'])) {
-        $controleur = "etudiant";
-    } else {
-        $controleur = $_POST['controleur'];
-    }
+$action = 'afficherFormulaireConnexion';
+$nomDeClasseControleur = '';
+
+// Vérifier si 'controleur' est défini et construire le nom de la classe du contrôleur
+if (isset($_REQUEST['controleur'])) {
+    $controleur = ucfirst($_REQUEST['controleur']);
+    $nomDeClasseControleur = "App\Sae\Controleur\Controleur" . $controleur;
 } else {
-    if (isset($_GET['controleur'])) {
-        $controleur = $_GET['controleur'];
-    } else {
-        $controleur = "etudiant";
+    $nomDeClasseControleur = "App\Sae\Controleur\ControleurEtudiant";
+}
+
+// Vérifier si la classe du contrôleur existe, sinon afficher une erreur
+if (!class_exists($nomDeClasseControleur)) {
+    $nomDeClasseControleur = 'App\Sae\Controleur\ControleurEtudiant';
+    $action = 'afficherErreur';
+} else {
+    // Si l'action est définie, la vérifier et l'utiliser
+    if (isset($_REQUEST['action'])) {
+        $action = $_REQUEST['action'];
+        // Si l'action n'est pas une méthode de la classe, afficher une erreur
+        if (!method_exists($nomDeClasseControleur, $action)) {
+            echo 'ratio2';
+            $action = 'afficherErreur';
+        }
+
     }
 }
 
-$nomDeClasseControleur = "App\\Sae\\Controleur\\Controleur". ucfirst($controleur);
-if(class_exists($nomDeClasseControleur)) {
+// Appeler l'action sur le contrôleur déterminé
+$nomDeClasseControleur::$action();
 
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        if (!isset($_POST['action'])) {
-            $action = "afficherListe";
-        } else {
-            $action = $_POST['action'];
-        }
-    } else {
-        if (!isset($_GET['action'])) {
-            $action = "afficherListe";
-        } else {
-            $action = $_GET['action'];
-        }
-    }
-    $methodes = get_class_methods($nomDeClasseControleur);
-    if (in_array($action, $methodes)) {
-        $nomDeClasseControleur::$action();
-    } else {
-        $nomDeClasseControleur::afficherErreur("Action non valide");
-    }
-}else{
-    ControleurEtudiant::afficherErreur("Controleur non valide");
-}
-
-?>

@@ -35,6 +35,49 @@ class AgregationRepository extends AbstractDataRepository
             "etudidTag" => $objet->getEtudiant()->getEtudid()
         );
     }
+
+    /**
+     * @param int $idAgregation
+     * @return array retourne la liste des ressources qui ont été agregées
+     */
+    public function listeRessourcesAgregees(int $idAgregation, int $etudid): array
+    {
+        $sql = "SELECT r.nomRessource, note, coefficient 
+        FROM agregerRessource a 
+        JOIN ressource r ON a.nomRessource = r.nomRessource 
+        JOIN noter e ON e.nomRessource = r.nomRessource WHERE idAgregation = :idAgregationTag AND etudid = :etudidTag";
+        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
+        $values = array("idAgregationTag" => $idAgregation,
+            "etudidTag" => $etudid);
+        $tab = [];
+        $pdoStatement->execute($values);
+        foreach($pdoStatement as $row){
+            $tab[] = $row;
+        }
+        return $tab;
+    }
+
+    /**
+     * @param int $idAgregation
+     * @return array retourne la liste des agregations qui ont été agrégées
+     */
+    public function listeAgregationsAgregees(int $idAgregation): array
+    {
+        $sql = "SELECT aa.idAgregationAgregee, nomAgregation, noteAgregation, coefficient 
+        FROM agregerAgregation aa
+        JOIN agregation a ON a.idAgregation = aa.idAgregationAgregee
+        WHERE aa.idAgregation = :idAgregationTag";
+        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
+        $values = array(
+            "idAgregationTag" => $idAgregation
+        );
+        $pdoStatement->execute($values);
+        $tab = [];
+        foreach ($pdoStatement as $row){
+            $tab[] = $row;
+        }
+        return $tab;
+    }
 }
 
 ?>

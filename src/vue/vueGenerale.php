@@ -11,8 +11,8 @@
          * @var string $cheminCorpsVue
          */
         ?></title>
-    <link href="../ressources/css/<?= str_replace(".php", "Style.css", $cheminCorpsVue)?>" rel="stylesheet">
     <link rel="stylesheet" href="../ressources/css/vueGeneraleStyle.css" />
+    <link href="../ressources/css/<?= str_replace(".php", "Style.css", $cheminCorpsVue)?>" rel="stylesheet">
 </head>
 <body>
 <header>
@@ -25,11 +25,20 @@
                     <a href="controleurFrontal.php?action=afficherListe">ACCUEIL</a>
                 </li>
                 <li>
-                    <a href="controleurFrontal.php?action=afficherListe">LISTE</a>
+                    <a href="controleurFrontal.php?action=afficherListe">LISTE ETUDIANTS</a>
                 </li>
                 <li>
-                    <a href="#"><img class="logout" src="../ressources/images/logout.png" alt="se déconnecter"/></a>
+                    <a href="controleurFrontal.php?action=afficherListe&controleur=agregation">LISTE AGREGATIONS</a>
                 </li>
+                <?php if (!\App\Sae\Lib\ConnexionUtilisateur::estConnecte()) {
+                    echo "<li>
+                    <a href='controleurFrontal.php?action=afficherFormulaireConnexion'>SE CONNECTER</a>
+                </li>";
+                } else {
+                    echo "<li>
+                    <a href='controleurFrontal.php?action=deconnecter'><img class='logout' src='../ressources/images/logout.png' alt='se déconnecter'/></a>
+                </li>";
+                }?>
             </ul>
         </div>
     </nav>

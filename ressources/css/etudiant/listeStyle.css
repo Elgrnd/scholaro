@@ -18,7 +18,8 @@ table {
 /* Style des cellules du tableau */
 th, td {
     text-align: center; /* Centre le texte */
-    padding: 8px; /* Ajoute un peu d'espace autour du texte */
+    padding-top: 8px; /* Ajoute un peu d'espace autour du texte */
+    padding-bottom: 8px; /* Ajoute un peu d'espace autour du texte */
 }
 
 td {
@@ -83,4 +84,9 @@ a {
 /* Changement de couleur au survol */
 .bouton-importation:hover {
     background-color: #a9a9a9; /* Couleur grisâtre au survol */
+}
+
+.pas-etudiant {
+    margin: 20px;
+    text-align: center;
 }
