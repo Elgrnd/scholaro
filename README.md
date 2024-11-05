@@ -57,14 +57,16 @@ Note : Assurez-vous que le conteneur serveurWebIUT dispose des ports réseau ouv
 
 <h2>URL du site</h2>
 
-    https://webinfo.iutmontp.univ-montp2.fr/~lyfoungn/sae3a-base/web/controleurFrontal.php
+>https://webinfo.iutmontp.univ-montp2.fr/~lyfoungn/sae3a-base/web/controleurFrontal.php
 
 <h2> Login / mot de passe </h2>
+
     Professeur (admin): pallejax / ok
     Professeur (non admin) pallejan / okok
     Etudiant : 99 / 22000151
 
 <h2> Fonctionnalités </h2>
+
     1 - Importation des informations des étudiants en .csv
 
     2 - Agrégations de notes
