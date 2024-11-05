@@ -10,6 +10,7 @@ class ControleurAgregation extends ControleurGenerique
     {
         if (!ConnexionUtilisateur::estAdministrateur()) {
             self::afficherErreur("Vous n'avez pas les droits administrateurs");
+            return;
         }
         $agregations = (new AgregationRepository())->recuperer();
         ControleurGenerique::afficherVue("vueGenerale.php", ["titre" => "Liste des agregations", "cheminCorpsVue" => "agregation/liste.php", "agregations" => $agregations]);
