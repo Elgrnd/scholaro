@@ -27,7 +27,7 @@
 </div>
 <div class="content">
     <h1>
-        Notes et Agrégation :
+        Notes et Agrégation
     </h1>
     <?php
 
