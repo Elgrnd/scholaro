@@ -124,9 +124,13 @@ class ControleurEtudiant extends ControleurGenerique
             self::afficherErreur("Uniquement disponible pour un administrateur.");
             return;
         }
-        if (isset($_FILES["file"]) && $_FILES['file']['error'] === UPLOAD_ERR_OK) {
-            $filename = $_FILES["file"]["tmp_name"];
-            if ($_FILES["file"]["size"] > 0) {
+        self::importerInfosEtudiant($_FILES);
+    }
+
+    public static function importerInfosEtudiant(array $tableau): void {
+        if (isset($tableau["file"]) && $tableau['file']['error'] === UPLOAD_ERR_OK) {
+            $filename = $tableau["file"]["tmp_name"];
+            if ($tableau["file"]["size"] > 0) {
                 $file = fopen($filename, "r");
                 $header = fgetcsv($file, 10000, ',');
 
