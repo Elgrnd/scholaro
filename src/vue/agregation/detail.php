@@ -3,25 +3,25 @@
 /**
  * @var \App\Sae\Modele\DataObject\Agregation $agregation
  */
-echo $agregation->getIdAgregation() .' '. $agregation->getNomAgregation() .' '. $agregation->getNoteAgregation();
+echo '<p> Nom agragation : '. htmlspecialchars($agregation->getNomAgregation()) .' </p> <p> Note : '. $agregation->getNoteAgregation() . "</p>";
 
 ?>
-<br>
+
 <?php
 /**
  * @var array $listeRessources
  */
 if (!empty($listeRessources)) {
-    echo "liste notes : <br>";
+    echo "<h3>liste notes :</h3>";
     foreach ($listeRessources as $ressource) {
-        echo $ressource[0] . ' ' . $ressource[1] . ' ' . $ressource[2] . '<br>';
+        echo "<p> Ressource : " . $ressource[0] . ' </p> <p> Note : ' . $ressource[1] . ' </p> <p> Coefficient : ' . $ressource[2] . "</p>";
     }
 }
 
 if(!empty($listeAgregations)){
-    echo "liste agregations : <br>";
+    echo "<h3>liste agregations :</h3>";
     foreach ($listeAgregations as $agregation) {
-        echo $agregation[0] . ' ' . $agregation[1] . ' ' . $agregation[2] .' ' .$agregation[3]. '<br>';
+        echo "<div class='cont' <p> id :" . $agregation[0] . ' </p> <p> Nom :' . htmlspecialchars($agregation[1]) . ' </p> <p> Note : ' . $agregation[2] .'</p> <p> Coefficient : ' .$agregation[3] . "</p> </div>";
     }
 }
 ?>

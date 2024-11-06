@@ -3,6 +3,7 @@
 namespace App\Sae\Controleur;
 
 use App\Sae\Lib\ChoixControleur;
+use App\Sae\Lib\ConnexionUtilisateur;
 
 class ControleurGenerique
 {
@@ -20,6 +21,9 @@ class ControleurGenerique
 
     public static function afficherFormulaireConnexion(): void
     {
+        if (ConnexionUtilisateur::estConnecte()) {
+            return;
+        }
         self::afficherVue("vueGenerale.php", ["titre" => "Connexion", "cheminCorpsVue" => "formulaireConnexion.php"]);
     }
 }

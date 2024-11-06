@@ -50,7 +50,7 @@ class ProfesseurRepository extends AbstractDataRepository
             "prenomProf" => $objet->getPrenomProf(),
             "loginProf" => $objet->getLoginProf(),
             "mdpHache" => $objet->getMdpHache(),
-            "estAdmin" => $val,
+            "estAdmin" => $val
         );
     }
 }

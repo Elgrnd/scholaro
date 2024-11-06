@@ -24,6 +24,10 @@ class ControleurAgregation extends ControleurGenerique
      * @return void affiche la compostion d'une agrégation
      */
     public static function afficherDetail(): void{
+        if (!ConnexionUtilisateur::estAdministrateur()) {
+            self::afficherErreur("Vous n'avez pas les droits administrateurs");
+            return;
+        }
         if($_REQUEST['id']){
             $agregation = (new AgregationRepository())->recupererParClePrimaire($_REQUEST['id']);
             if($agregation){

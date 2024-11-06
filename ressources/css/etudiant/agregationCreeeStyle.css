@@ -1,0 +1,21 @@
+.content {
+    margin: 10px;
+    padding: 10px;
+    border: black solid 1px;
+    min-width: 500px;
+}
+
+fieldset {
+    border: none;
+}
+
+main{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+main p{
+    margin-bottom: 5px;
+    margin-top: 5px;
+}

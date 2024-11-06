@@ -27,7 +27,7 @@
 </div>
 <div class="content">
     <h1>
-        Notes et Agrégation :
+        Notes et Agrégation
     </h1>
     <?php
 
@@ -86,7 +86,7 @@
 
     if($etudiant->getAvis() != null) {
         echo '<p> Avis </p>';
-        echo '<p>' . $etudiant->getAvis() . ' </p>';
+        echo '<p>' . htmlspecialchars($etudiant->getAvis()) . ' </p>';
     }
     ?>
 </div>
