@@ -82,10 +82,10 @@ class ControleurEtudiant extends ControleurGenerique
         $agregation = new Agregation(null, $_GET['nomAgregation'], $res, (new EtudiantRepository())->recupererParClePrimaire($_GET['etuid']));
         $idAgregation = (new AgregationRepository())->ajouter($agregation);
         $agregation->setIdAgregation($idAgregation);
-        for ($i = 0 ; $i < $_REQUEST['id']; $i++){
+        for ($i = 0; $i < $_REQUEST['id']; $i++) {
             if (isset($_REQUEST['noteCheck' . $i]) && $_REQUEST['noteCheck' . $i] > 0) {
                 if (ctype_digit($_REQUEST['idNom' . $i])) {
-                    (new EtudiantRepository())->enregistrerAgregationAgregee($agregation->getIdAgregation(), $_REQUEST['idNom' . $i], $_REQUEST['coeff'.$i]);
+                    (new EtudiantRepository())->enregistrerAgregationAgregee($agregation->getIdAgregation(), $_REQUEST['idNom' . $i], $_REQUEST['coeff' . $i]);
                 } else {
                     (new EtudiantRepository())->enregistrerRessource($_REQUEST['idNom' . $i], $agregation->getIdAgregation(), $_REQUEST['coeff' . $i]);
                 }
@@ -111,7 +111,7 @@ class ControleurEtudiant extends ControleurGenerique
         if (!$test) {
             self::afficherErreur("Agregation inconnu");
             return;
-          }
+        }
         $etudiant = (new EtudiantRepository())->recupererParClePrimaire($_GET['etudid']);
         $notes = (new EtudiantRepository())->getNotesEtudiant($etudiant->getEtudid());
         $notesAgregees = (new EtudiantRepository())->recupererNotesAgregees($etudiant->getEtudid());
@@ -124,10 +124,18 @@ class ControleurEtudiant extends ControleurGenerique
             self::afficherErreur("Uniquement disponible pour un administrateur.");
             return;
         }
-        self::importerInfosEtudiant($_FILES);
+        try {
+            self::importerInfosEtudiant($_FILES);
+            self::importerNotesEtudiant($_FILES);
+            $etudiants = (new EtudiantRepository())->recuperer();
+            ControleurGenerique::afficherVue("vueGenerale.php", ["titre" => "Etudiants importés avec succès", "cheminCorpsVue" => "etudiant/etudiantsImportes.php", "etudiants" => $etudiants]);
+        } catch (\Exception $e) {
+            self::afficherErreur("Erreur lors de l'importation du fichier");
+        }
     }
 
-    public static function importerInfosEtudiant(array $tableau): void {
+    public static function importerInfosEtudiant(array $tableau): void
+    {
         if (isset($tableau["file"]) && $tableau['file']['error'] === UPLOAD_ERR_OK) {
             $filename = $tableau["file"]["tmp_name"];
             if ($tableau["file"]["size"] > 0) {
@@ -157,9 +165,6 @@ class ControleurEtudiant extends ControleurGenerique
                     if (!ctype_digit(substr($etudid, 0, 1))) {
                         break;
                     }
-
-                    $etudiant = new Etudiant((int)$etudid, $code_nip, $civ, $nomEtu, $prenomEtu, $bac, $specialite, (int)$rg_admis, "", $mdpHache);
-                    (new EtudiantRepository())->ajouter($etudiant);
                 }
                 fclose($file);
             }
@@ -169,6 +174,47 @@ class ControleurEtudiant extends ControleurGenerique
             self::afficherErreur("Erreur lors de l'importation du fichier");
         }
     }
+
+    public static function importerNotesEtudiant(array $tableau): void
+    {
+        if (isset($tableau["file"]) && $tableau['file']['error'] === UPLOAD_ERR_OK) {
+            $filename = $tableau["file"]["tmp_name"];
+            if ($tableau["file"]["size"] > 0) {
+                $file = fopen($filename, "r");
+                $header = fgetcsv($file, 10000, ',');
+
+                while (($data = fgetcsv($file, 10000, ",")) !== FALSE) {
+                    $ligne = array_combine($header, $data);
+
+                    $etudid = $ligne['etudid'];
+                    if (!ctype_digit(substr($etudid, 0, 1))) {
+                        break;
+                    }
+
+                    foreach ($header as $index => $colName) {
+                        if (str_starts_with($colName, "R")) {
+                            if (strlen($colName) > 1) {
+                                $semestre = $colName[1];
+                                if (!ctype_digit($semestre)) {
+                                    continue;
+                                }
+                                if ($ligne[$colName] === "") {
+                                    continue;
+                                }
+                                $note = $ligne[$colName];
+
+                                (new EtudiantRepository())->enregistrerNotesEtudiant($etudid, $semestre, $colName, $note);
+                            }
+                        }
+                    }
+                }
+                fclose($file);
+            }
+        } else {
+            self::afficherErreur("Erreur lors de l'importation du fichier");
+        }
+    }
+
     public static function connecter(): void
     {
         if ($_REQUEST['choix_controleur'] != 'etudiant') {

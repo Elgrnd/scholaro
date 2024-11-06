@@ -31,7 +31,7 @@ class EtudiantRepository extends AbstractDataRepository
      */
     protected function getNomTable(): string
     {
-        return 'etudiant';
+        return 'etudiant_temp';
     }
 
     protected function getNomClePrimaire(): string
@@ -39,12 +39,30 @@ class EtudiantRepository extends AbstractDataRepository
         return "etudid";
     }
 
+    public function enregistrerNotesEtudiant(string $etudid, int $semestre_id, string $nomRessource, float $note) : ?bool{
+        $sql = "INSERT IGNORE INTO noter_temp (etudid, semestre_id, nomRessource, note) 
+            VALUES (:etudidTag, :semestre_idTag, :nomRessourceTag, :noteTag)";
+        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
+        $values = array(
+            "etudidTag" => $etudid,
+            "semestre_idTag" => $semestre_id,
+            "nomRessourceTag" => $nomRessource,
+            "noteTag" => $note
+        );
+        $pdoStatement->execute($values);
+        $objetFormatTableau = $pdoStatement->fetch();
+        if ($objetFormatTableau == null) {
+            return null;
+        }
+        return true;
+    }
+
     /**
      * @param int $id
      * @return array|null retourne toutes les notes d'un étudiant s'il en a sinon renvoie null
      */
     public function getNotesEtudiant(int $id) : ?array {
-        $sql = "SELECT * FROM noter WHERE etudid = :idTag";
+        $sql = "SELECT * FROM noter_temp WHERE etudid = :idTag";
         $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
         $values = array(
             "idTag" => $id,
