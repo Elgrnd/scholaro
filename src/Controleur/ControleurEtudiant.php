@@ -126,7 +126,6 @@ class ControleurEtudiant extends ControleurGenerique
         }
         try {
             self::importerInfosEtudiant($_FILES);
-            self::importerNotesEtudiant($_FILES);
             $etudiants = (new EtudiantRepository())->recuperer();
             ControleurGenerique::afficherVue("vueGenerale.php", ["titre" => "Etudiants importés avec succès", "cheminCorpsVue" => "etudiant/etudiantsImportes.php", "etudiants" => $etudiants]);
         } catch (\Exception $e) {
@@ -165,31 +164,9 @@ class ControleurEtudiant extends ControleurGenerique
                     if (!ctype_digit(substr($etudid, 0, 1))) {
                         break;
                     }
-                }
-                fclose($file);
-            }
-            $etudiants = (new EtudiantRepository())->recuperer();
-            ControleurGenerique::afficherVue("vueGenerale.php", ["titre" => "Etudiants importés avec succès", "cheminCorpsVue" => "etudiant/etudiantsImportes.php", "etudiants" => $etudiants]);
-        } else {
-            self::afficherErreur("Erreur lors de l'importation du fichier");
-        }
-    }
 
-    public static function importerNotesEtudiant(array $tableau): void
-    {
-        if (isset($tableau["file"]) && $tableau['file']['error'] === UPLOAD_ERR_OK) {
-            $filename = $tableau["file"]["tmp_name"];
-            if ($tableau["file"]["size"] > 0) {
-                $file = fopen($filename, "r");
-                $header = fgetcsv($file, 10000, ',');
-
-                while (($data = fgetcsv($file, 10000, ",")) !== FALSE) {
-                    $ligne = array_combine($header, $data);
-
-                    $etudid = $ligne['etudid'];
-                    if (!ctype_digit(substr($etudid, 0, 1))) {
-                        break;
-                    }
+                    $etudiant = new Etudiant((int)$etudid, $code_nip, $civ, $nomEtu, $prenomEtu, $bac, $specialite, (int)$rg_admis, "", $mdpHache);
+                    (new EtudiantRepository())->ajouter($etudiant);
 
                     foreach ($header as $index => $colName) {
                         if (str_starts_with($colName, "R")) {
@@ -210,6 +187,8 @@ class ControleurEtudiant extends ControleurGenerique
                 }
                 fclose($file);
             }
+            $etudiants = (new EtudiantRepository())->recuperer();
+            ControleurGenerique::afficherVue("vueGenerale.php", ["titre" => "Etudiants importés avec succès", "cheminCorpsVue" => "etudiant/etudiantsImportes.php", "etudiants" => $etudiants]);
         } else {
             self::afficherErreur("Erreur lors de l'importation du fichier");
         }
