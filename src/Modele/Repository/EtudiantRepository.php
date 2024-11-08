@@ -39,6 +39,22 @@ class EtudiantRepository extends AbstractDataRepository
         return "etudid";
     }
 
+    public function enregistrerRessource($nomRessource): ?bool
+    {
+        $sql = "INSERT IGNORE INTO ressource (nomRessource) 
+            VALUES (:nomRessourceTag)";
+        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
+        $values = array(
+            "nomRessourceTag" => $nomRessource,
+        );
+        $pdoStatement->execute($values);
+        $objetFormatTableau = $pdoStatement->fetch();
+        if ($objetFormatTableau == null) {
+            return null;
+        }
+        return true;
+    }
+
     public function enregistrerNotesEtudiant(string $etudid, int $semestre_id, string $nomRessource, float $note) : ?bool{
         $sql = "INSERT IGNORE INTO noter_temp (etudid, semestre_id, nomRessource, note) 
             VALUES (:etudidTag, :semestre_idTag, :nomRessourceTag, :noteTag)";
@@ -109,7 +125,7 @@ class EtudiantRepository extends AbstractDataRepository
      * @param float $coef
      * @return bool|null permet d'insérer dans la bd les données correspondant à la table ressource_Agregation
      */
-    public function enregistrerRessource(string $nomRessource, int $idAgregation,float $coef) : ?bool{
+    public function enregistrerRessourceAgregee(string $nomRessource, int $idAgregation,float $coef) : ?bool{
         $sql = "INSERT INTO agregerRessource (nomRessource, idAgregation, coefficient) 
             VALUES (:nomRessourceTag, :idAgregationTag, :coefficientTag)";
         $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);

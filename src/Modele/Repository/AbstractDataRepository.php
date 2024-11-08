@@ -42,6 +42,39 @@ abstract class AbstractDataRepository
         $pdoStatement->execute($values);
         return $pdo->lastInsertId();
     }
+
+    public function ajouterPlusieurs(array $objets)
+    {
+        if (empty($objets)) {
+            return null;
+        }
+
+        $colonnes = $this->getNomColonnes();
+        $nomTable = $this->getNomTable();
+        $nomsColonnes = join(",", $this->getNomColonnes());
+
+        $colonneObjet = [];
+        $values = [];
+        foreach ($objets as $index => $objet) {
+            $formattedObjet = $this->formatTableauSQL($objet);
+            $tags = [];
+            foreach ($colonnes as $colonne) {
+                $tag = ":{$colonne}Tag{$index}";
+                $tags[] = $tag;
+
+                $colonneTag = "{$colonne}Tag";
+                $values[$tag] = $formattedObjet[$colonneTag];
+            }
+            $colonneObjet[] = "(" . join(", ", $tags) . ")";
+        }
+        $nomColonneObjets = join(',', $colonneObjet);
+        $sql = "INSERT IGNORE INTO $nomTable ($nomsColonnes) VALUES $nomColonneObjets";
+        $pdo = ConnexionBaseDeDonnees::getPdo();
+        $pdoStatement = $pdo->prepare($sql);
+        $pdoStatement->execute($values);
+        return $pdo->lastInsertId();
+    }
+
     public function recupererParClePrimaire(string $clefPrimTag): ?AbstractDataObject
     {
         $sql = 'SELECT * from ' . $this->getNomTable() . ' WHERE ' . $this->getNomClePrimaire() . ' = :clefPrimTag';

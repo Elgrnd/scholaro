@@ -6,9 +6,11 @@ namespace App\Sae\Controleur;
 use App\Sae\Lib\ConnexionUtilisateur;
 use App\Sae\Lib\MotDePasse;
 use App\Sae\Modele\DataObject\Agregation;
+use App\Sae\Modele\DataObject\Noter;
 use App\Sae\Modele\Repository\AgregationRepository;
 use App\Sae\Modele\Repository\EtudiantRepository;
 use App\Sae\Modele\DataObject\Etudiant;
+use App\Sae\Modele\Repository\NoterRepository;
 
 
 class ControleurEtudiant extends ControleurGenerique
@@ -87,7 +89,7 @@ class ControleurEtudiant extends ControleurGenerique
                 if (ctype_digit($_REQUEST['idNom' . $i])) {
                     (new EtudiantRepository())->enregistrerAgregationAgregee($agregation->getIdAgregation(), $_REQUEST['idNom' . $i], $_REQUEST['coeff' . $i]);
                 } else {
-                    (new EtudiantRepository())->enregistrerRessource($_REQUEST['idNom' . $i], $agregation->getIdAgregation(), $_REQUEST['coeff' . $i]);
+                    (new EtudiantRepository())->enregistrerRessourceAgregee($_REQUEST['idNom' . $i], $agregation->getIdAgregation(), $_REQUEST['coeff' . $i]);
                 }
             }
         }
@@ -148,6 +150,8 @@ class ControleurEtudiant extends ControleurGenerique
                     }
                 }
 
+                $etudiants = [];
+                $notesRessources = [];
                 while (($data = fgetcsv($file, 10000, ",")) !== FALSE) {
                     $ligne = array_combine($header, $data);
 
@@ -166,7 +170,7 @@ class ControleurEtudiant extends ControleurGenerique
                     }
 
                     $etudiant = new Etudiant((int)$etudid, $code_nip, $civ, $nomEtu, $prenomEtu, $bac, $specialite, (int)$rg_admis, "", $mdpHache);
-                    (new EtudiantRepository())->ajouter($etudiant);
+                    $etudiants[] = $etudiant;
 
                     foreach ($header as $index => $colName) {
                         if (str_starts_with($colName, "R")) {
@@ -180,15 +184,20 @@ class ControleurEtudiant extends ControleurGenerique
                                 }
                                 $note = $ligne[$colName];
 
-                                (new EtudiantRepository())->enregistrerNotesEtudiant($etudid, $semestre, $colName, $note);
+                                $noteRessource = new Noter($etudid, $semestre, $colName, $note);
+                                $notesRessources[] = $noteRessource;
+
+                                (new EtudiantRepository())->enregistrerRessource($colName);
                             }
                         }
                     }
                 }
                 fclose($file);
+                (new EtudiantRepository())->ajouterPlusieurs($etudiants);
+                (new NoterRepository())->ajouterPlusieurs($notesRessources);
             }
-            $etudiants = (new EtudiantRepository())->recuperer();
-            ControleurGenerique::afficherVue("vueGenerale.php", ["titre" => "Etudiants importés avec succès", "cheminCorpsVue" => "etudiant/etudiantsImportes.php", "etudiants" => $etudiants]);
+            $listeEtudiants = (new EtudiantRepository())->recuperer();
+            ControleurGenerique::afficherVue("vueGenerale.php", ["titre" => "Etudiants importés avec succès", "cheminCorpsVue" => "etudiant/etudiantsImportes.php", "etudiants" => $listeEtudiants]);
         } else {
             self::afficherErreur("Erreur lors de l'importation du fichier");
         }
