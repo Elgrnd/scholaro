@@ -8,7 +8,7 @@ class AgregationRepository extends AbstractDataRepository
 {
     protected function construireDepuisTableauSQL(array $objetFormatTableau): Agregation
     {
-        return new Agregation($objetFormatTableau['idAgregation'], $objetFormatTableau['nomAgregation'], $objetFormatTableau['noteAgregation'], (new EtudiantRepository())->recupererParClePrimaire($objetFormatTableau['etudid']));
+        return new Agregation($objetFormatTableau['idAgregation'], $objetFormatTableau['nomAgregation']);
     }
 
     protected function getNomTable(): string
@@ -23,26 +23,34 @@ class AgregationRepository extends AbstractDataRepository
 
     protected function getNomColonnes(): array
     {
-        return ['idAgregation', 'nomAgregation', 'noteAgregation', 'etudid'];
+        return ['idAgregation', 'nomAgregation'];
     }
 
     protected function formatTableauSQL(AbstractDataObject $objet): array
     {
         return array(
             "idAgregationTag" => $objet->getIdAgregation(),
-            "nomAgregationTag" => $objet->getNomAgregation(),
-            "noteAgregationTag" => $objet->getNoteAgregation(),
-            "etudidTag" => $objet->getEtudiant()->getEtudid()
+            "nomAgregationTag" => $objet->getNomAgregation()
         );
     }
 
     /**
      * @param int $idAgregation
-     * @return array retourne la liste des ressources qui ont été agregées
+     * @param int $etudid
+     * @return void ajoute l'agrégation à un étudiant
+     */
+    public function ajouterEtudiants(int $idAgregation, int $etudid): void
+    {
+        //A compléter lors de la tâche agréger une ressource
+    }
+
+    /**
+     * @param int $idAgregation
+     * @return array retourne la liste des ressources qui ont été agregées pour un étudiant
      */
     public function listeRessourcesAgregees(int $idAgregation, int $etudid): array
     {
-        $sql = "SELECT r.nomRessource, note, coefficient 
+        $sql = "SELECT r.nomRessource, coefficient
         FROM agregerRessource a 
         JOIN ressource r ON a.nomRessource = r.nomRessource 
         JOIN noter e ON e.nomRessource = r.nomRessource WHERE idAgregation = :idAgregationTag AND etudid = :etudidTag";
@@ -63,9 +71,9 @@ class AgregationRepository extends AbstractDataRepository
      */
     public function listeAgregationsAgregees(int $idAgregation): array
     {
-        $sql = "SELECT aa.idAgregationAgregee, nomAgregation, noteAgregation, coefficient 
+        $sql = "SELECT aa.idAgregationAgregee, nomAgregation, coefficient 
         FROM agregerAgregation aa
-        JOIN agregation a ON a.idAgregation = aa.idAgregationAgregee
+        JOIN agregation a ON a.idAgregation = aa.idAgregationAgregee 
         WHERE aa.idAgregation = :idAgregationTag";
         $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
         $values = array(

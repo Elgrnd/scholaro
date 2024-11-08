@@ -56,7 +56,7 @@ class ControleurEtudiant extends ControleurGenerique
         ControleurGenerique::afficherVue("vueGenerale.php", ["titre" => "page Etudiant", "cheminCorpsVue" => "etudiant/etudiantPage.php", "etudiant" => $etudiant, "notes" => $notes, "notesAgregees" => $notesAgregees]);
     }
 
-    public static function creerAgregation()
+   /* public static function creerAgregation()
     {
         if (!ConnexionUtilisateur::estAdministrateur()) {
             self::afficherErreur("Uniquement disponible pour un administrateur.");
@@ -95,9 +95,9 @@ class ControleurEtudiant extends ControleurGenerique
         $notesAgregees = (new EtudiantRepository())->recupererNotesAgregees($agregation->getEtudiant()->getEtudid());
         ControleurGenerique::afficherVue("vueGenerale.php", ["titre" => "page Etudiant", "cheminCorpsVue" => "etudiant/agregationCreee.php", "etudiant" => $agregation->getEtudiant(), "notes" => $notes, "notesAgregees" => $notesAgregees]);
 
-    }
+    }*/
 
-    public static function supprimerAgregation(): void
+    /*public static function supprimerAgregation(): void
     {
         if (!ConnexionUtilisateur::estAdministrateur()) {
             self::afficherErreur("Uniquement disponible pour un administrateur.");
@@ -116,7 +116,7 @@ class ControleurEtudiant extends ControleurGenerique
         $notes = (new EtudiantRepository())->getNotesEtudiant($etudiant->getEtudid());
         $notesAgregees = (new EtudiantRepository())->recupererNotesAgregees($etudiant->getEtudid());
         ControleurGenerique::afficherVue("vueGenerale.php", ["titre" => "page Etudiant", "cheminCorpsVue" => "etudiant/agregationSuppr.php", "etudiant" => $etudiant, "notes" => $notes, "notesAgregees" => $notesAgregees]);
-    }
+    }*/
 
     public static function ajouterDepuisCSV(): void
     {

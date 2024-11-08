@@ -68,7 +68,7 @@ class EtudiantRepository extends AbstractDataRepository
      */
     public function recupererNotesAgregees($etuid) : ?array
     {
-        $sql = "Select * from agregation where etudid = :etudidTag";
+        $sql = "Select * from agregation a JOIN  where etudid = :etudidTag";
         $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
         $values = array(
             "etudidTag" => $etuid,

@@ -31,9 +31,9 @@ class ControleurAgregation extends ControleurGenerique
         if($_REQUEST['id']){
             $agregation = (new AgregationRepository())->recupererParClePrimaire($_REQUEST['id']);
             if($agregation){
-                $listeRessources = (new AgregationRepository())->listeRessourcesAgregees($agregation->getIdAgregation(), $agregation->getEtudiant()->getEtudid());
+                /*$listeRessources = (new AgregationRepository())->listeRessourcesAgregees($agregation->getIdAgregation(), $agregation->getEtudiant()->getEtudid());
                 $listeAgregations = (new AgregationRepository())->listeAgregationsAgregees($agregation->getIdAgregation());
-                ControleurGenerique::afficherVue("vueGenerale.php", ["titre" => "page Agrégation", "cheminCorpsVue" => "agregation/detail.php", "agregation" => $agregation, "listeRessources" => $listeRessources, "listeAgregations" => $listeAgregations]);
+                */ControleurGenerique::afficherVue("vueGenerale.php", ["titre" => "page Agrégation", "cheminCorpsVue" => "agregation/detail.php", "agregation" => $agregation/*, "listeRessources" => $listeRessources, "listeAgregations" => $listeAgregations*/]);
             }else{
                 self::afficherErreur("L'id n'est pas celle d'une agrégation");
             }
