@@ -67,7 +67,6 @@
                 $id+= 1;
             }
         }
-        foreach ($notes as $note) {}
         echo "
                 <p>
                     <label for='nomA_id'>Nom de l'agrégation</label> :
@@ -75,7 +74,7 @@
                     <input type='hidden' name='action' value='creerAgregation'>
                     <input type='hidden' name='controleur' value='etudiant'>
                     <input type='hidden' name='etuid' value='$idEtu'>
-                    <input type='hidden' name='id' value='$id'>
+                    <input type='hidden' name='id' value='$id'>619
                     <input type='submit' value='Envoyer' />
                 </p>
     </fieldset>

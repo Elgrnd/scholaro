@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Sae\Modele\Repository;
 
 use App\Sae\Modele\DataObject\AbstractDataObject;
@@ -43,7 +44,8 @@ class EtudiantRepository extends AbstractDataRepository
      * @param int $id
      * @return array|null retourne toutes les notes d'un étudiant s'il en a sinon renvoie null
      */
-    public function getNotesEtudiant(int $id) : ?array {
+    public function getNotesEtudiant(int $id): ?array
+    {
         $sql = "SELECT * FROM noter WHERE etudid = :idTag";
         $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
         $values = array(
@@ -52,8 +54,7 @@ class EtudiantRepository extends AbstractDataRepository
         $tab = array();
         try {
             $pdoStatement->execute($values);
-        }
-        catch (Exception $e){
+        } catch (Exception $e) {
             return null;
         }
         foreach ($pdoStatement as $row) {
@@ -66,7 +67,7 @@ class EtudiantRepository extends AbstractDataRepository
      * @param $etuid
      * @return array|null retourne la liste des notes agrégées
      */
-    public function recupererNotesAgregees($etuid) : ?array
+    public function recupererNotesAgregees($etuid): ?array
     {
         $sql = "Select * from agregation a JOIN  where etudid = :etudidTag";
         $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
@@ -76,7 +77,7 @@ class EtudiantRepository extends AbstractDataRepository
         $tab = array();
         try {
             $pdoStatement->execute($values);
-        }catch (Exception $e){
+        } catch (Exception $e) {
             return null;
         }
         foreach ($pdoStatement as $row) {
@@ -91,7 +92,8 @@ class EtudiantRepository extends AbstractDataRepository
      * @param float $coef
      * @return bool|null permet d'insérer dans la bd les données correspondant à la table ressource_Agregation
      */
-    public function enregistrerRessource(string $nomRessource, int $idAgregation,float $coef) : ?bool{
+    public function enregistrerRessource(string $nomRessource, int $idAgregation, float $coef): ?bool
+    {
         $sql = "INSERT INTO agregerRessource (nomRessource, idAgregation, coefficient) 
             VALUES (:nomRessourceTag, :idAgregationTag, :coefficientTag)";
         $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
@@ -114,7 +116,8 @@ class EtudiantRepository extends AbstractDataRepository
      * @param float $coef
      * @return bool|null permet d'insérer dans la bd les données agregation_AgregationAgregee
      */
-    public function enregistrerAgregationAgregee(string $idAgregation, int $idAgregationAgregee,float $coef) : ?bool{
+    public function enregistrerAgregationAgregee(string $idAgregation, int $idAgregationAgregee, float $coef): ?bool
+    {
         $sql = "INSERT INTO agregerAgregation (idAgregation, idAgregationAgregee, coefficient) 
             VALUES (:idAgregationTag, :idAgregationAgregeeTag, :coefficientTag)";
         $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
@@ -131,6 +134,33 @@ class EtudiantRepository extends AbstractDataRepository
         return true;
     }
 
+    public function existeDansNoter($etudid, $nomRessource): ?array
+    {
+        $sql = "SELECT note FROM noter WHERE etudid = :etudidTag AND nomRessource = :nomRessourceTag";
+        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
+        $values = array(
+            "etudidTag" => $etudid,
+            "nomRessourceTag" => $nomRessource,
+        );
+        $pdoStatement->execute($values);
+        $result = $pdoStatement->fetch();
+        return $result === false ? null : $result;
+    }
+
+    public function existeDansAgregationRessource($etudid, $idAgregation): ?array
+    {
+        $sql = "SELECT note FROM ressourceAgregation WHERE etudid = :etudidTag AND idAgregation = :idAgregationTag";
+        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
+        $values = array(
+            "etudidTag" => $etudid,
+            "idAgregationTag" => $idAgregation,
+        );
+        $pdoStatement->execute($values);
+        $result = $pdoStatement->fetch();
+        return $result === false ? null : $result;
+    }
+
+
     protected function getNomColonnes(): array
     {
         return ["etudid", "codenip", "civ", "nomEtu", "prenomEtu", "bac", "specialite", "rg_admis", "avis", "mdpHache"];
@@ -139,15 +169,15 @@ class EtudiantRepository extends AbstractDataRepository
     protected function formatTableauSQL(AbstractDataObject $objet): array
     {
         return array(
-            "etudidTag"=> $objet->getEtudid(),
+            "etudidTag" => $objet->getEtudid(),
             "codenipTag" => $objet->getCodenip(),
             "civTag" => $objet->getCiv(),
             "nomEtuTag" => $objet->getNomEtu(),
             "prenomEtuTag" => $objet->getPrenomEtu(),
-            "bacTag"=> $objet->getBac(),
+            "bacTag" => $objet->getBac(),
             "specialiteTag" => $objet->getSpecialite(),
             "rg_admisTag" => $objet->getRgadmis(),
-            "avisTag"=> $objet->getAvis(),
+            "avisTag" => $objet->getAvis(),
             "mdpHacheTag" => $objet->getMdpHache()
         );
     }
