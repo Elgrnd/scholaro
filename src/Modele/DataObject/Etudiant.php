@@ -1,7 +1,11 @@
 <?php
+
 namespace App\Sae\Modele\DataObject;
 
-class Etudiant extends AbstractDataObject{
+use App\Sae\Modele\Repository\EtudiantRepository;
+
+class Etudiant extends AbstractDataObject
+{
     private int $etudid;
     private string $codenip;
     private string $civ;
@@ -138,7 +142,32 @@ class Etudiant extends AbstractDataObject{
         $this->mdpHache = $mdpHache;
     }
 
-
+    public function calculerMoyenne(array $tabNom, array $tabCoeff): float
+    {
+        $etudiants = (new EtudiantRepository())->recuperer();
+        $diviseur = 0;
+        $numerateur = 0;
+        for ($i = 0; $i < count($tabNom); $i++) {
+            if ($tabNom[$i][0] === 'R') {
+                $note = (new EtudiantRepository())->existeDansNoter($this->getEtudid() , $tabNom[$i]);
+                if ($note) {
+                    $diviseur += (float) $tabCoeff[$i];
+                    $numerateur += (float) $note[0] *(float) $tabCoeff[$i];
+                }
+            } else {
+                $note = (new EtudiantRepository())->existeDansNoter($this->getEtudid(), $tabNom[$i]);
+                if ($note) {
+                    $diviseur += $tabCoeff[$i];
+                    $numerateur += $note[0] * $tabCoeff[$i];
+                }
+            }
+        }
+        if($diviseur != 0) {
+            return ($numerateur / $diviseur);
+        }else{
+            return -1;
+        }
+    }
 
 
 }

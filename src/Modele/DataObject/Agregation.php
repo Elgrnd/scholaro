@@ -1,6 +1,8 @@
 <?php
 namespace App\Sae\Modele\DataObject;
 
+use App\Sae\Modele\Repository\AgregationRepository;
+
 class Agregation extends AbstractDataObject{
     private ?int $idAgregation;
     private string $nomAgregation;
@@ -14,7 +16,6 @@ class Agregation extends AbstractDataObject{
     {
         $this->idAgregation = $idAgregation;
         $this->nomAgregation = $nomAgregation;
-        //$this->etudiants = ;
     }
 
     public function getIdAgregation(): ?int

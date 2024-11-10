@@ -39,9 +39,16 @@ class AgregationRepository extends AbstractDataRepository
      * @param int $etudid
      * @return void ajoute l'agrégation à un étudiant
      */
-    public function ajouterEtudiants(int $idAgregation, int $etudid): void
+    public function ajouterEtudiant(int $idAgregation, int $etudid, float $note): void
     {
-        //A compléter lors de la tâche agréger une ressource
+        $sql = "INSERT INTO etudiantAgregation (idAgregation, etudid, note) VALUES (:idAgregationTag, :etudidTag, :noteTag) ";
+        $pdoStatement = (ConnexionBaseDeDonnees::getPdo())->prepare($sql);
+        $values = array(
+            "idAgregationTag" => $idAgregation,
+            "etudidTag" => $etudid,
+            "noteTag" => $note
+        );
+        $pdoStatement->execute($values);
     }
 
     /**

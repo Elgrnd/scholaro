@@ -31,6 +31,9 @@
                     <a href='controleurFrontal.php?action=afficherListe'>LISTE ETUDIANTS</a>
                 </li>
                 <li>
+                    <a href='controleurFrontal.php?action=afficherFormulaire&controleur=agregation'>CREER AGREGATION</a>
+                </li>
+                <li>
                     <a href='controleurFrontal.php?action=afficherListe&controleur=agregation'>LISTE AGREGATIONS</a>
                 </li>";
                 }
