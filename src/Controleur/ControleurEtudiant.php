@@ -89,7 +89,7 @@ class ControleurEtudiant extends ControleurGenerique
                 if (ctype_digit($_REQUEST['idNom' . $i])) {
                     (new EtudiantRepository())->enregistrerAgregationAgregee($agregation->getIdAgregation(), $_REQUEST['idNom' . $i], $_REQUEST['coeff' . $i]);
                 } else {
-                    (new EtudiantRepository())->enregistrerRessourceAgregee($_REQUEST['idNom' . $i], $agregation->getIdAgregation(), $_REQUEST['coeff' . $i]);
+                    (new EtudiantRepository())->enregistrerRessourceAgregeeAgregee($_REQUEST['idNom' . $i], $agregation->getIdAgregation(), $_REQUEST['coeff' . $i]);
                 }
             }
         }

@@ -78,7 +78,7 @@ class ControleurAgregation extends ControleurGenerique
                     for ($i = 0; $i < count($tabNom); $i++) {
 
                         if (($tabNom[$i][0])=== 'R') {
-                            (new EtudiantRepository())->enregistrerRessource($tabNom[$i], $idAgregation, $tabCoeff[$i]);
+                            (new EtudiantRepository())->enregistrerRessourceAgregee($tabNom[$i], $idAgregation, $tabCoeff[$i]);
                         } else {
                             (new EtudiantRepository())->enregistrerAgregationAgregee($idAgregation, $tabNom[$i], $tabCoeff[$i]);
                         }

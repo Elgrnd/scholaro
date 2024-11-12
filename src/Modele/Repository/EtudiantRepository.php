@@ -92,7 +92,7 @@ class EtudiantRepository extends AbstractDataRepository
      * @param float $coef
      * @return bool|null permet d'insérer dans la bd les données correspondant à la table ressource_Agregation
      */
-    public function enregistrerRessource(string $nomRessource, int $idAgregation, float $coef): ?bool
+    public function enregistrerRessourceAgregee(string $nomRessource, int $idAgregation, float $coef): ?bool
     {
         $sql = "INSERT INTO agregerRessource (nomRessource, idAgregation, coefficient) 
             VALUES (:nomRessourceTag, :idAgregationTag, :coefficientTag)";
