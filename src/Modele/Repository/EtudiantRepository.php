@@ -40,6 +40,22 @@ class EtudiantRepository extends AbstractDataRepository
         return "etudid";
     }
 
+    public function enregistrerRessource($nomRessource): ?bool
+    {
+        $sql = "INSERT IGNORE INTO ressource (nomRessource) 
+            VALUES (:nomRessourceTag)";
+        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
+        $values = array(
+            "nomRessourceTag" => $nomRessource,
+        );
+        $pdoStatement->execute($values);
+        $objetFormatTableau = $pdoStatement->fetch();
+        if ($objetFormatTableau == null) {
+            return null;
+        }
+        return true;
+    }
+
     /**
      * @param int $id
      * @return array|null retourne toutes les notes d'un étudiant s'il en a sinon renvoie null
