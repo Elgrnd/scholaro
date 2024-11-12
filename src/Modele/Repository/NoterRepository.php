@@ -25,7 +25,7 @@ class NoterRepository extends AbstractDataRepository
      */
     protected function getNomTable(): string
     {
-        return 'noter_temp';
+        return 'noter';
     }
 
     protected function getNomClePrimaire(): string
