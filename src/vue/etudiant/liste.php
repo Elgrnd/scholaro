@@ -20,6 +20,7 @@
 
 <table>
     <thead>
+    <tr>
         <th>Id Etudiant</th>
         <th>Civilité</th>
         <th>Nom</th>
@@ -27,6 +28,7 @@
         <th>Bac</th>
         <th>Rang admission</th>
         <th>Avis</th>
+    </tr>
     </thead>
 
 

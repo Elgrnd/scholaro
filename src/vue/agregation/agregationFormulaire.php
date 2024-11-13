@@ -2,7 +2,7 @@
     <fieldset>
         <p>
             <label for='nomA_id'>Nom de l'agrégation</label> :
-            <input type='text' placeholder='Nom Agregation' name='nomAgregation' id='nomA_id' required/>
+            <input type='text' placeholder='Nom Agregation' name='nomAgregation' id='nomA_id' required>
         </p>
         <br>
         <?php
@@ -18,7 +18,7 @@
                 echo "<p>Nom ".$ressource->getNomRessource() ."
                     <input type='hidden' name='idNom$id' value=".$ressource->getNomRessource().">  
                     <input type='number' name='coeff$id' value='0' id='coefRessource$id'>
-                </p><br>";
+                </p>";
                 $id += 1;
             }
         }
@@ -27,11 +27,11 @@
                 echo "<p> Nom ".$agregation->getNomAgregation() ."
                     <input type='hidden' name='idNom$id' value=".$agregation->getIdAgregation().">  
                     <input type='number' name='coeff$id' value='0' id='coefAgregation$id'>
-                </p><br>";
+                </p>";
                 $id += 1;
             }
         }
-        echo "<input type='hidden' name='count' value='$id'/>";
+        echo "<input type='hidden' name='count' value='$id'>";
         ?>
         <input type='hidden' name='action' value='construireDepuisFormulaire'>
         <input type="hidden" name="controleur" value="agregation">

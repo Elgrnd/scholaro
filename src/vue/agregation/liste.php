@@ -1,8 +1,10 @@
 <div class="marge">
     <table>
         <thead>
+        <tr>
         <th>Id Agregation</th>
         <th>Nom Agregation</th>
+        </tr>
         </thead>
 
 
@@ -14,8 +16,8 @@
         foreach ($agregations as $agregation) {
             echo '
    <tr>
-    <td> <a href="?controleur=agregation&action=afficherDetail&id=' . rawurlencode($agregation->getIdAgregation()) . '">' . $agregation->getIdAgregation() . '</a></td>
-    <td><a href="?controleur=agregation&action=afficherDetail&id=' . rawurlencode($agregation->getIdAgregation()) . '">' . htmlspecialchars($agregation->getNomAgregation()) . '</td> 
+    <td> <a href="?controleur=agregation&action=afficherDetail&id=' . $agregation->getIdAgregation() . '">' . $agregation->getIdAgregation() . '</a></td>
+    <td><a href="?controleur=agregation&action=afficherDetail&id=' . $agregation->getIdAgregation() . '">' . htmlspecialchars($agregation->getNomAgregation()) . '</a></td> 
     </tr>';
         }
         ?>

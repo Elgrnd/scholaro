@@ -19,7 +19,7 @@
             <label class="InputAddOn-item" for="professeurId">Professeur</label>
         </p>
         <p>
-            <input type="submit" value="Envoyer" />
+            <input type="submit" value="Envoyer">
         </p>
         <h5 class="champs">
             * champs requis

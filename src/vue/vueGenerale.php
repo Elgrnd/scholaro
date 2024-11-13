@@ -11,14 +11,14 @@
          * @var string $cheminCorpsVue
          */
         ?></title>
-    <link rel="stylesheet" href="../ressources/css/vueGeneraleStyle.css" />
+    <link rel="stylesheet" href="../ressources/css/vueGeneraleStyle.css">
     <link href="../ressources/css/<?= str_replace(".php", "Style.css", $cheminCorpsVue)?>" rel="stylesheet">
 </head>
 <body>
 <header>
 
     <nav class="navbar">
-        <img class="logo" src="../ressources/images/logo_IUT.png" alt="logo" />
+        <img class="logo" src="../ressources/images/logo_IUT.png" alt="logo">
         <div class="nav_links">
             <ul>
                 <?php
@@ -49,7 +49,7 @@
                 </li>";
                 } else {
                     echo "<li>
-                    <a href='controleurFrontal.php?action=deconnecter'><img class='logout' src='../ressources/images/logout.png' alt='se déconnecter'/></a>
+                    <a href='controleurFrontal.php?action=deconnecter'><img class='logout' src='../ressources/images/logout.png' alt='se déconnecter'></a>
                 </li>";
                 }?>
             </ul>
