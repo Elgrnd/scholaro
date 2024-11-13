@@ -179,7 +179,7 @@ class ControleurEtudiant extends ControleurGenerique
                                 if (!ctype_digit($semestre)) {
                                     continue;
                                 }
-                                if ($ligne[$colName] === "") {
+                                if ($ligne[$colName] === "" ||$ligne[$colName] === "~") {
                                     continue;
                                 }
                                 $note = $ligne[$colName];
@@ -196,8 +196,6 @@ class ControleurEtudiant extends ControleurGenerique
                 (new EtudiantRepository())->ajouterPlusieurs($etudiants);
                 (new NoterRepository())->ajouterPlusieurs($notesRessources);
             }
-            $listeEtudiants = (new EtudiantRepository())->recuperer();
-            ControleurGenerique::afficherVue("vueGenerale.php", ["titre" => "Etudiants importés avec succès", "cheminCorpsVue" => "etudiant/etudiantsImportes.php", "etudiants" => $listeEtudiants]);
         } else {
             self::afficherErreur("Erreur lors de l'importation du fichier");
         }
