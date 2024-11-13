@@ -57,7 +57,7 @@ class EtudiantRepository extends AbstractDataRepository
     }
 
     public function enregistrerNotesEtudiant(string $etudid, int $semestre_id, string $nomRessource, float $note) : ?bool{
-        $sql = "INSERT IGNORE INTO noter_temp (etudid, semestre_id, nomRessource, note) 
+        $sql = "INSERT IGNORE INTO noter (etudid, semestre_id, nomRessource, note) 
             VALUES (:etudidTag, :semestre_idTag, :nomRessourceTag, :noteTag)";
         $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
         $values = array(
