@@ -60,48 +60,71 @@ class ControleurAgregation extends ControleurGenerique
         }
     }
 
-    public static function construireDepuisFormulaire()
+    public static function construireDepuisFormulaire(): void
     {
-        if (ConnexionUtilisateur::estAdministrateur()) {
-            if ((isset($_REQUEST['nomAgregation'])) && isset($_REQUEST['count'])) {
-                for ($i = 0; $i < $_REQUEST['count']; $i++) {
-                    if ($_REQUEST['coeff' . $i] > 0) {
-                        $tabNom[] = $_REQUEST['idNom' . $i];
-                        $tabCoeff[] = $_REQUEST['coeff' . $i];
-                    }
-                }
-                if (!empty($tabNom) && !empty($tabCoeff)) {
-                    $agregation = new Agregation(null, $_REQUEST['nomAgregation']);
-                    $idAgregation = (new AgregationRepository())->ajouter($agregation);
-                    $a = (new EtudiantRepository())->recuperer();
-                    var_dump($tabNom);
-                    for ($i = 0; $i < count($tabNom); $i++) {
-
-                        if (($tabNom[$i][0])=== 'R') {
-                            (new EtudiantRepository())->enregistrerRessourceAgregee($tabNom[$i], $idAgregation, $tabCoeff[$i]);
-                        } else {
-                            (new EtudiantRepository())->enregistrerAgregationAgregee($idAgregation, $tabNom[$i], $tabCoeff[$i]);
-                        }
-                    }
-                    foreach ($a as $etudiant) {
-                        $moyenne = $etudiant->calculerMoyenne($tabNom, $tabCoeff);
-                        if ($moyenne != -1) {
-                            (new AgregationRepository())->ajouterEtudiant($idAgregation, $etudiant->getEtudid(), $moyenne);
-                        }
-                    }
-                    $agregations = (new AgregationRepository())->recuperer();
-                    ControleurGenerique::afficherVue("vueGenerale.php", ["titre" => "Liste des agregations", "cheminCorpsVue" => "agregation/liste.php", "agregations" => $agregations]);
-                } else {
-                    self::afficherErreur("Aucune ressource ou agrégation ont été enregistré");
-                }
-
-            } else {
-                self::afficherErreur("Vous avez oublié le nom de l'agrégation à créer et/ou de sélectionner des ressources");
-            }
-        } else {
+        if (!ConnexionUtilisateur::estAdministrateur()) {
             self::afficherErreur("Vous n'avez pas les droits administrateurs");
+            return;
         }
+
+        $nomAgregation = $_REQUEST['nomAgregation'] ?? null;
+        $count = $_REQUEST['count'] ?? 0;
+
+        if (!$nomAgregation || !$count) {
+            self::afficherErreur("Vous avez oublié le nom de l'agrégation à créer et/ou de sélectionner des ressources");
+            return;
+        }
+
+        $tabNom = [];
+        $tabCoeff = [];
+
+        for ($i = 0; $i < $count; $i++) {
+            $coeff = $_REQUEST['coeff' . $i] ?? 0;
+            if ($coeff > 0) {
+                $tabNom[] = $_REQUEST['idNom' . $i];
+                $tabCoeff[] = $coeff;
+            }
+        }
+
+        if (empty($tabNom) || empty($tabCoeff)) {
+            self::afficherErreur("Aucune ressource ou agrégation n'a été enregistrée");
+            return;
+        }
+
+        $agregationRepo = new AgregationRepository();
+        $etudiantRepo = new EtudiantRepository();
+
+        // Création et enregistrement de l'agrégation
+        $agregation = new Agregation(null, $nomAgregation);
+        $idAgregation = $agregationRepo->ajouter($agregation);
+
+        // Enregistrement des ressources/agregations liées
+        foreach ($tabNom as $index => $nom) {
+            if ($nom[0] === 'R') {
+                $etudiantRepo->enregistrerRessourceAgregee($nom, $idAgregation, $tabCoeff[$index]);
+            } else {
+                $etudiantRepo->enregistrerAgregationAgregee($idAgregation, $nom, $tabCoeff[$index]);
+            }
+        }
+
+        // Calcul et enregistrement des moyennes des étudiants
+        $etudiants = $etudiantRepo->recuperer();
+        foreach ($etudiants as $etudiant) {
+            $moyenne = $etudiant->calculerMoyenne($tabNom, $tabCoeff);
+            if ($moyenne != -1) {
+                $agregationRepo->ajouterEtudiant($idAgregation, $etudiant->getEtudid(), $moyenne);
+            }
+        }
+
+        // Récupération des agrégations pour affichage
+        $agregations = $agregationRepo->recuperer();
+        ControleurGenerique::afficherVue("vueGenerale.php", [
+            "titre" => "Liste des agrégations",
+            "cheminCorpsVue" => "agregation/liste.php",
+            "agregations" => $agregations
+        ]);
     }
+
 
     /**
      * @param string $erreur message d'erreur à afficher
