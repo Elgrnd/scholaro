@@ -3,6 +3,7 @@
 namespace App\Sae\Controleur;
 
 
+use App\Sae\Configuration\ConfigurationLDAP;
 use App\Sae\Lib\ConnexionUtilisateur;
 use App\Sae\Lib\MotDePasse;
 use App\Sae\Modele\DataObject\Agregation;
@@ -201,41 +202,4 @@ class ControleurEtudiant extends ControleurGenerique
         }
     }
 
-    public static function connecter(): void
-    {
-        if ($_REQUEST['choix_controleur'] != 'etudiant') {
-            self::afficherErreur("Vous n'êtes pas un professeur ou une école");
-            return;
-        }
-
-        if (!isset($_REQUEST['login']) || !isset($_REQUEST['mdp'])) {
-            self::afficherErreur("Login et/ou mot de passe manquant(s)");
-            return;
-        }
-
-        $etudiant = (new EtudiantRepository())->recupererParClePrimaire($_REQUEST['login']);
-        if ($etudiant === null || !MotDePasse::verifier($_REQUEST['mdp'], $etudiant->getMdpHache())) {
-            self::afficherErreur("Login et/ou mot de passe incorrect(s)");
-            return;
-        }
-
-        ConnexionUtilisateur::connecter($etudiant->getEtudid());
-        self::afficherVue("vueGenerale.php", ["titre" => "Connexion réussie !", "cheminCorpsVue" => "etudiant/etudiantConnecte.php"]);
-    }
-
-    public static function deconnecter(): void
-    {
-        ConnexionUtilisateur::deconnecter();
-        self::afficherVue("vueGenerale.php", ["titre" => "Déconnexion réussie !", "cheminCorpsVue" => "etudiant/etudiantDeconnecte.php"]);
-    }
-
-
-    /**
-     * @param string $erreur message d'erreur à afficher
-     * @return void afficher la page d'erreur
-     */
-    public static function afficherErreur(string $erreur = ""): void
-    {
-        ControleurGenerique::afficherVue("vueGenerale.php", ["titre" => "Erreur", "cheminCorpsVue" => "etudiant/erreur.php", "erreur" => $erreur]);
-    }
 }

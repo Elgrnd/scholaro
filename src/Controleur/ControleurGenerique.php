@@ -2,6 +2,7 @@
 
 namespace App\Sae\Controleur;
 
+use App\Sae\Configuration\ConfigurationLDAP;
 use App\Sae\Lib\ChoixControleur;
 use App\Sae\Lib\ConnexionUtilisateur;
 
@@ -25,5 +26,62 @@ class ControleurGenerique
             return;
         }
         self::afficherVue("vueGenerale.php", ["titre" => "Connexion", "cheminCorpsVue" => "formulaireConnexion.php"]);
+    }
+
+    public static function connecter(): void
+    {
+        if (!isset($_REQUEST['login']) || !isset($_REQUEST['mdp'])) {
+            self::afficherErreur("Login et/ou mot de passe manquant(s)");
+            return;
+        }
+
+        $ldapConnection = ConfigurationLDAP::connecterServeur();;
+
+        // Login / mot de passe ˋa tester
+        $ldapLogin = $_REQUEST['login'];
+        $ldapPassword = $_REQUEST['mdp'];
+
+        // DN (distinguished name) de base ˋa l’IUT
+        $ldapBaseDN = ConfigurationLDAP::getLdapBaseDN();
+
+        // Filtre par uid (idenfiant unique)
+        $ldapSearchFilter = "(uid=$ldapLogin)";
+        $ldapSearch = ldap_search($ldapConnection, $ldapBaseDN, $ldapSearchFilter, array());
+
+        // Recherche des utilisateurs avec cet identifiant
+        $ldapUserResult = ldap_get_entries($ldapConnection, $ldapSearch);
+
+        // Vérification que le login existe bien
+        if ($ldapUserResult["count"] != 1) {
+            self::afficherErreur("Utilisateur inconnu");
+            return;
+        }
+
+        // Récupération du DN complet de l’utilisateur
+        $ldapUserDN = $ldapUserResult[0]["dn"];
+
+        // Tentative de connexion avec login / mdp
+        // Le @ sert à éviter l’écriture d’un message de Warning en cas d’identifiants incorrects
+        $ldapBindSuccessful = @ldap_bind($ldapConnection, $ldapUserDN, $ldapPassword);
+        if ($ldapBindSuccessful) {
+            ConnexionUtilisateur::connecter($ldapLogin);
+            self::afficherVue("vueGenerale.php", ["titre" => "Connexion réussie", "cheminCorpsVue" => "connecte.php"]);
+        } else {
+            self::afficherErreur("Identifiants incorrects");
+        }
+
+    }
+
+    public static function deconnecter(): void
+    {
+        // Fermeture de la connection au LDAP
+        ConnexionUtilisateur::deconnecter();
+        ConfigurationLDAP::deconnecterServeur();
+        self::afficherVue("vueGenerale.php", ["titre" => "Déconnexion réussie !", "cheminCorpsVue" => "deconnecte.php"]);
+    }
+
+    public static function afficherErreur(string $erreur = ""): void
+    {
+        ControleurGenerique::afficherVue("vueGenerale.php", ["titre" => "Erreur", "cheminCorpsVue" => "erreur.php", "erreur" => $erreur]);
     }
 }
