@@ -70,18 +70,4 @@ class ConnexionUtilisateur
         }
         return false;
     }
-
-    public static function estProfesseur(): bool
-    {
-        if (!self::estConnecte()) {
-            return false;
-        }
-        ConfigurationLDAP::connecterServeur();
-        foreach (ConfigurationLDAP::getAll() as $professeur) {
-            if ($professeur['login'] == self::getLoginUtilisateurConnecte() && $professeur['promotion'] == 'Personnel') {
-                return true;
-            }
-        }
-        return false;
-    }
 }
