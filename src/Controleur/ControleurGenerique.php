@@ -28,6 +28,9 @@ class ControleurGenerique
         self::afficherVue("vueGenerale.php", ["titre" => "Connexion", "cheminCorpsVue" => "formulaireConnexion.php"]);
     }
 
+    /**
+     * @throws \Exception
+     */
     public static function connecter(): void
     {
         if (!isset($_REQUEST['login']) || !isset($_REQUEST['mdp'])) {
@@ -35,7 +38,7 @@ class ControleurGenerique
             return;
         }
 
-        $ldapConnection = ConfigurationLDAP::connecterServeur();;
+        $ldapConnection = ConfigurationLDAP::connecterServeur();
 
         // Login / mot de passe ˋa tester
         $ldapLogin = $_REQUEST['login'];

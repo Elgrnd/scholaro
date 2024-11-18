@@ -2,6 +2,7 @@
 
 namespace App\Sae\Lib;
 
+use App\Sae\Configuration\ConfigurationLDAP;
 use App\Sae\Modele\HTTP\Session;
 use App\Sae\Modele\Repository\EtudiantRepository;
 use App\Sae\Modele\Repository\ProfesseurRepository;
@@ -34,27 +35,53 @@ class ConnexionUtilisateur
         return $_SESSION[ConnexionUtilisateur::$cleConnexion];
     }
 
-    public static function estUtilisateur($login): bool {
+    public static function estUtilisateur($login): bool
+    {
         return self::estConnecte() && self::getLoginUtilisateurConnecte() == $login;
     }
 
-    public static function estAdministrateur() : bool {
-        if (!self::estConnecte()) {
-            return false;
-        }
-        $utilisateur = (new ProfesseurRepository())->recupererParClePrimaire(self::getLoginUtilisateurConnecte());
-        if ($utilisateur == null) {
-            return false;
-        }
-        return $utilisateur->isEstAdmin();
-    }
-
-    public static function estEtudiant() : bool
+    public static function estAdministrateur(): bool
     {
         if (!self::estConnecte()) {
             return false;
         }
-        $utilisateur = (new EtudiantRepository())->recupererParClePrimaire(self::getLoginUtilisateurConnecte());
-        return $utilisateur != null;
+        return self::estUtilisateur("tordeuxm")
+            || self::estUtilisateur("lyfoungn")
+            || self::estUtilisateur("laurentg")
+            || self::estUtilisateur("nedjary")
+            || (self::estUtilisateur("messaoui"));
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public static function estEtudiant(): bool
+    {
+        if (!self::estConnecte()) {
+            return false;
+        }
+        ConfigurationLDAP::connecterServeur();
+        foreach (ConfigurationLDAP::getAll() as $etudiant) {
+            if ($etudiant['login'] == self::getLoginUtilisateurConnecte() && ($etudiant['promotion'] == 'Ann1'
+                    || $etudiant['promotion'] == 'Ann2'
+                    || $etudiant['promotion'] == 'Ann3')) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static function estProfesseur(): bool
+    {
+        if (!self::estConnecte()) {
+            return false;
+        }
+        ConfigurationLDAP::connecterServeur();
+        foreach (ConfigurationLDAP::getAll() as $professeur) {
+            if ($professeur['login'] == self::getLoginUtilisateurConnecte() && $professeur['promotion'] == 'Personnel') {
+                return true;
+            }
+        }
+        return false;
     }
 }

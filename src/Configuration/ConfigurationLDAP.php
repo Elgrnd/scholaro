@@ -39,6 +39,27 @@ class ConfigurationLDAP
         }
     }
 
+    public static function getAll()
+    {
+        // On recherche toutes les entr´ees du LDAP qui sont des personnes
+        $ldapSearch = ldap_search(self::$ldapConnection, \App\Sae\Configuration\ConfigurationLDAP::getLdapBaseDN(), "(objectClass=person)");
+        // On r´ecupˋere toutes les entr´ees de la recherche effectu´ee auparavant
+        $ldapResults = ldap_get_entries(\App\Sae\Configuration\ConfigurationLDAP::getLdapConnection(), $ldapSearch);
+        // Pour chaque utilisateur, on recupˋere les informations utiles
+        $utilisateurs = [];
+        for ($i = 0; $i < count($ldapResults) - 1; $i++) {
+            // Exemple d’informations
+            $utilisateurs[] = array(
+                'nom' => $ldapResults[$i]["givenname"][0] ?? null,
+                'prenom' => $ldapResults[$i]["sn"][0] ?? null,
+                'login' => $ldapResults[$i]["uid"][0] ?? null,
+                'promotion' => explode("=", explode(",", $ldapResults[$i]["dn"])[1])[1]
+            );
+
+        }
+        return $utilisateurs;
+    }
+
     public static function getLdapServer(): mixed
     {
         return self::$ldapServer;
@@ -61,8 +82,6 @@ class ConfigurationLDAP
     {
         return self::$ldapBaseDN;
     }
-
-
 
 
 }

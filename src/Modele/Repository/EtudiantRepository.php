@@ -23,8 +23,7 @@ class EtudiantRepository extends AbstractDataRepository
             $objetFormatTableau['bac'],
             $objetFormatTableau['specialite'],
             $objetFormatTableau['rg_admis'],
-            $objetFormatTableau['avis'],
-            $objetFormatTableau['mdpHache']);
+            $objetFormatTableau['avis']);
     }
 
     /**
@@ -197,7 +196,7 @@ class EtudiantRepository extends AbstractDataRepository
 
     protected function getNomColonnes(): array
     {
-        return ["etudid", "codenip", "civ", "nomEtu", "prenomEtu", "bac", "specialite", "rg_admis", "avis", "mdpHache"];
+        return ["etudid", "codenip", "civ", "nomEtu", "prenomEtu", "bac", "specialite", "rg_admis", "avis"];
     }
 
     protected function formatTableauSQL(AbstractDataObject $objet): array
@@ -212,7 +211,6 @@ class EtudiantRepository extends AbstractDataRepository
             "specialiteTag" => $objet->getSpecialite(),
             "rg_admisTag" => $objet->getRgadmis(),
             "avisTag" => $objet->getAvis(),
-            "mdpHacheTag" => $objet->getMdpHache()
         );
     }
 }

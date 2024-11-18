@@ -4,7 +4,7 @@
         <input type='hidden' name='action' value='connecter'>
         <p class="InputAddOn">
             <label class="InputAddOn-item" for="login_id">Login&#42;</label>
-            <input class="InputAddOn-field" type="text" placeholder="Ex : 000 | leblancj" name="login" id="login_id" required>
+            <input class="InputAddOn-field" type="text" placeholder="Ex : pallejax" name="login" id="login_id" required>
         </p>
         <p class="InputAddOn">
             <label class="InputAddOn-item" for="mdp_id">Mot de passe&#42;</label>
