@@ -27,9 +27,23 @@ class ControleurEtudiant extends ControleurGenerique
             return;
         }
         $etudiants = (new EtudiantRepository())->recuperer();
+        $agregation = (new AgregationRepository())->recupererParClePrimaire(109);
+        ControleurGenerique::afficherVue("vueGenerale.php", ["titre" => "Liste des étudiants", "cheminCorpsVue" => "etudiant/liste.php", "etudiants" => $etudiants, "agregation" => $agregation]);
 
-        ControleurGenerique::afficherVue("vueGenerale.php", ["titre" => "Liste des etudiants", "cheminCorpsVue" => "etudiant/liste.php", "etudiants" => $etudiants]);
+    }
 
+    public static function triCroissant(): void
+    {
+        if (!ConnexionUtilisateur::estAdministrateur()) {
+            self::afficherErreur("Vous n'avez pas les droits administrateurs");
+        }
+        if (isset($_REQUEST['idAgregation'])) {
+            $etudiants = (new EtudiantRepository())->triCroissantNoteEtudiants($_REQUEST['idAgregation']);
+            $agregation = (new AgregationRepository())->recupererParClePrimaire(109);
+            ControleurGenerique::afficherVue("vueGenerale.php", ["titre"=>"Liste des étudiants", "cheminCorpsVue"=> "etudiant/liste.php", "etudiants" => $etudiants, "agregation" => $agregation]);
+        }else{
+            self::afficherListe();
+        }
     }
 
     /**

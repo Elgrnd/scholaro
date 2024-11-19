@@ -194,11 +194,30 @@ class EtudiantRepository extends AbstractDataRepository
     }
 
     /**
+     * @param $etudid
+     * @param $idAgregation
+     * @return mixed return la note d'un étudiant avec une agrégation donnée
+     */
+    public function getNoteEtudiantAgregation($etudid, $idAgregation) : float|null
+    {
+        $sql = "SELECT note FROM etudiantAgregation WHERE etudid = :etudidTag AND idAgregation = :idAgregationTag";
+        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
+        $values = array(
+            "etudidTag" => $etudid,
+            "idAgregationTag" => $idAgregation,
+        );
+        $pdoStatement->execute($values);
+        $result = $pdoStatement->fetchColumn();
+        return $result !== false ? (float) $result : null;
+
+    }
+
+    /**
      * @return array return la liste des etudiants trié dans l'ordre croissant par rapport à leur note d'une agrégation
      */
     public function triCroissantNoteEtudiants($idAgregation) : ?array
     {
-        $sql = "SELECT e.*, note FROM etudiant e JOIN etudiantAgregation a ON a.etudid = e.etudid WHERE idAgregation = :idAgregationTag ORDER BY note DESC;";
+        $sql = "SELECT e.* FROM etudiant e LEFT JOIN etudiantAgregation a ON a.etudid = e.etudid AND a.idAgregation = :idAgregationTag ORDER BY a.note DESC;";
         $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
         $values = array(
             "idAgregationTag" => $idAgregation,
