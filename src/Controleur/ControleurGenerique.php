@@ -33,7 +33,7 @@ class ControleurGenerique
      */
     public static function connecter(): void
     {
-        if (!isset($_REQUEST['login']) || !isset($_REQUEST['mdp'])) {
+       if (!isset($_REQUEST['login']) || !isset($_REQUEST['mdp'])) {
             self::afficherErreur("Login et/ou mot de passe manquant(s)");
             return;
         }

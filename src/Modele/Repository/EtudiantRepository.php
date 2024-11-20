@@ -193,6 +193,70 @@ class EtudiantRepository extends AbstractDataRepository
         return $result === false ? null : $result;
     }
 
+    /**
+     * @param $etudid
+     * @param $idAgregation
+     * @return mixed return la note d'un étudiant avec une agrégation donnée
+     */
+    public function getNoteEtudiantAgregation($etudid, $idAgregation) : float|null
+    {
+        $sql = "SELECT note FROM etudiantAgregation WHERE etudid = :etudidTag AND idAgregation = :idAgregationTag";
+        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
+        $values = array(
+            "etudidTag" => $etudid,
+            "idAgregationTag" => $idAgregation,
+        );
+        $pdoStatement->execute($values);
+        $result = $pdoStatement->fetchColumn();
+        return $result !== false ? (float) $result : null;
+
+    }
+
+    /**
+     * @return array return la liste des etudiants trié dans l'ordre decroissant par rapport à leur note d'une agrégation
+     */
+    public function triDecroissantNoteEtudiants($idAgregation) : ?array
+    {
+        $sql = "SELECT e.* FROM etudiant e LEFT JOIN etudiantAgregation a ON a.etudid = e.etudid AND a.idAgregation = :idAgregationTag ORDER BY a.note DESC;";
+        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
+        $values = array(
+            "idAgregationTag" => $idAgregation,
+        );
+        try {
+            $pdoStatement->execute($values);
+        }catch (Exception $e) {
+            return null;
+        }
+
+        foreach ($pdoStatement as $row) {
+            $tabEtudiants[] = $this->construireDepuisTableauSQL($row);
+        }
+        return $tabEtudiants;
+    }
+
+    /**
+     * @param $idAgregation
+     * @return array|null return la liste des etudiants trié dans l'ordre croissant par rapport à leur note d'une agrégation
+     */
+    public function triCroissantNoteEtudiants($idAgregation) : ?array
+    {
+        $sql = "SELECT e.* FROM etudiantAgregation ea RIGHT JOIN etudiant e ON e.etudid = ea.etudid AND idAgregation = :idAgregationTag ORDER BY 
+                CASE WHEN note IS NULL THEN 1 ELSE 0 END, note ASC;";
+        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
+        $values = array(
+            "idAgregationTag" => $idAgregation,
+        );
+        try {
+            $pdoStatement->execute($values);
+        }catch (Exception $e) {
+            return null;
+        }
+        foreach ($pdoStatement as $row) {
+            $tabEtudiants[] = $this->construireDepuisTableauSQL($row);
+        }
+        return $tabEtudiants;
+    }
+
 
     protected function getNomColonnes(): array
     {
