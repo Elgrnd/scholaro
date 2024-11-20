@@ -213,9 +213,9 @@ class EtudiantRepository extends AbstractDataRepository
     }
 
     /**
-     * @return array return la liste des etudiants trié dans l'ordre croissant par rapport à leur note d'une agrégation
+     * @return array return la liste des etudiants trié dans l'ordre decroissant par rapport à leur note d'une agrégation
      */
-    public function triCroissantNoteEtudiants($idAgregation) : ?array
+    public function triDecroissantNoteEtudiants($idAgregation) : ?array
     {
         $sql = "SELECT e.* FROM etudiant e LEFT JOIN etudiantAgregation a ON a.etudid = e.etudid AND a.idAgregation = :idAgregationTag ORDER BY a.note DESC;";
         $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
@@ -234,6 +234,28 @@ class EtudiantRepository extends AbstractDataRepository
         return $tabEtudiants;
     }
 
+    /**
+     * @param $idAgregation
+     * @return array|null return la liste des etudiants trié dans l'ordre croissant par rapport à leur note d'une agrégation
+     */
+    public function triCroissantNoteEtudiants($idAgregation) : ?array
+    {
+        $sql = "SELECT e.* FROM etudiantAgregation ea RIGHT JOIN etudiant e ON e.etudid = ea.etudid AND idAgregation = :idAgregationTag ORDER BY 
+                CASE WHEN note IS NULL THEN 1 ELSE 0 END, note ASC;";
+        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
+        $values = array(
+            "idAgregationTag" => $idAgregation,
+        );
+        try {
+            $pdoStatement->execute($values);
+        }catch (Exception $e) {
+            return null;
+        }
+        foreach ($pdoStatement as $row) {
+            $tabEtudiants[] = $this->construireDepuisTableauSQL($row);
+        }
+        return $tabEtudiants;
+    }
 
 
     protected function getNomColonnes(): array

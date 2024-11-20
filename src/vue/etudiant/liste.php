@@ -24,7 +24,9 @@
         <th>Id Etudiant</th>
         <th>Nom</th>
         <th>Prenom</th>
-        <?php /** @var \App\Sae\Modele\DataObject\Agregation $agregation*/ echo '<th>'.$agregation->getNomAgregation().'<a href="?controleur=etudiant&action=triCroissant&idAgregation='.rawurlencode($agregation->getIdAgregation()).'"> ⬆️ </a></th>'; ?>
+        <?php /** @var \App\Sae\Modele\DataObject\Agregation $agregation*/ echo '<th>'.$agregation->getNomAgregation().
+            '<a href="?controleur=etudiant&action=triDecroissant&idAgregation='.$agregation->getIdAgregation().'"> ⬆️ </a>
+            <a href="?controleur=etudiant&action=triCroissant&idAgregation='.$agregation->getIdAgregation().'">⬇️</a> </th>'; ?>
         <th>Avis</th>
     </tr>
     </thead>
