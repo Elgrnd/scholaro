@@ -49,6 +49,9 @@ class ControleurAgregation extends ControleurGenerique
         }
     }
 
+    /**
+     * @return void affiche la vue formulaire de créer agrégation
+     */
     public static function afficherFormulaire(): void
     {
         if (!ConnexionUtilisateur::estAdministrateur()) {
