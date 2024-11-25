@@ -3,6 +3,7 @@
 namespace App\Sae\Controleur;
 
 use App\Sae\Configuration\ConfigurationLDAP;
+use App\Sae\Configuration\ConfigurationSite;
 use App\Sae\Lib\ChoixControleur;
 use App\Sae\Lib\ConnexionUtilisateur;
 
@@ -33,6 +34,13 @@ class ControleurGenerique
      */
     public static function connecter(): void
     {
+
+        if (ConfigurationSite::getDebug()) {
+            ConnexionUtilisateur::connecter("desertg");
+            self::afficherVue("vueGenerale.php", ["titre" => "Connexion réussie", "cheminCorpsVue" => "connecte.php"]);
+            return;
+        }
+
         if (!isset($_REQUEST['login']) || !isset($_REQUEST['mdp'])) {
             self::afficherErreur("Login et/ou mot de passe manquant(s)");
             return;

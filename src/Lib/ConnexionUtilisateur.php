@@ -3,6 +3,7 @@
 namespace App\Sae\Lib;
 
 use App\Sae\Configuration\ConfigurationLDAP;
+use App\Sae\Configuration\ConfigurationSite;
 use App\Sae\Modele\HTTP\Session;
 use App\Sae\Modele\Repository\EtudiantRepository;
 use App\Sae\Modele\Repository\ProfesseurRepository;
@@ -49,7 +50,8 @@ class ConnexionUtilisateur
             || self::estUtilisateur("lyfoungn")
             || self::estUtilisateur("laurentg")
             || self::estUtilisateur("nedjary")
-            || (self::estUtilisateur("messaoui"));
+            || (self::estUtilisateur("messaoui")
+            || (self::estUtilisateur("desertg")));
     }
 
     /**
@@ -57,6 +59,11 @@ class ConnexionUtilisateur
      */
     public static function estEtudiant(): bool
     {
+
+        if (ConfigurationSite::getDebug()) {
+            return false;
+        }
+
         if (!self::estConnecte()) {
             return false;
         }

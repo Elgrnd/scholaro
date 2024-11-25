@@ -31,7 +31,6 @@ if (!class_exists($nomDeClasseControleur)) {
         $action = $_REQUEST['action'];
         // Si l'action n'est pas une méthode de la classe, afficher une erreur
         if (!method_exists($nomDeClasseControleur, $action)) {
-            echo 'ratio2';
             $action = 'afficherErreur';
         }
 
