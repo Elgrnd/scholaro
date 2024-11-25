@@ -3,6 +3,7 @@ require_once __DIR__ . '/../src/Lib/Psr4AutoloaderClass.php';
 
 use App\Sae\Controleur\ControleurEtudiant as ControleurEtudiant;
 use App\Sae\Lib\ChoixControleur;
+use App\Sae\Lib\ConnexionUtilisateur;
 
 // initialisation en activant l'affichage de débogage
 $chargeurDeClasse = new App\Sae\Lib\Psr4AutoloaderClass(false);
@@ -34,6 +35,14 @@ if (!class_exists($nomDeClasseControleur)) {
             $action = 'afficherErreur';
         }
 
+    }
+}
+
+if (ConnexionUtilisateur::estConnecte()) {
+    if (ConnexionUtilisateur::estAdministrateur()) {
+        $action = 'afficherListe';
+    } else if (ConnexionUtilisateur::estEtudiant()) {
+        $action = 'afficherEtudiantPage';
     }
 }
 
