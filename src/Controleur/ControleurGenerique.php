@@ -45,42 +45,44 @@ class ControleurGenerique
             self::afficherErreur("Login et/ou mot de passe manquant(s)");
             return;
         }
+       if($_SERVER["HTTP_HOST"] == "webinfo.iutmontp.univ-montp2.fr") {
+           $ldapConnection = ConfigurationLDAP::connecterServeur();
 
-        $ldapConnection = ConfigurationLDAP::connecterServeur();
+           // Login / mot de passe ˋa tester
+           $ldapLogin = $_REQUEST['login'];
+           $ldapPassword = $_REQUEST['mdp'];
 
-        // Login / mot de passe ˋa tester
-        $ldapLogin = $_REQUEST['login'];
-        $ldapPassword = $_REQUEST['mdp'];
+           // DN (distinguished name) de base ˋa l’IUT
+           $ldapBaseDN = ConfigurationLDAP::getLdapBaseDN();
 
-        // DN (distinguished name) de base ˋa l’IUT
-        $ldapBaseDN = ConfigurationLDAP::getLdapBaseDN();
+           // Filtre par uid (idenfiant unique)
+           $ldapSearchFilter = "(uid=$ldapLogin)";
+           $ldapSearch = ldap_search($ldapConnection, $ldapBaseDN, $ldapSearchFilter, array());
 
-        // Filtre par uid (idenfiant unique)
-        $ldapSearchFilter = "(uid=$ldapLogin)";
-        $ldapSearch = ldap_search($ldapConnection, $ldapBaseDN, $ldapSearchFilter, array());
+           // Recherche des utilisateurs avec cet identifiant
+           $ldapUserResult = ldap_get_entries($ldapConnection, $ldapSearch);
 
-        // Recherche des utilisateurs avec cet identifiant
-        $ldapUserResult = ldap_get_entries($ldapConnection, $ldapSearch);
+           // Vérification que le login existe bien
+           if ($ldapUserResult["count"] != 1) {
+               self::afficherErreur("Utilisateur inconnu");
+               return;
+           }
 
-        // Vérification que le login existe bien
-        if ($ldapUserResult["count"] != 1) {
-            self::afficherErreur("Utilisateur inconnu");
-            return;
-        }
+           // Récupération du DN complet de l’utilisateur
+           $ldapUserDN = $ldapUserResult[0]["dn"];
 
-        // Récupération du DN complet de l’utilisateur
-        $ldapUserDN = $ldapUserResult[0]["dn"];
-
-        // Tentative de connexion avec login / mdp
-        // Le @ sert à éviter l’écriture d’un message de Warning en cas d’identifiants incorrects
-        $ldapBindSuccessful = @ldap_bind($ldapConnection, $ldapUserDN, $ldapPassword);
-        if ($ldapBindSuccessful) {
-            ConnexionUtilisateur::connecter($ldapLogin);
-            self::afficherVue("vueGenerale.php", ["titre" => "Connexion réussie", "cheminCorpsVue" => "connecte.php"]);
-        } else {
-            self::afficherErreur("Identifiants incorrects");
-        }
-
+           // Tentative de connexion avec login / mdp
+           // Le @ sert à éviter l’écriture d’un message de Warning en cas d’identifiants incorrects
+           $ldapBindSuccessful = @ldap_bind($ldapConnection, $ldapUserDN, $ldapPassword);
+           if ($ldapBindSuccessful) {
+               ConnexionUtilisateur::connecter($ldapLogin);
+               self::afficherVue("vueGenerale.php", ["titre" => "Connexion réussie", "cheminCorpsVue" => "connecte.php"]);
+           } else {
+               self::afficherErreur("Identifiants incorrects");
+           }
+       }else{
+           self::afficherErreur("Connexion LDAP impossible");
+       }
     }
 
     public static function deconnecter(): void
