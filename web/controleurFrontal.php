@@ -11,8 +11,17 @@ $chargeurDeClasse->register();
 // enregistrement d'une association "espace de nom" → "dossier"
 $chargeurDeClasse->addNamespace("App\Sae", __DIR__ . '/../src');
 
-$action = 'afficherFormulaireConnexion';
 $nomDeClasseControleur = '';
+
+if (ConnexionUtilisateur::estConnecte()) {
+    if (ConnexionUtilisateur::estAdministrateur()) {
+        $action = 'afficherListe';
+    } else if (ConnexionUtilisateur::estEtudiant()) {
+        $action = 'afficherEtudiantPage';
+    }
+} else {
+    $action = 'afficherFormulaireConnexion';
+}
 
 // Vérifier si 'controleur' est défini et construire le nom de la classe du contrôleur
 if (isset($_REQUEST['controleur'])) {
@@ -35,14 +44,6 @@ if (!class_exists($nomDeClasseControleur)) {
             $action = 'afficherErreur';
         }
 
-    }
-}
-
-if (ConnexionUtilisateur::estConnecte()) {
-    if (ConnexionUtilisateur::estAdministrateur()) {
-        $action = 'afficherListe';
-    } else if (ConnexionUtilisateur::estEtudiant()) {
-        $action = 'afficherEtudiantPage';
     }
 }
 
