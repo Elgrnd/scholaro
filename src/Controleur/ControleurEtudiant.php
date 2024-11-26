@@ -4,6 +4,7 @@ namespace App\Sae\Controleur;
 
 
 use App\Sae\Configuration\ConfigurationLDAP;
+use App\Sae\Configuration\ConfigurationSite;
 use App\Sae\Lib\ConnexionUtilisateur;
 use App\Sae\Lib\MotDePasse;
 use App\Sae\Modele\DataObject\Agregation;
@@ -94,6 +95,7 @@ class ControleurEtudiant extends ControleurGenerique
 
     /**
      * @return void affiche les détails d'un étudiant
+     * @throws \Exception
      */
     public static function afficherEtudiantPage(): void
     {
@@ -101,21 +103,25 @@ class ControleurEtudiant extends ControleurGenerique
             self::afficherErreur("Vous n'êtes pas connectés");
             return;
         }
-        if (!isset($_GET['id'])) {
+        if (!isset($_REQUEST['id'])) {
             self::afficherErreur("L'id de l'étudiant n'a pas été transmis");
             return;
         }
-        $etudiant = (new EtudiantRepository())->recupererParClePrimaire($_GET['id']);
+        $etudiant = (new EtudiantRepository())->recupererParClePrimaire($_REQUEST['id']);
         if (!$etudiant) {
-            self::afficherErreur("L'id n'est pas celle d'un étudiant");
+            self::afficherErreur("Aucunes infos sur l'étudiant");
             return;
         }
-        if (!ConnexionUtilisateur::estUtilisateur($etudiant->getEtudid()) && !ConnexionUtilisateur::estAdministrateur()) {
-            self::afficherErreur("Les détails d'un étudiant ne peuvent être vu que par lui même et un administrateur.");
-            return;
+        if (!ConfigurationSite::getDebug()) {
+            ConfigurationLDAP::connecterServeur();
+            if (!ConnexionUtilisateur::estUtilisateur(ConfigurationLDAP::getAvecUidNumber($_REQUEST['id'])) && !ConnexionUtilisateur::estAdministrateur()) {
+                self::afficherErreur("Les détails d'un étudiant ne peuvent être vu que par lui même et un administrateur.");
+                return;
+            }
         }
-        $notes = (new EtudiantRepository())->getNotesEtudiant($_GET['id']);
-        $notesAgregees = (new EtudiantRepository())->recupererNotesAgregees($_GET['id']);
+
+        $notes = (new EtudiantRepository())->getNotesEtudiant($_REQUEST['id']);
+        $notesAgregees = (new EtudiantRepository())->recupererNotesAgregees($_REQUEST['id']);
         ControleurGenerique::afficherVue("vueGenerale.php", ["titre" => "page Etudiant", "cheminCorpsVue" => "etudiant/etudiantPage.php", "etudiant" => $etudiant, "notes" => $notes, "notesAgregees" => $notesAgregees]);
     }
 
