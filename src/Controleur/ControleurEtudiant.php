@@ -27,9 +27,24 @@ class ControleurEtudiant extends ControleurGenerique
             return;
         }
         $etudiants = (new EtudiantRepository())->recuperer();
-        $agregation = (new AgregationRepository())->recupererParClePrimaire(109);
-        ControleurGenerique::afficherVue("vueGenerale.php", ["titre" => "Liste des étudiants", "cheminCorpsVue" => "etudiant/liste.php", "etudiants" => $etudiants, "agregation" => $agregation]);
+        ControleurGenerique::afficherVue("vueGenerale.php", ["titre" => "Liste des étudiants", "cheminCorpsVue" => "etudiant/liste.php", "etudiants" => $etudiants, "agregations" => []]);
 
+    }
+
+    public static function afficherListeFiltre()
+    {
+        if (!ConnexionUtilisateur::estAdministrateur()) {
+            self::afficherErreur("Vous n'avez pas les droits administrateurs");
+            return;
+        }
+        $etudiants = (new EtudiantRepository())->recuperer();
+        $agregations = array();
+        if (isset($_REQUEST['idAgregations'])){
+            foreach ($_REQUEST["idAgregations"] as $agregation){
+                $agregations[] = (new AgregationRepository())->recupererParClePrimaire($agregation);
+            }
+        }
+        ControleurGenerique::afficherVue("vueGenerale.php", ["titre" => "Liste des étudiants", "cheminCorpsVue" => "etudiant/liste.php", "etudiants" => $etudiants, "agregations" => $agregations]);
     }
 
     public static function triDecroissant(): void
@@ -38,11 +53,15 @@ class ControleurEtudiant extends ControleurGenerique
             self::afficherErreur("Vous n'avez pas les droits administrateurs");
             return;
         }
+
         if (isset($_REQUEST['idAgregation'])) {
-            $agregation = (new AgregationRepository())->recupererParClePrimaire($_REQUEST['idAgregation']);
+            $agregations = array();
+            foreach ($_REQUEST["idAgregations"] as $agregation){
+                $agregations[] = (new AgregationRepository())->recupererParClePrimaire($agregation);
+            }
             $etudiants = (new EtudiantRepository())->triDecroissantNoteEtudiants($_REQUEST['idAgregation']);
-            if ($agregation != null && $etudiants != null) {
-                ControleurGenerique::afficherVue("vueGenerale.php", ["titre" => "Liste des étudiants", "cheminCorpsVue" => "etudiant/liste.php", "etudiants" => $etudiants, "agregation" => $agregation]);
+            if ($etudiants != null) {
+                ControleurGenerique::afficherVue("vueGenerale.php", ["titre" => "Liste des étudiants", "cheminCorpsVue" => "etudiant/liste.php", "etudiants" => $etudiants, "agregations" => $agregations]);
             }else{
                 self::afficherListe();
             }
@@ -58,10 +77,13 @@ class ControleurEtudiant extends ControleurGenerique
             return;
         }
         if (isset($_REQUEST['idAgregation'])) {
-            $agregation = (new AgregationRepository())->recupererParClePrimaire($_REQUEST['idAgregation']);
+            $agregations = array();
+            foreach ($_REQUEST["idAgregations"] as $agregation){
+                $agregations[] = (new AgregationRepository())->recupererParClePrimaire($agregation);
+            }
             $etudiants = (new EtudiantRepository())->triCroissantNoteEtudiants($_REQUEST['idAgregation']);
-            if ($agregation != null && $etudiants != null) {
-                ControleurGenerique::afficherVue("vueGenerale.php", ["titre" => "Liste des étudiants", "cheminCorpsVue" => "etudiant/liste.php", "etudiants" => $etudiants, "agregation" => $agregation]);
+            if ($etudiants != null) {
+                ControleurGenerique::afficherVue("vueGenerale.php", ["titre" => "Liste des étudiants", "cheminCorpsVue" => "etudiant/liste.php", "etudiants" => $etudiants, "agregations" => $agregations]);
             }else{
                 self::afficherListe();
             }
@@ -96,68 +118,6 @@ class ControleurEtudiant extends ControleurGenerique
         $notesAgregees = (new EtudiantRepository())->recupererNotesAgregees($_GET['id']);
         ControleurGenerique::afficherVue("vueGenerale.php", ["titre" => "page Etudiant", "cheminCorpsVue" => "etudiant/etudiantPage.php", "etudiant" => $etudiant, "notes" => $notes, "notesAgregees" => $notesAgregees]);
     }
-
-    /* public static function creerAgregation()
-     {
-         if (!ConnexionUtilisateur::estAdministrateur()) {
-             self::afficherErreur("Uniquement disponible pour un administrateur.");
-             return;
-         }
-         if (!(isset($_REQUEST['nomAgregation'], $_REQUEST['etuid']))) {
-             self::afficherErreur("Données manquantes");
-             return;
-         }
-         $diviseur = 0;
-         $cumul = 0;
-         for ($i = 0; $i < $_REQUEST['id']; $i++) {
-             if (isset($_REQUEST['noteCheck' . $i]) && $_REQUEST['noteCheck' . $i] > 0) {
-                 $cumul += ($_REQUEST['noteagreger' . $i] * $_REQUEST['coeff' . $i]);
-                 $diviseur += $_REQUEST['coeff' . $i];
-             }
-         }
-         if ($diviseur == 0) {
-             self::afficherErreur("Aucune note sélectionnée");
-             return;
-         }
-         $res = $cumul / $diviseur;
-         $agregation = new Agregation(null, $_GET['nomAgregation'], $res, (new EtudiantRepository())->recupererParClePrimaire($_GET['etuid']));
-         $idAgregation = (new AgregationRepository())->ajouter($agregation);
-         $agregation->setIdAgregation($idAgregation);
-         for ($i = 0; $i < $_REQUEST['id']; $i++) {
-             if (isset($_REQUEST['noteCheck' . $i]) && $_REQUEST['noteCheck' . $i] > 0) {
-                 if (ctype_digit($_REQUEST['idNom' . $i])) {
-                     (new EtudiantRepository())->enregistrerAgregationAgregee($agregation->getIdAgregation(), $_REQUEST['idNom' . $i], $_REQUEST['coeff' . $i]);
-                 } else {
-                     (new EtudiantRepository())->enregistrerRessourceAgregeeAgregee($_REQUEST['idNom' . $i], $agregation->getIdAgregation(), $_REQUEST['coeff' . $i]);
-                 }
-             }
-         }
-         $notes = (new EtudiantRepository())->getNotesEtudiant($agregation->getEtudiant()->getEtudid());
-         $notesAgregees = (new EtudiantRepository())->recupererNotesAgregees($agregation->getEtudiant()->getEtudid());
-         ControleurGenerique::afficherVue("vueGenerale.php", ["titre" => "page Etudiant", "cheminCorpsVue" => "etudiant/agregationCreee.php", "etudiant" => $agregation->getEtudiant(), "notes" => $notes, "notesAgregees" => $notesAgregees]);
-
-     }*/
-
-    /*public static function supprimerAgregation(): void
-    {
-        if (!ConnexionUtilisateur::estAdministrateur()) {
-            self::afficherErreur("Uniquement disponible pour un administrateur.");
-            return;
-        }
-        if (!isset($_GET["idNoteAgregee"])) {
-            self::afficherErreur("Données manquantes");
-            return;
-        }
-        $test = (new AgregationRepository())->supprimer($_GET['idNoteAgregee']);
-        if (!$test) {
-            self::afficherErreur("Agregation inconnu");
-            return;
-        }
-        $etudiant = (new EtudiantRepository())->recupererParClePrimaire($_GET['etudid']);
-        $notes = (new EtudiantRepository())->getNotesEtudiant($etudiant->getEtudid());
-        $notesAgregees = (new EtudiantRepository())->recupererNotesAgregees($etudiant->getEtudid());
-        ControleurGenerique::afficherVue("vueGenerale.php", ["titre" => "page Etudiant", "cheminCorpsVue" => "etudiant/agregationSuppr.php", "etudiant" => $etudiant, "notes" => $notes, "notesAgregees" => $notesAgregees]);
-    }*/
 
     public static function ajouterDepuisCSV(): void
     {
