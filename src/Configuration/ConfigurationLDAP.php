@@ -60,6 +60,13 @@ class ConfigurationLDAP
         return $utilisateurs;
     }
 
+    public static function getAvecUidNumber($uidnumber) {
+        // On recherche toutes les entr´ees du LDAP qui sont des personnes
+        $ldapSearch = ldap_search(self::$ldapConnection, \App\Sae\Configuration\ConfigurationLDAP::getLdapBaseDN(), "(&(uidnumber=$uidnumber)(objectClass=person))");
+        $ldapResults = ldap_get_entries(\App\Sae\Configuration\ConfigurationLDAP::getLdapConnection(), $ldapSearch);
+        return $ldapResults[0]["uid"] ?? null;
+    }
+
     public static function getLdapServer(): mixed
     {
         return self::$ldapServer;
