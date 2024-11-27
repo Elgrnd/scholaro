@@ -15,8 +15,8 @@
             echo '
             <p>Ressources :</p>';
             foreach ($ressources as $ressource) {
-                echo "<p>Nom ".$ressource->getNomRessource() ."
-                    <input type='hidden' name='idNom$id' value=".$ressource->getNomRessource().">  
+                echo "<p>Nom ".htmlspecialchars($ressource->getNomRessource()) ."
+                    <input type='hidden' name='idNom$id' value=".htmlspecialchars($ressource->getNomRessource()).">  
                     <input type='number' name='coeff$id' value='0' id='coefRessource$id'>
                 </p>";
                 $id += 1;
@@ -24,7 +24,7 @@
         }
         if (!empty($agregations)){
             foreach ($agregations as $agregation) {
-                echo "<p> Nom ".$agregation->getNomAgregation() ."
+                echo "<p> Nom ". htmlspecialchars($agregation->getNomAgregation()) ."
                     <input type='hidden' name='idNom$id' value=".$agregation->getIdAgregation().">  
                     <input type='number' name='coeff$id' value='0' id='coefAgregation$id'>
                 </p>";

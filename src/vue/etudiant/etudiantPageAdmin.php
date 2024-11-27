@@ -17,6 +17,8 @@
     $codeNip = htmlspecialchars($etudiant->getCodenip());
 
 
+
+
     ?>
 
     <p> Code Nip : <?=$codeNip?></p>
@@ -31,19 +33,19 @@
     <h1>Ecole Favorite</h1>
     <form method=<?php if (\App\Sae\Configuration\ConfigurationSite::getDebug()) echo "get"; else echo "post" ?> action="">
 
-    <?php
-    foreach ((new \App\Sae\Modele\Repository\EcoleRepestory())->recuperer() as $ecole) {
-        $check = "";
-        if (!empty($ecolesChoisie)){
-            if (in_array($ecole, $ecolesChoisie)){
-                $check = "checked";
-            }
+        <?php
+        foreach ($ecolesChoisie as $ecole) {
+            $ecolesChoisieNom = htmlspecialchars($ecole->getNomEcole());
+            $ecolesChoisieVille = htmlspecialchars($ecole->getNomVille());
+            echo '<label for="'. $ecole->getIdEcole() . '">'.$ecolesChoisieNom . ' -> ' . $ecolesChoisieVille . '</label>' .
+            '<select name="ecole" id="choixEcole">
+                <option value="ecole1">École 1</option>
+                <option value="ecole2">École 2</option>
+                <option value="ecole3">École 3</option>
+            </select>'
+            ;
         }
-        echo '<input type="checkbox" name="idEcoles[]" value="'.$ecole->getIdEcole().'" id="'.$ecole->getIdEcole().'" '. $check .'>
-        <label for="'.$ecole->getIdEcole().'">'.htmlspecialchars($ecole->getNomEcole()).'</label>
-        ';
-    }
-    ?>
+        ?>
         <input type="hidden" name="idEtudiant" value="<?=$etudiant->getEtudid()?>">
         <input type='hidden' name='action' value='ajouterEcoleFavoris'>
         <input type="hidden" name="controleur" value="etudiant">
@@ -62,10 +64,10 @@
 
     $idEtu = $etudiant->getEtudid();
     if (!empty($notes)) {
-    echo "
+        echo "
     <form method='get' action='controleurFrontal.php'>
     <fieldset>";
-    $id = 0;
+        $id = 0;
         foreach ($notes as $note) {
             echo "<p>$note[2] : $note[3] </p>";
             $id+= 1;

@@ -11,7 +11,7 @@
                     }
                 }
                 echo "<input type=checkbox name='idAgregations[]' value='".$agregation->getIdAgregation()."' id='".$agregation->getIdAgregation()."' ".$check.">
-                <label for='".$agregation->getIdAgregation()."' > ".$agregation->getNomAgregation()." </label> 
+                <label for='".htmlspecialchars($agregation->getIdAgregation())."' > ".htmlspecialchars($agregation->getNomAgregation())." </label> 
             ";
             }
             ?>
@@ -53,7 +53,7 @@
                     $actionTexte .= "&idAgregations%5B%5D=".$agregation->getIdAgregation();
                 }
                 foreach ($agregations as $agregation) {
-                    echo '<th>' . $agregation->getNomAgregation() .
+                    echo '<th>' . htmlspecialchars($agregation->getNomAgregation()) .
                         '<a href="?controleur=etudiant&action=triDecroissant&idAgregation=' . $agregation->getIdAgregation() . $actionTexte.'"> ⬆️ </a>
                     <a href="?controleur=etudiant&action=triCroissant&idAgregation=' . $agregation->getIdAgregation() . $actionTexte.'">⬇️</a> </th>';
                 }
