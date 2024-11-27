@@ -32,7 +32,7 @@
     <form method=<?php if (\App\Sae\Configuration\ConfigurationSite::getDebug()) echo "get"; else echo "post" ?> action="">
 
     <?php
-    foreach ((new \App\Sae\Modele\Repository\EcoleRepestory())->recuperer() as $ecole) {
+    foreach ((new \App\Sae\Modele\Repository\EcoleRepository())->recuperer() as $ecole) {
         $check = "";
         if (!empty($ecolesChoisie)){
             if (in_array($ecole, $ecolesChoisie)){

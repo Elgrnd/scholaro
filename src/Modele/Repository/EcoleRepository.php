@@ -6,7 +6,7 @@ use App\Sae\Modele\DataObject\AbstractDataObject;
 use App\Sae\Modele\Repository\AbstractDataRepository;
 use App\Sae\Modele\DataObject\Ecole;
 
-class EcoleRepestory extends AbstractDataRepository
+class EcoleRepository extends AbstractDataRepository
 {
 
     protected function getNomTable(): string
