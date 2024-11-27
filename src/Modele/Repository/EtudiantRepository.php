@@ -277,4 +277,21 @@ class EtudiantRepository extends AbstractDataRepository
             "avisTag" => $objet->getAvis(),
         );
     }
+
+    public function ajouterEcoleFav($idEcoles, $idEtudiant)
+    {
+        $sql1 = "DELETE FROM ecoleFavoris WHERE idEtudiant = :idEtudiantTag";
+        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql1);
+        $values = array("idEtudiantTag" => $idEtudiant);
+        $pdoStatement->execute($values);
+
+
+        foreach ($idEcoles as $idEcole){
+            $sql2 = "INSERT INTO ecoleFavoris (idEcole, idEtudiant) VALUES (:idEcoleTag, :idEtudiantTag)";
+            $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql2);
+            $values = array("idEcoleTag" => $idEcole, "idEtudiantTag" => $idEtudiant);
+            $pdoStatement->execute($values);
+        }
+    }
+
 }

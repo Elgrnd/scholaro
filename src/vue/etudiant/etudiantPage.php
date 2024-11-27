@@ -6,6 +6,7 @@
     <?php
     /**
      * @var \App\Sae\Modele\DataObject\Etudiant $etudiant
+     * @var \App\Sae\Modele\DataObject\Ecole[] $ecolesChoisie
      */
 
     $nomEtudiant = htmlspecialchars($etudiant->getNomEtu());
@@ -14,6 +15,7 @@
     $bac = htmlspecialchars($etudiant->getBac());
     $spe = htmlspecialchars($etudiant->getSpecialite());
     $codeNip = htmlspecialchars($etudiant->getCodenip());
+
 
     ?>
 
@@ -24,6 +26,29 @@
     <p> Baccalauréat : <?=$bac?> </p>
     <p> Spécialité : <?=$spe?> </p>
 
+
+
+    <h1>Ecole Favorite</h1>
+    <form method=<?php if (\App\Sae\Configuration\ConfigurationSite::getDebug()) echo "get"; else echo "post" ?> action="">
+
+    <?php
+    foreach ((new \App\Sae\Modele\Repository\EcoleRepestory())->recuperer() as $ecole) {
+        $check = "";
+        if (!empty($ecolesChoisie)){
+            if (in_array($ecole, $ecolesChoisie)){
+                $check = "checked";
+            }
+        }
+        echo '<input type="checkbox" name="idEcoles[]" value="'.$ecole->getIdEcole().'" id="'.$ecole->getIdEcole().'" '. $check .'>
+        <label for="'.$ecole->getIdEcole().'">'.$ecole->getNomEcole().'</label>
+        ';
+    }
+    ?>
+        <input type="hidden" name="idEtudiant" value="<?=$etudiant->getEtudid()?>">
+        <input type='hidden' name='action' value='ajouterEcoleFavoris'>
+        <input type="hidden" name="controleur" value="etudiant">
+        <input type="submit" name="valider" value="Valider">
+    </form>
 </div>
 <div class="content">
     <h1>

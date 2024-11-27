@@ -10,6 +10,7 @@ use App\Sae\Lib\MotDePasse;
 use App\Sae\Modele\DataObject\Agregation;
 use App\Sae\Modele\DataObject\Noter;
 use App\Sae\Modele\Repository\AgregationRepository;
+use App\Sae\Modele\Repository\EcoleRepestory;
 use App\Sae\Modele\Repository\EtudiantRepository;
 use App\Sae\Modele\DataObject\Etudiant;
 use App\Sae\Modele\Repository\NoterRepository;
@@ -103,26 +104,38 @@ class ControleurEtudiant extends ControleurGenerique
             self::afficherErreur("Vous n'êtes pas connectés");
             return;
         }
-        if (!isset($_REQUEST['id'])) {
+        if (!isset($_REQUEST['idEtudiant'])) {
             self::afficherErreur("L'id de l'étudiant n'a pas été transmis");
             return;
         }
-        $etudiant = (new EtudiantRepository())->recupererParClePrimaire($_REQUEST['id']);
+        $etudiant = (new EtudiantRepository())->recupererParClePrimaire($_REQUEST['idEtudiant']);
         if (!$etudiant) {
             self::afficherErreur("Aucunes infos sur l'étudiant");
             return;
         }
         if (!ConfigurationSite::getDebug()) {
             ConfigurationLDAP::connecterServeur();
-            if (!ConnexionUtilisateur::estUtilisateur(ConfigurationLDAP::getAvecUidNumber($_REQUEST['id'])) && !ConnexionUtilisateur::estAdministrateur()) {
+            if (!ConnexionUtilisateur::estUtilisateur(ConfigurationLDAP::getAvecUidNumber($_REQUEST['idEtudiant'])) && !ConnexionUtilisateur::estAdministrateur()) {
                 self::afficherErreur("Les détails d'un étudiant ne peuvent être vu que par lui même et un administrateur.");
                 return;
             }
         }
+        $ecolechoisi = (new EcoleRepestory())->recuperEcoleFavoris($_REQUEST["idEtudiant"]);
+        $notes = (new EtudiantRepository())->getNotesEtudiant($_REQUEST['idEtudiant']);
+        $notesAgregees = (new EtudiantRepository())->recupererNotesAgregees($_REQUEST['idEtudiant']);
+        ControleurGenerique::afficherVue("vueGenerale.php", ["titre" => "page Etudiant", "cheminCorpsVue" => "etudiant/etudiantPage.php", "etudiant" => $etudiant, "notes" => $notes, "notesAgregees" => $notesAgregees, "ecolesChoisie"=>$ecolechoisi]);
+    }
 
-        $notes = (new EtudiantRepository())->getNotesEtudiant($_REQUEST['id']);
-        $notesAgregees = (new EtudiantRepository())->recupererNotesAgregees($_REQUEST['id']);
-        ControleurGenerique::afficherVue("vueGenerale.php", ["titre" => "page Etudiant", "cheminCorpsVue" => "etudiant/etudiantPage.php", "etudiant" => $etudiant, "notes" => $notes, "notesAgregees" => $notesAgregees]);
+    public static function ajouterEcoleFavoris()
+    {
+        if (!ConnexionUtilisateur::estConnecte()) {
+            self::afficherErreur("Vous n'êtes pas connectés");
+            return;
+        }
+        if (isset($_REQUEST['idEcoles'])) {
+            (new EtudiantRepository())->ajouterEcoleFav($_REQUEST["idEcoles"], $_REQUEST["idEtudiant"]);
+        }
+        self::afficherEtudiantPage();
     }
 
     public static function ajouterDepuisCSV(): void
