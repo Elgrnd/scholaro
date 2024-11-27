@@ -61,7 +61,7 @@ class ConnexionUtilisateur
     {
 
         if (ConfigurationSite::getDebug()) {
-            return true;
+            return false;
         }
 
         if (!self::estConnecte()) {

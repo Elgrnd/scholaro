@@ -5,6 +5,7 @@ namespace App\Sae\Controleur;
 use App\Sae\Configuration\ConfigurationLDAP;
 use App\Sae\Configuration\ConfigurationSite;
 use App\Sae\Lib\ChoixControleur;
+use App\Sae\Lib\ChoixSemestre;
 use App\Sae\Lib\ConnexionUtilisateur;
 use App\Sae\Lib\MessageFlash;
 
@@ -29,6 +30,19 @@ class ControleurGenerique
             return;
         }
         self::afficherVue("vueGenerale.php", ["titre" => "Connexion", "cheminCorpsVue" => "formulaireConnexion.php"]);
+    }
+
+    public static function enregistrerSemestre(): void {
+        $semestres = [];
+        for ($i = 1; $i < 6; $i++) {
+            $numSemestre = 'numSemestre' . $i;
+            if (isset($_REQUEST[$numSemestre])) {
+                $semestres[] = $_REQUEST[$numSemestre];
+            }
+        }
+        ChoixSemestre::enregistrer($semestres);
+        MessageFlash::ajouter("success", "Changements appliqués");
+        self::redirectionVersUrl("controleurFrontal.php?action=afficherFormulaire&controleur=agregation");
     }
 
     /**

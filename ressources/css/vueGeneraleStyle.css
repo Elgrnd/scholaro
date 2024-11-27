@@ -3,6 +3,8 @@
     padding: 0;
     text-decoration: none;
     list-style: none;
+    font-family: 'apple', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Open Sans', 'Helvetica Neue', sans-serif;
+
 }
 
 html::-webkit-scrollbar {
@@ -47,7 +49,6 @@ header {
     padding: 5px;
     font-size: 17px;
     font-weight: bold;
-    font-family: 'apple', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
 .navbar a:hover {
@@ -97,7 +98,6 @@ footer {
 
 .co {
     color: white;
-    font-family: 'apple', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
 .alert {

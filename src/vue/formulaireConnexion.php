@@ -1,4 +1,4 @@
-<form method=<?php if (\App\Sae\Configuration\ConfigurationSite::getDebug()) echo "get"; else echo "post" ?> action="controleurFrontal.php">
+<form method="<?php if (\App\Sae\Configuration\ConfigurationSite::getDebug()) echo "get"; else echo "post" ?>" action="controleurFrontal.php">
     <fieldset>
         <legend>Connexion :</legend>
         <input type='hidden' name='action' value='connecter'>
