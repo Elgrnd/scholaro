@@ -3,6 +3,7 @@
 namespace App\Sae\Controleur;
 
 use App\Sae\Lib\ConnexionUtilisateur;
+use App\Sae\Lib\MessageFlash;
 use App\Sae\Modele\DataObject\Agregation;
 use App\Sae\Modele\DataObject\Etudiant;
 use App\Sae\Modele\Repository\AgregationRepository;
@@ -17,7 +18,8 @@ class ControleurAgregation extends ControleurGenerique
     public static function afficherListe(): void
     {
         if (!ConnexionUtilisateur::estAdministrateur()) {
-            self::afficherErreur("Vous n'avez pas les droits administrateurs");
+            MessageFlash::ajouter("danger", "Vous n'avez pas les droits administrateurs");
+            self::redirectionVersUrl("controleurFrontal.php");
             return;
         }
         $agregations = (new AgregationRepository())->recuperer();
@@ -31,7 +33,8 @@ class ControleurAgregation extends ControleurGenerique
     public static function afficherDetail(): void
     {
         if (!ConnexionUtilisateur::estAdministrateur()) {
-            self::afficherErreur("Vous n'avez pas les droits administrateurs");
+            MessageFlash::ajouter("danger", "Vous n'avez pas les droits administrateurs");
+            self::redirectionVersUrl("controleurFrontal.php");
             return;
         }
         if ($_REQUEST['id']) {
@@ -42,10 +45,12 @@ class ControleurAgregation extends ControleurGenerique
                 */
                 ControleurGenerique::afficherVue("vueGenerale.php", ["titre" => "page Agrégation", "cheminCorpsVue" => "agregation/detail.php", "agregation" => $agregation/*, "listeRessources" => $listeRessources, "listeAgregations" => $listeAgregations*/]);
             } else {
-                self::afficherErreur("L'id n'est pas celle d'une agrégation");
+                MessageFlash::ajouter("warning", "L'id n'est pas celle d'une agrégation");
+                self::redirectionVersUrl("controleurFrontal.php?action=afficherListe&controleur=agregation");
             }
         } else {
-            self::afficherErreur("L'id de l'étudiant n'a pas été transmis");
+            MessageFlash::ajouter("warning", "L'id de l'étudiant n'a pas été transmis");
+            self::redirectionVersUrl("controleurFrontal.php?action=afficherListe&controleur=agregation");
         }
     }
 
@@ -55,7 +60,8 @@ class ControleurAgregation extends ControleurGenerique
     public static function afficherFormulaire(): void
     {
         if (!ConnexionUtilisateur::estAdministrateur()) {
-            self::afficherErreur("Vous n'avez pas les droits administrateurs");
+            MessageFlash::ajouter("danger", "Vous n'avez pas les droits administrateurs");
+            self::redirectionVersUrl("controleurFrontal.php");
         } else {
             $agregations = (new AgregationRepository())->recuperer();
             $ressources = (new RessourceRepository())->recuperer();
@@ -66,7 +72,8 @@ class ControleurAgregation extends ControleurGenerique
     public static function construireDepuisFormulaire(): void
     {
         if (!ConnexionUtilisateur::estAdministrateur()) {
-            self::afficherErreur("Vous n'avez pas les droits administrateurs");
+            MessageFlash::ajouter("danger", "Vous n'avez pas les droits administrateurs");
+            self::redirectionVersUrl("controleurFrontal.php");
             return;
         }
 
@@ -74,7 +81,8 @@ class ControleurAgregation extends ControleurGenerique
         $count = $_REQUEST['count'] ?? 0;
 
         if (!$nomAgregation || !$count) {
-            self::afficherErreur("Vous avez oublié le nom de l'agrégation à créer et/ou de sélectionner des ressources");
+            MessageFlash::ajouter("warning", "Vous avez oublié le nom de l'agrégation et/ou de sélectionner des ressources");
+            self::redirectionVersUrl("controleurFrontal.php?action=afficherFormulaire&controleur=agregation");
             return;
         }
 
@@ -90,7 +98,8 @@ class ControleurAgregation extends ControleurGenerique
         }
 
         if (empty($tabNom) || empty($tabCoeff)) {
-            self::afficherErreur("Aucune ressource ou agrégation n'a été enregistrée");
+            MessageFlash::ajouter("warning", "Aucune ressource ou agrégation n'a été enregistrée");
+            self::redirectionVersUrl("controleurFrontal.php?action=afficherFormulaire&controleur=agregation");
             return;
         }
 
@@ -121,11 +130,8 @@ class ControleurAgregation extends ControleurGenerique
 
         // Récupération des agrégations pour affichage
         $agregations = $agregationRepo->recuperer();
-        ControleurGenerique::afficherVue("vueGenerale.php", [
-            "titre" => "Liste des agrégations",
-            "cheminCorpsVue" => "agregation/liste.php",
-            "agregations" => $agregations
-        ]);
+        MessageFlash::ajouter("success", "Agrégation créée avec succès !");
+        self::redirectionVersUrl("controleurFrontal.php?action=afficherListe&controleur=agregation");
     }
 
 }
