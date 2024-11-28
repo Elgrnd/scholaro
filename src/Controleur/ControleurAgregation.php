@@ -23,6 +23,13 @@ class ControleurAgregation extends ControleurGenerique
             return;
         }
         $agregations = (new AgregationRepository())->recuperer();
+        foreach ($agregations as $agregation) {
+            $listeRessources = (new AgregationRepository())->listeRessourcesAgregees($agregation->getIdAgregation());
+            $listeAgregation = (new AgregationRepository())->listeAgregationsAgregees($agregation->getIdAgregation());
+            if (empty($listeAgregation) && empty($listeRessources)) {
+                (new AgregationRepository())->supprimer($agregation->getIdAgregation());
+            }
+        }
         ControleurGenerique::afficherVue("vueGenerale.php", ["titre" => "Liste des agregations", "cheminCorpsVue" => "agregation/liste.php", "agregations" => $agregations]);
 
     }
