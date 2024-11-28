@@ -42,23 +42,7 @@ class ControleurAgregation extends ControleurGenerique
             if ($agregation) {
                 $listeRessources = (new AgregationRepository())->listeRessourcesAgregees($_REQUEST['id']);
                 $listeAgregations = (new AgregationRepository())->listeAgregationsAgregees($_REQUEST['id']);
-                $moyenne = 0;
-                $cpt = 0;
-                if (!empty($listeRessources)) {
-                    $moyenne += (new AgregationRepository())->moyenne($_REQUEST['id']);
-                    $cpt += 1;
-                }
-                $coef = 0;
-                if (!empty($listeAgregations)) {
-                    foreach ($listeAgregations as $agreg) {
-                        $moyenne += (new AgregationRepository())->moyenne($agreg[0]) * $agreg[1];
-                        $coef += $agreg[1];
-                    }
-                    $cpt += 1;
-                    $moyenne /= $coef;
-                }
-                $moyenne /= $cpt;
-                ControleurGenerique::afficherVue("vueGenerale.php", ["titre" => "page Agrégation", "cheminCorpsVue" => "agregation/detail.php", "agregation" => $agregation, "listeRessources" => $listeRessources, "listeAgregations" => $listeAgregations, "moyenne" => $moyenne]);
+                ControleurGenerique::afficherVue("vueGenerale.php", ["titre" => "page Agrégation", "cheminCorpsVue" => "agregation/detail.php", "agregation" => $agregation, "listeRessources" => $listeRessources, "listeAgregations" => $listeAgregations]);
             } else {
                 MessageFlash::ajouter("warning", "L'id n'est pas celle d'une agrégation");
                 self::redirectionVersUrl("controleurFrontal.php?action=afficherListe&controleur=agregation");
@@ -158,10 +142,8 @@ class ControleurAgregation extends ControleurGenerique
             }
         }
 
-        // Récupération des agrégations pour affichage
-        $agregations = $agregationRepo->recuperer();
         MessageFlash::ajouter("success", "Agrégation créée avec succès !");
-        self::redirectionVersUrl("controleurFrontal.php?action=afficherListe&controleur=agregation");
+        self::redirectionVersUrl('controleurFrontal.php?action=afficherDetail&controleur=agregation&id=' . $idAgregation);
     }
 
 }

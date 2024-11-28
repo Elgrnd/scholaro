@@ -1,34 +1,45 @@
-
 <?php
 /**
  * @var \App\Sae\Modele\DataObject\Agregation $agregation
  * @var array $listeRessources
  * @var float $moyenne
  */
-echo '<h2>' . htmlspecialchars($agregation->getNomAgregation()) .'</h2>';
 
+echo '<div id="agregation-details">';
+echo '<h2 class="agregation-title">' . htmlspecialchars($agregation->getNomAgregation()) . '</h2>';
+
+// Section des ressources
 if (!empty($listeRessources)) {
-    echo "<h3>liste notes :</h3>";
+    echo '<div class="ressources-section">';
+    echo '<h3 class="ressources-title">Liste des notes :</h3>';
     foreach ($listeRessources as $ressource) {
-        echo "<p> Ressource : " . $ressource[0] . ' </p> <p> Coefficient : ' . $ressource[1] . "</p>";
+        echo '<div class="ressource-item">';
+        echo '<p class="ressource-name">Ressource : ' . htmlspecialchars($ressource[0]) . '</p>';
+        echo '<p class="ressource-coef">Coefficient : ' . htmlspecialchars($ressource[1]) . '</p>';
+        echo '</div>';
     }
+    echo '</div>';
 }
 
-if(!empty($listeAgregations)){
-    echo "<h3>liste agregations :</h3>";
+// Section des agrégations
+if (!empty($listeAgregations)) {
+    echo '<div class="agregations-section">';
+    echo '<h3 class="agregations-title">Liste des agrégations :</h3>';
     foreach ($listeAgregations as $agregations) {
-        $id = $agregations[0];
-        echo "<div> <p> id : <a href='controleurFrontal.php?action=afficherDetail&controleur=agregation&id=$id'>" . $id . ' </p></a> <p> Coefficient : ' .$agregations[1] . "</p> </div>";
+        $id = htmlspecialchars($agregations[0]);
+        echo '<div class="agregation-item">';
+        echo '<p class="agregation-id">ID : <a href="controleurFrontal.php?action=afficherDetail&controleur=agregation&id=' . $id . '" class="agregation-link">' . $id . '</a></p>';
+        echo '<p class="agregation-coef">Coefficient : ' . htmlspecialchars($agregations[1]) . '</p>';
+        echo '</div>';
     }
+    echo '</div>';
 }
 
-echo "<h3> moyenne : " . $moyenne . " </h3>";
+// Bouton de suppression
+echo '<a href="controleurFrontal.php?action=supprimer&controleur=agregation&id=' . htmlspecialchars($agregation->getIdAgregation()) . '" 
+       class="delete-agregation-link" 
+       onclick="return confirm(\'Êtes-vous sûr de vouloir supprimer cette agrégation ? \nCela peut modifier d\\\'autres agrégations.\');">';
+echo '<div class="delete-agregation-button">Supprimer l\'agrégation</div>';
+echo '</a>';
 
-?>
-
-<a href="controleurFrontal.php?action=supprimer&controleur=agregation&id=<?= $agregation->getIdAgregation()?>"
-   onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette agrégation ? \nCela peut modifier d\'autres agrégations.');">
-    <div>
-        Supprimer l'agrégation
-    </div>
-</a>
+echo '</div>';
