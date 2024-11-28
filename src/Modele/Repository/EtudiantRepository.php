@@ -309,7 +309,7 @@ class EtudiantRepository extends AbstractDataRepository
 
     public function ajouterCommentaireEcole($commentaires , $idEtudiant)
     {
-        foreach ((new EcoleRepestory())->recupererEcoleFavoris($idEtudiant) as $ecoleFavoris){
+        foreach ((new EcoleRepository())->recupererEcoleFavoris($idEtudiant) as $ecoleFavoris){
             $sql = "UPDATE ecoleFavoris SET commentaire = :commentaireTag WHERE idEtudiant = :idEtudiantTag AND idEcole = :idEcole";
             $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
             $values = array("commentaireTag" => $commentaires[$ecoleFavoris->getIdEcole()], "idEtudiantTag" => $idEtudiant, "idEcole" => $ecoleFavoris->getIdEcole());

@@ -88,7 +88,7 @@
             echo '<h1>Ecole Favorite</h1>
             <form method="'. $methode .'" action="?">
            ';
-            foreach ((new \App\Sae\Modele\Repository\EcoleRepestory())->recuperer() as $ecole) {
+            foreach ((new \App\Sae\Modele\Repository\EcoleRepository())->recuperer() as $ecole) {
                 $check = "";
                 if (!empty($ecolesChoisie)){
                     if (in_array($ecole, $ecolesChoisie)){

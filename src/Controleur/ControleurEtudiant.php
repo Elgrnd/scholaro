@@ -122,7 +122,7 @@ class ControleurEtudiant extends ControleurGenerique
         $ecolechoisi = (new EcoleRepository())->recupererEcoleFavoris($_REQUEST["idEtudiant"]);
         $notes = (new EtudiantRepository())->getNotesEtudiant($_REQUEST['idEtudiant']);
         $notesAgregees = (new EtudiantRepository())->recupererNotesAgregees($_REQUEST['idEtudiant']);
-        $avis = (new EcoleRepestory())->recupererAvis($_REQUEST["idEtudiant"]);
+        $avis = (new EcoleRepository())->recupererAvis($_REQUEST["idEtudiant"]);
         ControleurGenerique::afficherVue("vueGenerale.php", ["titre" => "page Etudiant", "cheminCorpsVue" => "etudiant/etudiantPage.php", "etudiant" => $etudiant, "notes" => $notes, "notesAgregees" => $notesAgregees, "ecolesChoisie"=>$ecolechoisi, "regarder" => $regarder, "avis" => $avis]);
     }
 
