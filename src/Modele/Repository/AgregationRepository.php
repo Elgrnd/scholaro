@@ -92,6 +92,22 @@ class AgregationRepository extends AbstractDataRepository
         }
         return $tab;
     }
+
+    public function moyenne(int $idAgregation): float
+    {
+        $sql = "SELECT AVG(note) AS moyenne 
+                FROM etudiantAgregation 
+                 WHERE idAgregation = :idAgregationTag";
+        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
+        $values = array(
+            "idAgregationTag" => $idAgregation
+        );
+        $pdoStatement->execute($values);
+        $res = $pdoStatement->fetch();
+        $moyenne = $res['moyenne'] !== null ? (float)$res['moyenne'] : 0.0;
+        return round($moyenne, 2);
+    }
+
 }
 
 ?>
