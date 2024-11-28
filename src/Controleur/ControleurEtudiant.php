@@ -134,6 +134,28 @@ class ControleurEtudiant extends ControleurGenerique
         self::afficherEtudiantPage();
     }
 
+    public static function afficherPdf() {
+        if (!ConnexionUtilisateur::estConnecte()) {
+            MessageFlash::ajouter("warning", "Vous n'êtes pas connectés");
+            self::redirectionVersUrl("controleurFrontal.php");
+            return;
+        }
+        $etudiant = (new EtudiantRepository())->recupererParClePrimaire($_REQUEST['idEtudiant']);
+        if (!$etudiant) {
+            self::afficherErreur("Aucunes infos sur l'étudiant");
+            return;
+        }
+        if (!ConfigurationSite::getDebug()) {
+            ConfigurationLDAP::connecterServeur();
+            if (!ConnexionUtilisateur::estUtilisateur(ConfigurationLDAP::getAvecUidNumber($_REQUEST['idEtudiant'])) && !ConnexionUtilisateur::estAdministrateur()) {
+                MessageFlash::ajouter("danger", "La fiche de d'avis de poursuite d'étude d'un étudiant ne peut être vue que par lui même et un administrateur.");
+                self::redirectionVersUrl("controleurFrontal.php");
+                return;
+            }
+        }
+        require __DIR__ . "/../vue/etudiant/pdf.php";
+    }
+
 
     public static function ajouterDepuisCSV(): void
     {

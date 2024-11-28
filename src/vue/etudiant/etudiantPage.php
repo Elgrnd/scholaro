@@ -26,7 +26,10 @@
     <p> Baccalauréat : <?=$bac?> </p>
     <p> Spécialité : <?=$spe?> </p>
 
-
+    <?php
+    $loginURL = $etudiant->getEtudid();
+        echo "<p><a href=\"controleurFrontal.php?controleur=etudiant&action=afficherPdf&idEtudiant=$loginURL\">Afficher la fiche Avis Poursuite d'Études</a></p>"
+    ?>
 
     <h1>Ecole Favorite</h1>
     <form method=<?php if (\App\Sae\Configuration\ConfigurationSite::getDebug()) echo "get"; else echo "post" ?> action="">
