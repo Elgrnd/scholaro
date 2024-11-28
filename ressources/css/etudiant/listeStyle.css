@@ -90,3 +90,40 @@ a {
     margin: 20px;
     text-align: center;
 }
+
+.fleche{
+    width: 12px;
+}
+.Filtre h1{
+    margin-left: 9px;
+}
+
+form.filtres {
+    display: flex; /* Affiche les filtres en ligne */
+    flex-wrap: wrap; /* Permet le retour à la ligne si nécessaire */
+    gap: 10px; /* Espace entre les filtres */
+    background-color: #f9f9f9; /* Couleur de fond douce */
+    border: 1px solid #ddd; /* Bordure discrète */
+    border-radius: 8px; /* Coins arrondis */
+    padding: 15px; /* Espacement interne */
+    margin-top: 10px; /* Espace au-dessus des filtres */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Effet d'ombre pour la profondeur */
+    margin-bottom: 10px;
+}
+
+form.filtres input[type="checkbox"] {
+    accent-color: rgb(255, 86, 96); /* Personnalisation de la couleur des cases à cocher */
+    transform: scale(1.2); /* Agrandit légèrement les cases */
+    cursor: pointer; /* Curseur de la souris au survol */
+}
+
+form.filtres label {
+    margin-left: 5px; /* Espace entre la case et le texte */
+    font-size: 14px; /* Taille de police ajustée */
+    color: #333; /* Couleur du texte */
+    cursor: pointer; /* Clique sur le texte pour cocher */
+}
+
+form.filtres label:hover {
+    color: rgb(255, 86, 96); /* Couleur dynamique au survol */
+}

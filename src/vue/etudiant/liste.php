@@ -1,7 +1,7 @@
 <div class="marge">
-    <div>
+    <div class="Filtre">
         <h1>Filtre :</h1>
-        <form method=<?php use App\Sae\Configuration\ConfigurationSite;
+        <form class = "filtres" method=<?php use App\Sae\Configuration\ConfigurationSite;
         use App\Sae\Lib\Preferences;
         use App\Sae\Modele\Repository\AgregationRepository;
 
@@ -55,8 +55,8 @@
             if (!empty($agregations)) {
                 foreach ($agregations as $agregation) {
                     echo '<th>' . htmlspecialchars($agregation->getNomAgregation()) .
-                        '<a href="?controleur=etudiant&action=triDecroissant&idAgregation=' . $agregation->getIdAgregation() .'"> ⬆️ </a>
-                    <a href="?controleur=etudiant&action=triCroissant&idAgregation=' . $agregation->getIdAgregation() .'">⬇️</a> </th>';
+                        '<a href="?controleur=etudiant&action=triDecroissant&idAgregation=' . $agregation->getIdAgregation() .'"> <img class="fleche" src="../ressources/images/fleche_haut.png" alt="fleche_haut"> </a>
+                    <a href="?controleur=etudiant&action=triCroissant&idAgregation=' . $agregation->getIdAgregation() .'"><img class="fleche" src="../ressources/images/fleche_bas.png" alt="fleche_bas"></a> </th>';
                 }
 
             } ?>
