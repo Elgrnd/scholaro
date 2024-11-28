@@ -2,7 +2,6 @@
 /**
  * @var \App\Sae\Modele\DataObject\Agregation $agregation
  * @var array $listeRessources
- * @var float $moyenne
  */
 
 echo '<div id="agregation-details">';
