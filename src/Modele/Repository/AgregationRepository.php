@@ -53,17 +53,17 @@ class AgregationRepository extends AbstractDataRepository
 
     /**
      * @param int $idAgregation
-     * @return array retourne la liste des ressources qui ont été agregées pour un étudiant
+     * @return array retourne la liste des ressources qui ont été agregées
      */
-    public function listeRessourcesAgregees(int $idAgregation, int $etudid): array
+    public function listeRessourcesAgregees(int $idAgregation): array
     {
-        $sql = "SELECT r.nomRessource, coefficient
-        FROM agregerRessource a 
-        JOIN ressource r ON a.nomRessource = r.nomRessource 
-        JOIN noter e ON e.nomRessource = r.nomRessource WHERE idAgregation = :idAgregationTag AND etudid = :etudidTag";
+        $sql = "SELECT nomRessource, coefficient
+        FROM agregerRessource
+        WHERE idAgregation = :idAgregationTag";
         $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
-        $values = array("idAgregationTag" => $idAgregation,
-            "etudidTag" => $etudid);
+        $values = array(
+            "idAgregationTag" => $idAgregation
+        );
         $tab = [];
         $pdoStatement->execute($values);
         foreach($pdoStatement as $row){
@@ -78,10 +78,9 @@ class AgregationRepository extends AbstractDataRepository
      */
     public function listeAgregationsAgregees(int $idAgregation): array
     {
-        $sql = "SELECT aa.idAgregationAgregee, nomAgregation, coefficient 
-        FROM agregerAgregation aa
-        JOIN agregation a ON a.idAgregation = aa.idAgregationAgregee 
-        WHERE aa.idAgregation = :idAgregationTag";
+        $sql = "SELECT idAgregationAgregee, coefficient 
+        FROM agregerAgregation aa 
+        WHERE idAgregation = :idAgregationTag";
         $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
         $values = array(
             "idAgregationTag" => $idAgregation
@@ -92,6 +91,21 @@ class AgregationRepository extends AbstractDataRepository
             $tab[] = $row;
         }
         return $tab;
+    }
+
+    public function moyenne(int $idAgregation): float
+    {
+        $sql = "SELECT AVG(note) AS moyenne 
+                FROM etudiantAgregation 
+                 WHERE idAgregation = :idAgregationTag";
+        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
+        $values = array(
+            "idAgregationTag" => $idAgregation
+        );
+        $pdoStatement->execute($values);
+        $res = $pdoStatement->fetch();
+        $moyenne = $res['moyenne'] !== null ? (float)$res['moyenne'] : 0.0;
+        return round($moyenne, 2);
     }
 }
 

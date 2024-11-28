@@ -40,18 +40,48 @@ class ControleurAgregation extends ControleurGenerique
         if ($_REQUEST['id']) {
             $agregation = (new AgregationRepository())->recupererParClePrimaire($_REQUEST['id']);
             if ($agregation) {
-                /*$listeRessources = (new AgregationRepository())->listeRessourcesAgregees($agregation->getIdAgregation(), $agregation->getEtudiant()->getEtudid());
-                $listeAgregations = (new AgregationRepository())->listeAgregationsAgregees($agregation->getIdAgregation());
-                */
-                ControleurGenerique::afficherVue("vueGenerale.php", ["titre" => "page Agrégation", "cheminCorpsVue" => "agregation/detail.php", "agregation" => $agregation/*, "listeRessources" => $listeRessources, "listeAgregations" => $listeAgregations*/]);
+                $listeRessources = (new AgregationRepository())->listeRessourcesAgregees($_REQUEST['id']);
+                $listeAgregations = (new AgregationRepository())->listeAgregationsAgregees($_REQUEST['id']);
+                $moyenne = 0;
+                $cpt = 0;
+                if (!empty($listeRessources)) {
+                    $moyenne += (new AgregationRepository())->moyenne($_REQUEST['id']);
+                    $cpt += 1;
+                }
+                $coef = 0;
+                if (!empty($listeAgregations)) {
+                    foreach ($listeAgregations as $agreg) {
+                        $moyenne += (new AgregationRepository())->moyenne($agreg[0]) * $agreg[1];
+                        $coef += $agreg[1];
+                    }
+                    $cpt += 1;
+                    $moyenne /= $coef;
+                }
+                $moyenne /= $cpt;
+                ControleurGenerique::afficherVue("vueGenerale.php", ["titre" => "page Agrégation", "cheminCorpsVue" => "agregation/detail.php", "agregation" => $agregation, "listeRessources" => $listeRessources, "listeAgregations" => $listeAgregations, "moyenne" => $moyenne]);
             } else {
                 MessageFlash::ajouter("warning", "L'id n'est pas celle d'une agrégation");
                 self::redirectionVersUrl("controleurFrontal.php?action=afficherListe&controleur=agregation");
             }
         } else {
-            MessageFlash::ajouter("warning", "L'id de l'étudiant n'a pas été transmis");
+            MessageFlash::ajouter("warning", "L'id de l'agrégation n'a pas été transmis");
             self::redirectionVersUrl("controleurFrontal.php?action=afficherListe&controleur=agregation");
         }
+    }
+
+    public static function supprimer(): void
+    {
+        $id = $_REQUEST['id'];
+
+        if (!ConnexionUtilisateur::estAdministrateur()) {
+            MessageFlash::ajouter("danger", "Vous n'avez pas les droits administrateurs");
+            self::redirectionVersUrl("controleurFrontal.php");
+            return;
+        }
+        (new AgregationRepository())->supprimer($id);
+        MessageFlash::ajouter("success", "Agrégation supprimée");
+        self::redirectionVersUrl("controleurFrontal.php?action=afficherListe&controleur=agregation");
+
     }
 
     /**
