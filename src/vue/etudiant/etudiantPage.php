@@ -73,8 +73,8 @@
                         </select>
                         </div>
                         <div>
-                        <label for="commentaire">Commentaire :</label><br>
-                        <textarea id="commentaire" name="commentaires['.$ecole->getIdEcole().']" rows="5" cols="40" style="border: 2px solid black; padding: 5px;">'.htmlspecialchars($commentaire).'</textarea>
+                        <label for="commentaire'.$ecole->getIdEcole().'">Commentaire :</label><br>
+                        <textarea id="commentaire'.$ecole->getIdEcole().'" name="commentaires['.$ecole->getIdEcole().']" rows="5" cols="40" style="border: 2px solid black; padding: 5px;">'.htmlspecialchars($commentaire).'</textarea>
                         </div>';
                 }
                 echo '<input type="hidden" name="idEtudiant" value="'.$etudiant->getEtudid().'">
