@@ -5,9 +5,10 @@ namespace App\Sae\Controleur;
 use App\Sae\Configuration\ConfigurationLDAP;
 use App\Sae\Configuration\ConfigurationSite;
 use App\Sae\Lib\ChoixControleur;
-use App\Sae\Lib\ChoixSemestre;
+use App\Sae\Lib\Preferences;
 use App\Sae\Lib\ConnexionUtilisateur;
 use App\Sae\Lib\MessageFlash;
+use App\Sae\Modele\Repository\AgregationRepository;
 
 class ControleurGenerique
 {
@@ -40,9 +41,23 @@ class ControleurGenerique
                 $semestres[] = $_REQUEST[$numSemestre];
             }
         }
-        ChoixSemestre::enregistrer($semestres);
+        Preferences::enregistrer("choixSemestre", $semestres);
         MessageFlash::ajouter("success", "Changements appliqués");
         self::redirectionVersUrl("controleurFrontal.php?action=afficherFormulaire&controleur=agregation");
+    }
+
+    public static function enregistrerFiltres(): void {
+        $filtres = [];
+        foreach ((new AgregationRepository())->recuperer() as $agregation) {
+            $id = $agregation->getIdAgregation();
+            $idAgregation = 'idAgregations' . $id;
+            if (isset($_REQUEST[$idAgregation])) {
+                $filtres[] = $_REQUEST[$idAgregation];
+            }
+        }
+        Preferences::enregistrer("choixFiltres", $filtres);
+        MessageFlash::ajouter("success", "Filtres appliqués");
+        self::redirectionVersUrl("controleurFrontal.php?action=afficherListe&controleur=etudiant");
     }
 
     /**

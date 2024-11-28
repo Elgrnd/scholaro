@@ -8,6 +8,7 @@ use App\Sae\Configuration\ConfigurationSite;
 use App\Sae\Lib\ConnexionUtilisateur;
 use App\Sae\Lib\MessageFlash;
 use App\Sae\Lib\MotDePasse;
+use App\Sae\Lib\Preferences;
 use App\Sae\Modele\DataObject\Agregation;
 use App\Sae\Modele\DataObject\Noter;
 use App\Sae\Modele\Repository\AgregationRepository;
@@ -31,28 +32,13 @@ class ControleurEtudiant extends ControleurGenerique
             self::redirectionVersUrl("controleurFrontal.php");
             return;
         }
+        $agregations = [];
         $etudiants = (new EtudiantRepository())->recuperer();
-        ControleurGenerique::afficherVue("vueGenerale.php", ["titre" => "Liste des étudiants", "cheminCorpsVue" => "etudiant/liste.php", "etudiants" => $etudiants, "agregations" => []]);
-
-    }
-
-    public static function afficherListeFiltre()
-    {
-        if (!ConnexionUtilisateur::estAdministrateur()) {
-            MessageFlash::ajouter("danger", "Vous n'avez pas les droits administrateurs");
-            self::redirectionVersUrl("controleurFrontal.php");
-            return;
-        }
-        $etudiants = (new EtudiantRepository())->recuperer();
-        $agregations = array();
-        if (isset($_REQUEST['idAgregations'])) {
-            foreach ($_REQUEST["idAgregations"] as $agregation) {
-                $agregations[] = (new AgregationRepository())->recupererParClePrimaire($agregation);
-            }
+        foreach (Preferences::lire("choixFiltres") as $idAgregation) {
+            $agregations[] = (new AgregationRepository())->recupererParClePrimaire($idAgregation);
         }
         ControleurGenerique::afficherVue("vueGenerale.php", ["titre" => "Liste des étudiants", "cheminCorpsVue" => "etudiant/liste.php", "etudiants" => $etudiants, "agregations" => $agregations]);
     }
-
     public static function triDecroissant(): void
     {
         if (!ConnexionUtilisateur::estAdministrateur()) {
@@ -63,7 +49,7 @@ class ControleurEtudiant extends ControleurGenerique
 
         if (isset($_REQUEST['idAgregation'])) {
             $agregations = array();
-            foreach ($_REQUEST["idAgregations"] as $agregation) {
+            foreach (Preferences::lire("choixFiltres") as $agregation) {
                 $agregations[] = (new AgregationRepository())->recupererParClePrimaire($agregation);
             }
             $etudiants = (new EtudiantRepository())->triDecroissantNoteEtudiants($_REQUEST['idAgregation']);
@@ -86,7 +72,7 @@ class ControleurEtudiant extends ControleurGenerique
         }
         if (isset($_REQUEST['idAgregation'])) {
             $agregations = array();
-            foreach ($_REQUEST["idAgregations"] as $agregation) {
+            foreach (Preferences::lire("choixFiltres") as $agregation) {
                 $agregations[] = (new AgregationRepository())->recupererParClePrimaire($agregation);
             }
             $etudiants = (new EtudiantRepository())->triCroissantNoteEtudiants($_REQUEST['idAgregation']);

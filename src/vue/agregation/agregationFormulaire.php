@@ -1,4 +1,4 @@
-<form method="<?php use App\Sae\Lib\ChoixSemestre;
+<form method="<?php use App\Sae\Lib\Preferences;
 
 if (\App\Sae\Configuration\ConfigurationSite::getDebug()) echo "get"; else echo "post" ?>"
       action='controleurFrontal.php' class="form-semestres">
@@ -7,7 +7,7 @@ if (\App\Sae\Configuration\ConfigurationSite::getDebug()) echo "get"; else echo 
         <div class="semestre-options">
             <?php
             for ($i = 1; $i < 6; $i++) {
-                if (in_array($i, ChoixSemestre::lire())) {
+                if (in_array($i, Preferences::lire("choixSemestre"))) {
                     echo "
                 <label for='numSemestre$i' class='label-semestre'> $i </label>
                 <input type='checkbox' class='checkbox-semestre' name='numSemestre$i' id='numSemestre$i' value=$i checked onchange='this.form.submit()'>
@@ -30,7 +30,7 @@ if (\App\Sae\Configuration\ConfigurationSite::getDebug()) echo "get"; else echo 
     <fieldset class="fieldset-agregation">
         <legend class="legend-agregation">Agrégations</legend>
         <?php
-        $semestres = ChoixSemestre::lire();
+        $semestres = Preferences::lire("choixSemestre");
         if (empty($semestres) && empty($agregations)) {
             echo "<p class='message-info'>Veuillez sélectionner un ou plusieurs semestres</p>";
         } else {
