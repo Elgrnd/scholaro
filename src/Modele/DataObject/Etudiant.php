@@ -143,7 +143,7 @@ class Etudiant extends AbstractDataObject
                     $numerateur += (float) $note[0] *(float) $tabCoeff[$i];
                 }
             } else {
-                $note = (new EtudiantRepository())->existeDansNoter($this->getEtudid(), $tabNom[$i]);
+                $note = (new EtudiantRepository())->existeDansAgregationRessource($this->getEtudid(), $tabNom[$i]);
                 if ($note) {
                     $diviseur += $tabCoeff[$i];
                     $numerateur += $note[0] * $tabCoeff[$i];

@@ -182,7 +182,7 @@ class EtudiantRepository extends AbstractDataRepository
 
     public function existeDansAgregationRessource($etudid, $idAgregation): ?array
     {
-        $sql = "SELECT note FROM ressourceAgregation WHERE etudid = :etudidTag AND idAgregation = :idAgregationTag";
+        $sql = "SELECT note FROM etudiantAgregation WHERE etudid = :etudidTag AND idAgregation = :idAgregationTag";
         $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
         $values = array(
             "etudidTag" => $etudid,
