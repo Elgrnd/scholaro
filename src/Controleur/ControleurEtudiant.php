@@ -120,10 +120,15 @@ class ControleurEtudiant extends ControleurGenerique
                 return;
             }
         }
-        $ecolechoisi = (new EcoleRepestory())->recuperEcoleFavoris($_REQUEST["idEtudiant"]);
+        $regarder = "";
+        if (isset($_REQUEST["regarder"])){
+            $regarder = $_REQUEST["regarder"];
+        }
+        $ecolechoisi = (new EcoleRepestory())->recupererEcoleFavoris($_REQUEST["idEtudiant"]);
         $notes = (new EtudiantRepository())->getNotesEtudiant($_REQUEST['idEtudiant']);
         $notesAgregees = (new EtudiantRepository())->recupererNotesAgregees($_REQUEST['idEtudiant']);
-        ControleurGenerique::afficherVue("vueGenerale.php", ["titre" => "page Etudiant", "cheminCorpsVue" => "etudiant/etudiantPage.php", "etudiant" => $etudiant, "notes" => $notes, "notesAgregees" => $notesAgregees, "ecolesChoisie"=>$ecolechoisi]);
+        $avis = (new EcoleRepestory())->recupererAvis($_REQUEST["idEtudiant"]);
+        ControleurGenerique::afficherVue("vueGenerale.php", ["titre" => "page Etudiant", "cheminCorpsVue" => "etudiant/etudiantPage.php", "etudiant" => $etudiant, "notes" => $notes, "notesAgregees" => $notesAgregees, "ecolesChoisie"=>$ecolechoisi, "regarder" => $regarder, "avis" => $avis]);
     }
 
     public static function ajouterEcoleFavoris()
@@ -134,6 +139,19 @@ class ControleurEtudiant extends ControleurGenerique
         }
         if (isset($_REQUEST['idEcoles'])) {
             (new EtudiantRepository())->ajouterEcoleFav($_REQUEST["idEcoles"], $_REQUEST["idEtudiant"]);
+        }
+        self::afficherEtudiantPage();
+    }
+
+    public static function ajouterAvis()
+    {
+        if (!ConnexionUtilisateur::estConnecte()) {
+            self::afficherErreur("Vous n'êtes pas connectés");
+            return;
+        }
+        if (isset($_REQUEST['avisEcoles'])) {
+            (new EtudiantRepository())->ajouterAvisEcole($_REQUEST["avisEcoles"], $_REQUEST["idEtudiant"]);
+            (new EtudiantRepository())->ajouterCommentaireEcole($_REQUEST["commentaires"], $_REQUEST["idEtudiant"]);
         }
         self::afficherEtudiantPage();
     }

@@ -36,7 +36,7 @@ class EcoleRepestory extends AbstractDataRepository
         );
     }
 
-    public function recuperEcoleFavoris($idEtudiant)
+    public function recupererEcoleFavoris($idEtudiant)
     {
         $sql = "SELECT * FROM ecolePartenaire JOIN ecoleFavoris on ecoleFavoris.idEcole = ecolePartenaire.idEcole WHERE idEtudiant = :idEtudiantTag";
         $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
@@ -45,6 +45,19 @@ class EcoleRepestory extends AbstractDataRepository
         $tableauObjets = [];
         foreach ($pdoStatement as $objetFormatTableau) {
             $tableauObjets[] = $this->construireDepuisTableauSQL($objetFormatTableau);
+        }
+        return $tableauObjets;
+    }
+
+    public function recupererAvis($idEtudiant)
+    {
+        $sql = "SELECT idEcole, avis, commentaire FROM ecoleFavoris WHERE idEtudiant = :idEtudiantTag";
+        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
+        $values = array("idEtudiantTag" => $idEtudiant);
+        $pdoStatement->execute($values);
+        $tableauObjets = [];
+        foreach ($pdoStatement as $objetFormatTableau) {
+            $tableauObjets[$objetFormatTableau["idEcole"]] = [$objetFormatTableau["avis"], $objetFormatTableau["commentaire"]];
         }
         return $tableauObjets;
     }
