@@ -280,16 +280,39 @@ class EtudiantRepository extends AbstractDataRepository
 
     public function ajouterEcoleFav($idEcoles, $idEtudiant)
     {
-        $sql1 = "DELETE FROM ecoleFavoris WHERE idEtudiant = :idEtudiantTag";
-        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql1);
-        $values = array("idEtudiantTag" => $idEtudiant);
-        $pdoStatement->execute($values);
-
-
         foreach ($idEcoles as $idEcole){
-            $sql2 = "INSERT INTO ecoleFavoris (idEcole, idEtudiant) VALUES (:idEcoleTag, :idEtudiantTag)";
-            $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql2);
-            $values = array("idEcoleTag" => $idEcole, "idEtudiantTag" => $idEtudiant);
+            if (stripos($idEcole, "False") == false) {
+                $sql = "INSERT IGNORE INTO ecoleFavoris (idEcole, idEtudiant) VALUES (:idEcoleTag, :idEtudiantTag)";
+                $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
+                $values = array("idEcoleTag" => $idEcole, "idEtudiantTag" => $idEtudiant);
+                $pdoStatement->execute($values);
+            } else {
+                $sql = "DELETE FROM ecoleFavoris WHERE idEtudiant = :idEtudiantTag AND idEcole = :idEcoleTag";
+                $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
+                $nouvelle_chaine = str_replace("False", "", $idEcole);
+                $values = array("idEtudiantTag" => $idEtudiant, "idEcoleTag" => $nouvelle_chaine);
+                $pdoStatement->execute($values);
+            }
+        }
+    }
+
+    public function ajouterAvisEcole($avisTot , $idEtudiant)
+    {
+        foreach ($avisTot as $avis){
+            $parti = explode("_", $avis);
+            $sql = "UPDATE ecoleFavoris SET avis = :avisTag WHERE idEtudiant = :idEtudiantTag AND idEcole = :idEcole";
+            $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
+            $values = array("avisTag" => $parti[0], "idEtudiantTag" => $idEtudiant, "idEcole" => $parti[1]);
+            $pdoStatement->execute($values);
+        }
+    }
+
+    public function ajouterCommentaireEcole($commentaires , $idEtudiant)
+    {
+        foreach ((new EcoleRepestory())->recupererEcoleFavoris($idEtudiant) as $ecoleFavoris){
+            $sql = "UPDATE ecoleFavoris SET commentaire = :commentaireTag WHERE idEtudiant = :idEtudiantTag AND idEcole = :idEcole";
+            $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
+            $values = array("commentaireTag" => $commentaires[$ecoleFavoris->getIdEcole()], "idEtudiantTag" => $idEtudiant, "idEcole" => $ecoleFavoris->getIdEcole());
             $pdoStatement->execute($values);
         }
     }
