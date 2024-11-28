@@ -11,10 +11,10 @@
                 $id = $agregation->getIdAgregation();
                 if (in_array($agregation->getIdAgregation(), Preferences::lire("choixFiltres"))) {
                     echo "<input type=checkbox name='idAgregations$id' value='" . $agregation->getIdAgregation() . "' id='" . $agregation->getIdAgregation() . "' checked onchange='this.form.submit()'>
-                <label for='" . $agregation->getIdAgregation() . "' > " . $agregation->getNomAgregation() . " </label>";
+                <label for='" . $agregation->getIdAgregation() . "' > " . htmlspecialchars($agregation->getNomAgregation()) . " </label>";
                 } else {
                     echo "<input type=checkbox name='idAgregations$id' value='" . $agregation->getIdAgregation() . "' id='" . $agregation->getIdAgregation() . "' onchange='this.form.submit()'>
-                <label for='" . $agregation->getIdAgregation() . "' > " . $agregation->getNomAgregation() . " </label> 
+                <label for='" . $agregation->getIdAgregation() . "' > " . htmlspecialchars($agregation->getNomAgregation()) . " </label> 
             ";
                 }
 
@@ -54,7 +54,7 @@
             <?php /** @var \App\Sae\Modele\DataObject\Agregation $agregations */
             if (!empty($agregations)) {
                 foreach ($agregations as $agregation) {
-                    echo '<th>' . $agregation->getNomAgregation() .
+                    echo '<th>' . htmlspecialchars($agregation->getNomAgregation()) .
                         '<a href="?controleur=etudiant&action=triDecroissant&idAgregation=' . $agregation->getIdAgregation() .'"> ⬆️ </a>
                     <a href="?controleur=etudiant&action=triCroissant&idAgregation=' . $agregation->getIdAgregation() .'">⬇️</a> </th>';
                 }

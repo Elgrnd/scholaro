@@ -61,7 +61,7 @@ if (\App\Sae\Configuration\ConfigurationSite::getDebug()) echo "get"; else echo 
             echo '<p class="agregation-title">Agregations :</p><div class="agregation-list">';
             foreach ($agregations as $agregation) {
                 echo "<div class='agregation-item'>
-                    <span class='agregation-name'>" . $agregation->getNomAgregation() . "</span>
+                    <span class='agregation-name'>" . htmlspecialchars($agregation->getNomAgregation()) . "</span>
                     <input type='hidden' name='idNom$id' value='" . $agregation->getIdAgregation() . "'>
                     <input type='number' class='input-coeff' name='coeff$id' value='0' id='coefAgregation$id'>
                 </div>";
