@@ -111,7 +111,7 @@ class ControleurEtudiant extends ControleurGenerique
             ConfigurationLDAP::connecterServeur();
             if (!ConnexionUtilisateur::estUtilisateur(ConfigurationLDAP::getAvecUidNumber($_REQUEST['idEtudiant'])) && !ConnexionUtilisateur::estAdministrateur()) {
                 MessageFlash::ajouter("danger", "Les détails d'un étudiant ne peuvent être vu que par lui même et un administrateur.");
-                self::redirectionVersUrl("controleurFrontal.php?action=afficherErreur");
+                self::redirectionVersUrl("controleurFrontal.php");
                 return;
             }
         }
