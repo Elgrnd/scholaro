@@ -4,6 +4,7 @@ namespace App\Sae\Controleur;
 
 use App\Sae\Lib\ConnexionUtilisateur;
 use App\Sae\Lib\MessageFlash;
+use App\Sae\Lib\Preferences;
 use App\Sae\Modele\DataObject\Agregation;
 use App\Sae\Modele\DataObject\Etudiant;
 use App\Sae\Modele\Repository\AgregationRepository;
