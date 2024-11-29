@@ -4,6 +4,7 @@ namespace App\Sae\Controleur;
 
 use App\Sae\Lib\ConnexionUtilisateur;
 use App\Sae\Lib\MessageFlash;
+use App\Sae\Lib\Preferences;
 use App\Sae\Modele\DataObject\Agregation;
 use App\Sae\Modele\DataObject\Etudiant;
 use App\Sae\Modele\Repository\AgregationRepository;
@@ -49,7 +50,25 @@ class ControleurAgregation extends ControleurGenerique
             if ($agregation) {
                 $listeRessources = (new AgregationRepository())->listeRessourcesAgregees($_REQUEST['id']);
                 $listeAgregations = (new AgregationRepository())->listeAgregationsAgregees($_REQUEST['id']);
-                ControleurGenerique::afficherVue("vueGenerale.php", ["titre" => "page Agrégation", "cheminCorpsVue" => "agregation/detail.php", "agregation" => $agregation, "listeRessources" => $listeRessources, "listeAgregations" => $listeAgregations]);
+                $moyenne = 0;
+                $coefRessource = 0;
+                if (!empty($listeRessources)) {
+                    foreach ($listeRessources as $ressource) {
+                        $moyenne += (new RessourceRepository())->moyenne($ressource[0]) * $ressource[1];
+                        $coefRessource += $ressource[1];
+                    }
+
+                }
+                $coefAgreg = 0;
+                if (!empty($listeAgregations)) {
+                    foreach ($listeAgregations as $agreg) {
+                        $moyenne += (new AgregationRepository())->moyenne($agreg[0]) * $agreg[1];
+                        $coefAgreg += $agreg[1];
+                    }
+                }
+                $moyenne /= $coefRessource + $coefAgreg;
+                $moyenne = round($moyenne, 2);
+                ControleurGenerique::afficherVue("vueGenerale.php", ["titre" => "page Agrégation", "cheminCorpsVue" => "agregation/detail.php", "agregation" => $agregation, "listeRessources" => $listeRessources, "listeAgregations" => $listeAgregations, "moyenne" => $moyenne]);
             } else {
                 MessageFlash::ajouter("warning", "L'id n'est pas celle d'une agrégation");
                 self::redirectionVersUrl("controleurFrontal.php?action=afficherListe&controleur=agregation");

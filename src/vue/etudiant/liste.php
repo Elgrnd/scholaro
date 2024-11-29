@@ -54,6 +54,9 @@
             <?php /** @var \App\Sae\Modele\DataObject\Agregation $agregations */
             if (!empty($agregations)) {
                 foreach ($agregations as $agregation) {
+                    if (!$agregation) {
+                        continue;
+                    }
                     echo '<th>' . htmlspecialchars($agregation->getNomAgregation()) .
                         '<a href="?controleur=etudiant&action=triDecroissant&idAgregation=' . $agregation->getIdAgregation() .'"> <img class="fleche" src="../ressources/images/fleche_haut.png" alt="fleche_haut"> </a>
                     <a href="?controleur=etudiant&action=triCroissant&idAgregation=' . $agregation->getIdAgregation() .'"><img class="fleche" src="../ressources/images/fleche_bas.png" alt="fleche_bas"></a> </th>';
@@ -84,6 +87,9 @@
         ';
         if (!empty($agregations)) {
             foreach ($agregations as $agregation) {
+                if (!$agregation) {
+                    continue;
+                }
                 echo '<td> <a href="?controleur=etudiant&action=afficherEtudiantPage&regarder=admin&idEtudiant=' . $etudiant->getEtudid() . '">' . (new \App\Sae\Modele\Repository\EtudiantRepository())->getNoteEtudiantAgregation($etudiant->getEtudid(), $agregation->getIdAgregation()) . '</a></td>';
             }
         }

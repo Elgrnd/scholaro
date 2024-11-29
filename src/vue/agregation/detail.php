@@ -2,6 +2,7 @@
 /**
  * @var \App\Sae\Modele\DataObject\Agregation $agregation
  * @var array $listeRessources
+ * @var float $moyenne
  */
 
 echo '<div id="agregation-details">';
@@ -33,6 +34,8 @@ if (!empty($listeAgregations)) {
     }
     echo '</div>';
 }
+
+echo "<h1> Moyenne : $moyenne  </h1>";
 
 // Bouton de suppression
 echo '<a href="controleurFrontal.php?action=supprimer&controleur=agregation&id=' . htmlspecialchars($agregation->getIdAgregation()) . '" 

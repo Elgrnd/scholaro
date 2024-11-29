@@ -36,4 +36,20 @@ class RessourceRepository extends AbstractDataRepository
         );
     }
 
+    public function moyenne(string $nomRessource): float
+    {
+        $sql = "SELECT AVG(note) AS moyenne 
+                FROM noter 
+                 WHERE nomRessource = :nomRessourceTag";
+        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
+        $values = array(
+            "nomRessourceTag" => $nomRessource
+        );
+        $pdoStatement->execute($values);
+        $res = $pdoStatement->fetch();
+        $moyenne = $res['moyenne'] !== null ? (float)$res['moyenne'] : 0.0;
+        return round($moyenne, 2);
+    }
+
+
 }
