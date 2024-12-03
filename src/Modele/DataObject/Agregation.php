@@ -6,16 +6,18 @@ use App\Sae\Modele\Repository\AgregationRepository;
 class Agregation extends AbstractDataObject{
     private ?int $idAgregation;
     private string $nomAgregation;
+    private string $loginCreateur;
 
 
     /**
      * @param int|null $idAgregation
      * @param string $nomAgregation
      */
-    public function __construct(?int $idAgregation, string $nomAgregation)
+    public function __construct(?int $idAgregation, string $nomAgregation, string $loginCreateur)
     {
         $this->idAgregation = $idAgregation;
         $this->nomAgregation = $nomAgregation;
+        $this->loginCreateur = $loginCreateur;
     }
 
     public function getIdAgregation(): ?int
@@ -38,4 +40,13 @@ class Agregation extends AbstractDataObject{
         $this->nomAgregation = $nomAgregation;
     }
 
+    public function getLoginCreateur(): string
+    {
+        return $this->loginCreateur;
+    }
+
+    public function setLoginCreateur(string $loginCreateur): void
+    {
+        $this->loginCreateur = $loginCreateur;
+    }
 }

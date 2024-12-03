@@ -8,7 +8,7 @@ class AgregationRepository extends AbstractDataRepository
 {
     protected function construireDepuisTableauSQL(array $objetFormatTableau): Agregation
     {
-        return new Agregation($objetFormatTableau['idAgregation'], $objetFormatTableau['nomAgregation']);
+        return new Agregation($objetFormatTableau['idAgregation'], $objetFormatTableau['nomAgregation'], $objetFormatTableau['loginCreateur']);
     }
 
     protected function getNomTable(): string
@@ -23,14 +23,15 @@ class AgregationRepository extends AbstractDataRepository
 
     protected function getNomColonnes(): array
     {
-        return ['idAgregation', 'nomAgregation'];
+        return ['idAgregation', 'nomAgregation', 'loginCreateur'];
     }
 
     protected function formatTableauSQL(AbstractDataObject $objet): array
     {
         return array(
             "idAgregationTag" => $objet->getIdAgregation(),
-            "nomAgregationTag" => $objet->getNomAgregation()
+            "nomAgregationTag" => $objet->getNomAgregation(),
+            "loginCreateurTag" => $objet->getLoginCreateur(),
         );
     }
 
@@ -93,6 +94,10 @@ class AgregationRepository extends AbstractDataRepository
         return $tab;
     }
 
+    /**
+     * @param int $idAgregation
+     * @return float retourne la moyenne des notes d'une agrégation
+     */
     public function moyenne(int $idAgregation): float
     {
         $sql = "SELECT AVG(note) AS moyenne 
