@@ -16,6 +16,8 @@ class Etudiant extends AbstractDataObject
     private int $rg_admis;
     private string $avis;
 
+    private string $login;
+
     /**
      * @param int $etudid
      * @param string $codenip
@@ -27,7 +29,7 @@ class Etudiant extends AbstractDataObject
      * @param int $rgadmis
      * @param string $avis
      */
-    public function __construct(int $etudid, string $codenip, string $civ, string $nom, string $prenom, string $bac, string $specialite, int $rgadmis, string $avis)
+    public function __construct(int $etudid, string $codenip, string $civ, string $nom, string $prenom, string $bac, string $specialite, int $rgadmis, string $avis, string $login)
     {
         $this->etudid = $etudid;
         $this->codenip = $codenip;
@@ -38,6 +40,7 @@ class Etudiant extends AbstractDataObject
         $this->specialite = $specialite;
         $this->rg_admis = $rgadmis;
         $this->avis = $avis;
+        $this->login = $login;
     }
 
     public function getEtudid(): int
@@ -129,6 +132,18 @@ class Etudiant extends AbstractDataObject
     {
         $this->avis = $avis;
     }
+
+    public function getLogin(): string
+    {
+        return $this->login;
+    }
+
+    public function setLogin(string $login): void
+    {
+        $this->login = $login;
+    }
+
+
 
     public function calculerMoyenne(array $tabNom, array $tabCoeff): float
     {
