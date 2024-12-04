@@ -225,12 +225,13 @@ class ControleurEtudiant extends ControleurGenerique
                 $bac = $ligne["Bac"];
                 $specialite = $ligne["Spécialité"];
                 $rg_admis = $ligne["Rg. Adm."];
+                $login = $nomEtu . $prenomEtu[0];
 
                 if (!ctype_digit(substr($etudid, 0, 1))) {
                     break;
                 }
 
-                $etudiant = new Etudiant((int)$etudid, $code_nip, $civ, $nomEtu, $prenomEtu, $bac, $specialite, (int)$rg_admis, "");
+                $etudiant = new Etudiant((int)$etudid, $code_nip, $civ, $nomEtu, $prenomEtu, $bac, $specialite, (int)$rg_admis, "", $login);
                 $etudiants[] = $etudiant;
 
                 foreach ($header as $index => $colName) {
