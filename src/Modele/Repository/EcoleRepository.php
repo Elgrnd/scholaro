@@ -16,29 +16,36 @@ class EcoleRepository extends AbstractDataRepository
 
     protected function getNomClePrimaire(): string
     {
-        return "idEcole";
+        return "siret";
     }
 
     protected function getNomColonnes(): array
     {
-        return ['idEcole', 'nomEcole', 'villeEcole'];
+        return ['siret', 'nomEcole', 'villeEcole', 'telEcole', 'mailEcole', 'emailAValider', 'nonce', 'estValide', 'mdpHache'];
     }
 
     protected function construireDepuisTableauSQL(array $objetFormatTableau) : Ecole {
-        return new Ecole($objetFormatTableau["idEcole"], $objetFormatTableau["nomEcole"], $objetFormatTableau["villeEcole"]);
+        return new Ecole($objetFormatTableau["siret"], $objetFormatTableau["nomEcole"], $objetFormatTableau["villeEcole"], $objetFormatTableau['telEcole'],
+        $objetFormatTableau['mailEcole'], $objetFormatTableau['emailAValider'], $objetFormatTableau['nonce'], $objetFormatTableau['estValide'], $objetFormatTableau['mdpHache']);
     }
     protected function formatTableauSQL(AbstractDataObject $objet): array
     {
         return array(
-            "idEcoleTag" => $objet->getIdEcole(),
+            "siretTag" => $objet->getSiret(),
             "nomEcoleTag" => $objet->getNomEcole(),
             "villeEcoleTag" => $objet->getVilleEcole(),
+            "telEcoleTag" => $objet->getTel(),
+            "mailEcoleTag" => $objet->getMailEcole(),
+            "emailAValiderTag" => $objet->getEmailAValider(),
+            "nonceTag" => $objet->getNonce(),
+            "estValideTag" => intval($objet->isEstValide()),
+            "mdpHacheTag" => $objet->getMdpHache()
         );
     }
 
     public function recupererEcoleFavoris($idEtudiant)
     {
-        $sql = "SELECT * FROM ecolePartenaire JOIN ecoleFavoris on ecoleFavoris.idEcole = ecolePartenaire.idEcole WHERE idEtudiant = :idEtudiantTag";
+        $sql = "SELECT * FROM ecolePartenaire JOIN ecoleFavoris on ecoleFavoris.siret = ecolePartenaire.siret WHERE idEtudiant = :idEtudiantTag";
         $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
         $values = array("idEtudiantTag" => $idEtudiant);
         $pdoStatement->execute($values);
@@ -51,13 +58,13 @@ class EcoleRepository extends AbstractDataRepository
 
     public function recupererAvis($idEtudiant)
     {
-        $sql = "SELECT idEcole, avis, commentaire FROM ecoleFavoris WHERE idEtudiant = :idEtudiantTag";
+        $sql = "SELECT siret, avis, commentaire FROM ecoleFavoris WHERE idEtudiant = :idEtudiantTag";
         $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
         $values = array("idEtudiantTag" => $idEtudiant);
         $pdoStatement->execute($values);
         $tableauObjets = [];
         foreach ($pdoStatement as $objetFormatTableau) {
-            $tableauObjets[$objetFormatTableau["idEcole"]] = [$objetFormatTableau["avis"], $objetFormatTableau["commentaire"]];
+            $tableauObjets[$objetFormatTableau["siret"]] = [$objetFormatTableau["avis"], $objetFormatTableau["commentaire"]];
         }
         return $tableauObjets;
     }

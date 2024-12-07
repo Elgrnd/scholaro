@@ -51,30 +51,30 @@
                     $Rselected = "";
                     $commentaire = "";
                     if (!empty($avis)){
-                        if ($avis[$ecole->getIdEcole()][0] == "Tres-Favorable"){
+                        if ($avis[$ecole->getSiret()][0] == "Tres-Favorable"){
                             $TFselected = "selected";
-                        } else if ($avis[$ecole->getIdEcole()][0] == "Favorable"){
+                        } else if ($avis[$ecole->getSiret()][0] == "Favorable"){
                             $Fselected = "selected";
-                        } else if ($avis[$ecole->getIdEcole()][0] == "Reserve"){
+                        } else if ($avis[$ecole->getSiret()][0] == "Reserve"){
                             $Rselected = "selected";
                         }
-                        if (!empty($avis[$ecole->getIdEcole()][1])){
-                            $commentaire = $avis[$ecole->getIdEcole()][1];
+                        if (!empty($avis[$ecole->getSiret()][1])){
+                            $commentaire = $avis[$ecole->getSiret()][1];
                         }
                     }
 
                     $ecolesChoisieNom = htmlspecialchars($ecole->getNomEcole());
                     $ecolesChoisieVille = htmlspecialchars($ecole->getVilleEcole());
-                    echo '<div><label for="'. $ecole->getIdEcole() . '">'. $ecolesChoisieNom . ' -> ' . $ecolesChoisieVille . '</label>' .
-                        '<select name="avisEcoles[]" id="'.$ecole->getIdEcole().'">
-                            <option value="Tres-Favorable_'.$ecole->getIdEcole().'" '.$TFselected.'>Très Favorable</option>
-                            <option value="Favorable_'.$ecole->getIdEcole().'" '. $Fselected.'>Favorable</option>
-                            <option value="Reserve_'.$ecole->getIdEcole().'" '. $Rselected.'>Réservé</option>
+                    echo '<div><label for="'. $ecole->getSiret() . '">'. $ecolesChoisieNom . ' -> ' . $ecolesChoisieVille . '</label>' .
+                        '<select name="avisEcoles[]" id="'.$ecole->getSiret().'">
+                            <option value="Tres-Favorable_'.$ecole->getSiret().'" '.$TFselected.'>Très Favorable</option>
+                            <option value="Favorable_'.$ecole->getSiret().'" '. $Fselected.'>Favorable</option>
+                            <option value="Reserve_'.$ecole->getSiret().'" '. $Rselected.'>Réservé</option>
                         </select>
                         </div>
                         <div>
-                        <label for="commentaire'.$ecole->getIdEcole().'">Commentaire :</label><br>
-                        <textarea id="commentaire'.$ecole->getIdEcole().'" name="commentaires['.$ecole->getIdEcole().']" rows="5" cols="40" style="border: 2px solid black; padding: 5px;">'.htmlspecialchars($commentaire).'</textarea>
+                        <label for="commentaire'.$ecole->getSiret().'">Commentaire :</label><br>
+                        <textarea id="commentaire'.$ecole->getSiret().'" name="commentaires['.$ecole->getSiret().']" rows="5" cols="40" style="border: 2px solid black; padding: 5px;">'.htmlspecialchars($commentaire).'</textarea>
                         </div>';
                 }
                 echo '<input type="hidden" name="idEtudiant" value="'.$etudiant->getEtudid().'">
