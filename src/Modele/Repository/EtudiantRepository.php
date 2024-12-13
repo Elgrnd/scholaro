@@ -319,8 +319,5 @@ class EtudiantRepository extends AbstractDataRepository
         }
     }
 
-    protected function estAI(): bool
-    {
-        return false;
-    }
+
 }

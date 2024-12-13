@@ -40,12 +40,7 @@ abstract class AbstractDataRepository
         $pdoStatement = $pdo->prepare($sql);
         $values = $this->formatTableauSQL($objet);
         $pdoStatement->execute($values);
-        if($this->estAI()){
-            return $pdo->lastInsertId();
-        }
-        else{
-            return true;
-        }
+        return $pdo->lastInsertId();
     }
 
     public function ajouterPlusieurs(array $objets)
@@ -119,6 +114,6 @@ abstract class AbstractDataRepository
         }
         return true;
     }
-    protected abstract function estAI() : bool;
+
 
 }

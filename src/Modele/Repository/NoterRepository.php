@@ -48,8 +48,5 @@ class NoterRepository extends AbstractDataRepository
         );
     }
 
-    protected function estAI(): bool
-    {
-        return false;
-    }
+
 }

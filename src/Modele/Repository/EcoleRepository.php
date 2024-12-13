@@ -69,9 +69,6 @@ class EcoleRepository extends AbstractDataRepository
         return $tableauObjets;
     }
 
-    protected function estAI(): bool
-    {
-        return false;
-    }
+
 
 }

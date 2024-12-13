@@ -113,10 +113,6 @@ class AgregationRepository extends AbstractDataRepository
         return round($moyenne, 2);
     }
 
-    protected function estAI(): bool
-    {
-        return true;
-    }
 }
 
 ?>
