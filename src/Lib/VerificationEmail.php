@@ -20,12 +20,12 @@ class VerificationEmail
         $loginURL = rawurlencode($utilisateur->getSiret());
         $nonceURL = rawurlencode($utilisateur->getNonce());
         $URLAbsolue = ConfigurationSite::getURLAbsolue();
-        $lienValidationEmail = "$URLAbsolue?action=validerEmail&controleur=utilisateur&login=$loginURL&nonce=$nonceURL";
+        $lienValidationEmail = "http://localhost$URLAbsolue?action=validerEmail&controleur=EcolePartenaire&login=$loginURL&nonce=$nonceURL";
         $corpsEmailHTML = "<a href=\"$lienValidationEmail\">Validation</a>";
 
         // Temporairement avant d'envoyer un vrai mail
-        echo "Simulation d'envoi d'un mail<br> Destinataire : $destinataire<br> Sujet : $sujet<br> Corps : <br>$corpsEmailHTML";
-
+        //echo "Simulation d'envoi d'un mail<br> Destinataire : $destinataire<br> Sujet : $sujet<br> Corps : <br>$corpsEmailHTML";
+        mail($utilisateur->getEmailAValider(), $sujet, $corpsEmailHTML, $enTete);
         // Quand vous aurez configué l'envoi de mail via PHP
         // mail($destinataire, $sujet, $corpsEmailHTML, $enTete);
     }

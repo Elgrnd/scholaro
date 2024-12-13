@@ -84,6 +84,21 @@ class ControleurEcolePartenaire extends ControleurGenerique
             self::redirectionVersUrl("controleurFrontal.php?action=afficherFormulaireCreationCompte");
         }
     }
+    public static function validerEmail()
+    {
+        if (isset($_REQUEST['login']) && isset($_REQUEST['nonce'])) {
+            $booleen = VerificationEmail::traiterEmailValidation($_REQUEST['login'], $_REQUEST['nonce']);
+            if ($booleen === true) {
+                $utilisateur = (new EcoleRepository())->recupererParClePrimaire($_REQUEST['login']);
+                MessageFlash::ajouter("success", "Mail validé");
+                ControleurGenerique::redirectionVersUrl("controleurFrontal.php");
+            } else {
+                self::afficherErreur("pb avec l'email");
+            }
+        } else {
+            self::afficherErreur("erreur login ou nonce");
+        }
+    }
 
 
 }
