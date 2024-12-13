@@ -35,7 +35,7 @@ class EcoleRepository extends AbstractDataRepository
             "nomEcoleTag" => $objet->getNomEcole(),
             "villeEcoleTag" => $objet->getVilleEcole(),
             "telEcoleTag" => $objet->getTel(),
-            "mailEcoleTag" => $objet->getMailEcole(),
+            "mailEcoleTag" => $objet->getMail(),
             "emailAValiderTag" => $objet->getEmailAValider(),
             "nonceTag" => $objet->getNonce(),
             "estValideTag" => intval($objet->isEstValide()),
@@ -69,5 +69,9 @@ class EcoleRepository extends AbstractDataRepository
         return $tableauObjets;
     }
 
+    protected function estAI(): bool
+    {
+        return false;
+    }
 
 }

@@ -50,6 +50,9 @@ class RessourceRepository extends AbstractDataRepository
         $moyenne = $res['moyenne'] !== null ? (float)$res['moyenne'] : 0.0;
         return round($moyenne, 2);
     }
-
+    protected function estAI(): bool
+    {
+        return false;
+    }
 
 }

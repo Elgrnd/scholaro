@@ -52,12 +52,12 @@ class Ecole extends AbstractDataObject
         $this->tel = $tel;
     }
 
-    public function getMailEcole(): string
+    public function getMail(): string
     {
         return $this->mailEcole;
     }
 
-    public function setMailEcole(string $mailEcole): void
+    public function setMail(string $mailEcole): void
     {
         $this->mailEcole = $mailEcole;
     }

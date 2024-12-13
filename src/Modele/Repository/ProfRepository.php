@@ -36,4 +36,8 @@ class ProfRepository extends AbstractDataRepository {
             "estAdminTag" => intval($prof->isEstAdmin())
         );
     }
+    protected function estAI(): bool
+    {
+        return false;
+    }
 }

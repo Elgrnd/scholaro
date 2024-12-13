@@ -47,4 +47,9 @@ class NoterRepository extends AbstractDataRepository
             "noteTag" => $objet->getNote(),
         );
     }
+
+    protected function estAI(): bool
+    {
+        return false;
+    }
 }
