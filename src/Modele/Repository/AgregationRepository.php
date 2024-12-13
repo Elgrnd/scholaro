@@ -8,7 +8,7 @@ class AgregationRepository extends AbstractDataRepository
 {
     protected function construireDepuisTableauSQL(array $objetFormatTableau): Agregation
     {
-        return new Agregation($objetFormatTableau['idAgregation'], $objetFormatTableau['nomAgregation'], $objetFormatTableau['loginCreateur']);
+        return new Agregation($objetFormatTableau['idAgregation'], $objetFormatTableau['nomAgregation'], $objetFormatTableau['loginCreateur'], $objetFormatTableau['siretCreateur']);
     }
 
     protected function getNomTable(): string
@@ -23,7 +23,7 @@ class AgregationRepository extends AbstractDataRepository
 
     protected function getNomColonnes(): array
     {
-        return ['idAgregation', 'nomAgregation', 'loginCreateur'];
+        return ['idAgregation', 'nomAgregation', 'loginCreateur', 'siretCreateur'];
     }
 
     protected function formatTableauSQL(AbstractDataObject $objet): array
@@ -32,6 +32,7 @@ class AgregationRepository extends AbstractDataRepository
             "idAgregationTag" => $objet->getIdAgregation(),
             "nomAgregationTag" => $objet->getNomAgregation(),
             "loginCreateurTag" => $objet->getLoginCreateur(),
+            "siretCreateurTag" => $objet->getSiretCreateur(),
         );
     }
 

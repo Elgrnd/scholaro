@@ -149,7 +149,7 @@ class ControleurAgregation extends ControleurGenerique
         // Création et enregistrement de l'agrégation
 
         //LE LOGIN EST TEMPORAIRE, IL SERA CHANGE DES QU ON AURA LA CONNEXION PROF ET ECOLE PARTENAIRE
-        $agregation = new Agregation(null, $nomAgregation, "prof");
+        $agregation = new Agregation(null, $nomAgregation, "prof", null);
         $idAgregation = $agregationRepo->ajouter($agregation);
 
         // Enregistrement des ressources/agregations liées
