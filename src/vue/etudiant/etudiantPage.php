@@ -136,4 +136,133 @@
     }
     ?>
 </div>
+<div class="content">
+    <h1> Graph </h1>
+    <?php
+        if($notesAgregees != null){
+            $labels = [];
+            $notes = [];
+            foreach ($notesAgregees as $noteAgregee) {
+                $labels[] = $noteAgregee['nomAgregation'];
+                $notes[] = $noteAgregee['note'];
+            }
+            $labelsJSON = json_encode($labels);
+            $notesJSON = json_encode($notes);
+            /**
+             * @var $moyennes array
+             */
+            $moyennesJSON = json_encode($moyennes);
+            ?>
+            <form id="filterForm">
+                <h3>Sélectionner les agrégations à afficher :</h3>
+                <?php foreach ($notesAgregees as $index => $noteAgregee): ?>
+                    <label>
+                        <input type="checkbox" name="filters[]" value="<?= $index ?>" checked>
+                        <?= $noteAgregee['nomAgregation'] ?>
+                    </label><br>
+                <?php endforeach; ?>
+                <button type="button" onclick="updateChart()">Mettre à jour le graphique</button>
+            </form>
+
+            <div style="width: 750px; height: 750px; margin: 0 auto;">
+                <canvas id="radarChart"></canvas>
+            </div>
+
+            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+            <script>
+                const labels = <?php echo $labelsJSON; ?>;
+                const notes = <?php echo $notesJSON; ?>;
+                const moyennes = <?php echo $moyennesJSON; ?>;
+                const ctx = document.getElementById('radarChart').getContext('2d');
+
+                function updateChart() {
+                    const selectedIndexes = Array.from(document.querySelectorAll('input[name="filters[]"]:checked')).map(input => parseInt(input.value));
+                    const filteredLabels = selectedIndexes.map(index => labels[index]);
+                    const filteredNotes = selectedIndexes.map(index => notes[index]);
+                    const filteredMoyennes = selectedIndexes.map(index => moyennes[index]);
+
+                    const config = {
+                        type: 'radar',
+                        data: {
+                            labels: filteredLabels,
+                            datasets: [
+                                {
+                                    label: 'Notes Agrégées',
+                                    data: filteredNotes,
+                                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                                    borderColor: 'rgba(54, 162, 235, 1)',
+                                    borderWidth: 2,
+                                    pointBackgroundColor: 'rgba(255, 99, 132, 1)',
+                                    pointBorderColor: '#fff',
+                                    pointHoverRadius: 6,
+                                },
+                                {
+                                    label: 'Moyennes',
+                                    data: filteredMoyennes,
+                                    backgroundColor: 'rgba(255, 206, 86, 0.2)',
+                                    borderColor: 'rgba(255, 206, 86, 1)',
+                                    borderWidth: 2,
+                                    pointBackgroundColor: 'rgba(75, 192, 192, 1)',
+                                    pointBorderColor: '#fff',
+                                    pointHoverRadius: 6,
+                                }
+                            ]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            scales: {
+                                r: {
+                                    min: 0,
+                                    max: 20,
+                                    ticks: {
+                                        stepSize: 2,
+                                        showLabelBackdrop: false,
+                                        color: '#666',
+                                        backdropPadding: 3,
+                                        z: 1
+                                    },
+                                    grid: {
+                                        color: 'rgba(200, 200, 200, 0.3)',
+                                    },
+                                    angleLines: {
+                                        color: 'rgba(200, 200, 200, 0.5)',
+                                        display: true,
+                                    },
+                                    pointLabels: {
+                                        font: {
+                                            size: 16
+                                        },
+                                        color: '#333',
+                                        padding: 10,
+                                    }
+                                }
+                            },
+                            plugins: {
+                                legend: {
+                                    position: 'top'
+                                }
+                            },
+                            layout: {
+                                padding: {
+                                    top: 30,
+                                    bottom: 30,
+                                }
+                            }
+                        }
+                    };
+                    if (window.chartInstance) {
+                        window.chartInstance.destroy();
+                    }
+                    window.chartInstance = new Chart(ctx, config);
+                }
+                updateChart();
+            </script>
+            <?php
+        } else {
+            echo '<p>Aucune note agrégée à modéliser pour cet étudiant</p>';
+        }
+    ?>
+
+</div>
 
