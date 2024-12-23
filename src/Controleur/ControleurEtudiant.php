@@ -123,7 +123,10 @@ class ControleurEtudiant extends ControleurGenerique
         $notes = (new EtudiantRepository())->getNotesEtudiant($_REQUEST['idEtudiant']);
         $notesAgregees = (new EtudiantRepository())->recupererNotesAgregees($_REQUEST['idEtudiant']);
         $avis = (new EcoleRepository())->recupererAvis($_REQUEST["idEtudiant"]);
-        ControleurGenerique::afficherVue("vueGenerale.php", ["titre" => "page Etudiant", "cheminCorpsVue" => "etudiant/etudiantPage.php", "etudiant" => $etudiant, "notes" => $notes, "notesAgregees" => $notesAgregees, "ecolesChoisie"=>$ecolechoisi, "regarder" => $regarder, "avis" => $avis]);
+        foreach ($notesAgregees as $note) {
+            $moyennes[] = (new AgregationRepository())->moyenne($note['idAgregation']);
+        }
+        ControleurGenerique::afficherVue("vueGenerale.php", ["titre" => "page Etudiant", "cheminCorpsVue" => "etudiant/etudiantPage.php", "etudiant" => $etudiant, "notes" => $notes, "notesAgregees" => $notesAgregees, "ecolesChoisie"=>$ecolechoisi, "regarder" => $regarder, "avis" => $avis, "moyennes" => $moyennes]);
     }
 
     public static function ajouterEcoleFavoris()

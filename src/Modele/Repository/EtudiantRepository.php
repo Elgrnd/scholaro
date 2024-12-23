@@ -103,7 +103,7 @@ class EtudiantRepository extends AbstractDataRepository
      */
     public function recupererNotesAgregees($etuid): ?array
     {
-        $sql = "Select * from agregation a JOIN etudiantAgregation where etudid = :etudidTag";
+        $sql = "Select * from agregation a JOIN etudiantAgregation ea ON ea.idAgregation = a.idAgregation where etudid = :etudidTag";
         $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
         $values = array(
             "etudidTag" => $etuid,
@@ -115,7 +115,7 @@ class EtudiantRepository extends AbstractDataRepository
             return null;
         }
         foreach ($pdoStatement as $row) {
-            $tab[] = (new AgregationRepository())->construireDepuisTableauSQL($row);
+            $tab[] = $row;
         }
         return $tab;
     }
