@@ -5,11 +5,13 @@ namespace App\Sae\Controleur;
 use App\Sae\Configuration\ConfigurationLDAP;
 use App\Sae\Configuration\ConfigurationSite;
 use App\Sae\Lib\ChoixControleur;
+use App\Sae\Lib\MotDePasse;
 use App\Sae\Lib\Preferences;
 use App\Sae\Lib\ConnexionUtilisateur;
 use App\Sae\Lib\MessageFlash;
+use App\Sae\Lib\VerificationEmail;
 use App\Sae\Modele\Repository\AgregationRepository;
-
+use App\Sae\Modele\Repository\EcoleRepository;
 class ControleurGenerique
 {
 
@@ -33,7 +35,8 @@ class ControleurGenerique
         self::afficherVue("vueGenerale.php", ["titre" => "Connexion", "cheminCorpsVue" => "formulaireConnexion.php"]);
     }
 
-    public static function enregistrerSemestre(): void {
+    public static function enregistrerSemestre(): void
+    {
         $semestres = [];
         for ($i = 1; $i < 6; $i++) {
             $numSemestre = 'numSemestre' . $i;
@@ -46,7 +49,8 @@ class ControleurGenerique
         self::redirectionVersUrl("controleurFrontal.php?action=afficherFormulaire&controleur=agregation");
     }
 
-    public static function enregistrerFiltres(): void {
+    public static function enregistrerFiltres(): void
+    {
         $filtres = [];
         foreach ((new AgregationRepository())->recuperer() as $agregation) {
             $id = $agregation->getIdAgregation();
@@ -124,6 +128,27 @@ class ControleurGenerique
                 MessageFlash::ajouter("warning", "Identifiants incorrects");
                 self::redirectionVersUrl("controleurFrontal.php");
             }
+
+        } else if (ConnexionUtilisateur::estEcolePartenaire($_REQUEST['login'])) {
+            $ep = (new EcoleRepository())->recupererParClePrimaire($_REQUEST['login']);
+            if ($ep && MotDePasse::verifier($_REQUEST['mdp'], $ep->getMdpHache())) {
+                if($ep->isEstValide()) {
+                    if (VerificationEmail::aValideEmail($ep)) {
+                        ConnexionUtilisateur::connecter($ep->getSiret());
+                        MessageFlash::ajouter("success", "Connexion réussie");
+                        self::redirectionVersUrl("controleurFrontal.php?action=afficherListe&controleur=EcolePartenaire");
+                    } else {
+                        MessageFlash::ajouter("warning", "Vous n'avez pas validé votre mail, regardez votre boite mail");
+                        self::redirectionVersUrl("controleurFrontal.php");
+                    }
+                }else{
+                    MessageFlash::ajouter("warning", "L'Admin n'a pas validé votre compte");
+                    self::redirectionVersUrl("controleurFrontal.php");
+                }
+            } else {
+                self::afficherErreur(" Login et/ou mot de passe incorrect.");
+            }
+
         } else {
             self::afficherErreur("Connexion LDAP impossible");
             MessageFlash::ajouter("warning", "Connexion LDAP impossible");
