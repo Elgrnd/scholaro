@@ -26,7 +26,7 @@
                     use App\Sae\Lib\ConnexionUtilisateur;
                     use App\Sae\Modele\Repository\EtudiantRepository;
 
-                if (ConnexionUtilisateur::estAdministrateur()) {
+                if (ConnexionUtilisateur::estAdministrateur() || (ConnexionUtilisateur::estConnecte() && ConnexionUtilisateur::estEcolePartenaire(ConnexionUtilisateur::getLoginUtilisateurConnecte()))) {
                     echo "<li>
                     <a href='controleurFrontal.php?action=afficherListe'>LISTE ETUDIANTS</a>
                 </li>

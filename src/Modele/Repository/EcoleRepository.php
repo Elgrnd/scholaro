@@ -3,6 +3,7 @@
 namespace App\Sae\Modele\Repository;
 
 use App\Sae\Modele\DataObject\AbstractDataObject;
+use App\Sae\Modele\DataObject\Agregation;
 use App\Sae\Modele\Repository\AbstractDataRepository;
 use App\Sae\Modele\DataObject\Ecole;
 
@@ -69,6 +70,27 @@ class EcoleRepository extends AbstractDataRepository
         return $tableauObjets;
     }
 
+    /**
+     * @param $siret
+     * @return Agregation|array recupere les agrégations d'une école partenaire
+     */
+    public function recupererAgregations($siret)
+    {
+        $sql = "SELECT * from Agregations where siretCreateur = :siretTag";
+        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
+        $values = array("siretTag" => $siret);
+        try {
 
+            $pdoStatement->execute($values);
+        }
+        catch (\Exception $e) {
+            return null;
+        }
+        $tableauObjets = [];
+        foreach ($pdoStatement as $objetFormatTableau) {
+            $tableauObjets = (new AgregationRepository())->construireDepuisTableauSQL($objetFormatTableau);
+        }
+        return $tableauObjets;
+    }
 
 }

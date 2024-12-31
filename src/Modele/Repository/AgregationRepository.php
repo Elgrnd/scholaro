@@ -114,6 +114,19 @@ class AgregationRepository extends AbstractDataRepository
         return round($moyenne, 2);
     }
 
+    public function recupererEtudiants(int $idAgregation): array{
+        $sql = "SELECT e.* FROM etudiant e JOIN etudiantAgregation a ON e.etudid = a.etudid WHERE a.idAgregation = :idAgregationTag";
+        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
+        $values = array(
+            "idAgregationTag" => $idAgregation
+        );
+        $pdoStatement->execute($values);
+        $tab = array();
+        foreach ($pdoStatement as $row){
+            $tab[] = (new EtudiantRepository())->construireDepuisTableauSQL($row);
+        }
+        return $tab;
+    }
 }
 
 ?>
