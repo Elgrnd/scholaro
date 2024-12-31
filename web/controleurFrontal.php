@@ -14,13 +14,10 @@ $chargeurDeClasse->addNamespace("App\Sae", __DIR__ . '/../src');
 $nomDeClasseControleur = '';
 
 if (ConnexionUtilisateur::estConnecte()) {
-    if (ConnexionUtilisateur::estAdministrateur()) {
+    if (ConnexionUtilisateur::estAdministrateur() || ConnexionUtilisateur::estEcolePartenaire(ConnexionUtilisateur::getLoginUtilisateurConnecte())) {
         $action = 'afficherListe';
     } else if (ConnexionUtilisateur::estEtudiant()) {
         $action = 'afficherEtudiantPage';
-    }
-    else if (ConnexionUtilisateur::estEcolePartenaire(ConnexionUtilisateur::getLoginUtilisateurConnecte())) {
-        $action = 'afficherListe';
     }
 } else {
     $action = 'afficherFormulaireConnexion';
@@ -30,7 +27,7 @@ if (ConnexionUtilisateur::estConnecte()) {
 if (isset($_REQUEST['controleur'])) {
     $controleur = ucfirst($_REQUEST['controleur']);
     $nomDeClasseControleur = "App\Sae\Controleur\Controleur" . $controleur;
-}else if(ConnexionUtilisateur::estEcolePartenaire(ConnexionUtilisateur::getLoginUtilisateurConnecte())){
+}else if(ConnexionUtilisateur::estConnecte() && ConnexionUtilisateur::estEcolePartenaire(ConnexionUtilisateur::getLoginUtilisateurConnecte())){
     $nomDeClasseControleur = 'App\Sae\Controleur\ControleurEcolePartenaire';
 }
 else {
@@ -52,7 +49,6 @@ if (!class_exists($nomDeClasseControleur)) {
 
     }
 }
-echo $nomDeClasseControleur;
 
 // Appeler l'action sur le contrôleur déterminé
 $nomDeClasseControleur::$action();

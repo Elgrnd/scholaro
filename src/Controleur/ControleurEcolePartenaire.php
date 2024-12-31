@@ -17,15 +17,21 @@ class ControleurEcolePartenaire extends ControleurGenerique
 {
     public static function afficherFormulaireCreationCompte()
     {
-        ControleurGenerique::afficherVue("vueGenerale.php",["titre" => "Formulaire création de compte", "cheminCorpsVue" => "ecolePartenaire/formulaireCreationCompte.php"]);
+        ControleurGenerique::afficherVue("vueGenerale.php", ["titre" => "Formulaire création de compte", "cheminCorpsVue" => "ecolePartenaire/formulaireCreationCompte.php"]);
     }
 
-    public static function afficherListe(){
+    public static function afficherListe()
+    {
+        $agregations = (new EcoleRepository())->recupererAgregations(ConnexionUtilisateur::getLoginUtilisateurConnecte());
+        $etudiants = [];
 
-        $agregations = [];
-        $etudiants = (new EtudiantRepository())->recuperer();
-        foreach (Preferences::lire("choixFiltres") as $idAgregation) {
-            $agregations[] = (new AgregationRepository())->recupererParClePrimaire($idAgregation);
+        if ($agregations) {
+            foreach ($agregations as $agregation) {
+                $listeEtudiants = (new AgregationRepository())->recupererEtudiants($agregation->getIdAgregation());
+                foreach ($listeEtudiants as $etudiant) {
+                    $etudiants[$etudiant->getIdEtudiant()] = $etudiant;
+                }
+            }
         }
         ControleurGenerique::afficherVue("vueGenerale.php", ["titre" => "Liste des étudiants", "cheminCorpsVue" => "etudiant/liste.php", "etudiants" => $etudiants, "agregations" => $agregations]);
     }
@@ -55,7 +61,7 @@ class ControleurEcolePartenaire extends ControleurGenerique
         if (isset($_REQUEST["siret"], $_REQUEST["nomEcole"], $_REQUEST["villeEcole"], $_REQUEST["tel"], $_REQUEST["email"], $_REQUEST["mdp"], $_REQUEST["mdp2"])) {
             // Validation du format de l'email
             $entreprise = (new EcoleRepository())->recupererParClePrimaire($_REQUEST["siret"]);
-            if(!$entreprise) {
+            if (!$entreprise) {
                 if (filter_var($_REQUEST["email"], FILTER_VALIDATE_EMAIL)) {
                     // Vérification des mots de passe
                     if ($_REQUEST["mdp"] === $_REQUEST["mdp2"]) {
@@ -90,7 +96,7 @@ class ControleurEcolePartenaire extends ControleurGenerique
                     MessageFlash::ajouter("warning", "Format d'email invalide");
                     self::redirectionVersUrl("controleurFrontal.php?action=afficherFormulaireCreationCompte");
                 }
-            }else{
+            } else {
                 MessageFlash::ajouter("warning", "Erreur l'entreprise existe déjà");
                 self::redirectionVersUrl("controleurFrontal.php?action=afficherFormulaireCreationCompte");
             }
@@ -99,6 +105,7 @@ class ControleurEcolePartenaire extends ControleurGenerique
             self::redirectionVersUrl("controleurFrontal.php?action=afficherFormulaireCreationCompte");
         }
     }
+
     public static function validerEmail()
     {
         if (isset($_REQUEST['login']) && isset($_REQUEST['nonce'])) {

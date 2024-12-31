@@ -136,7 +136,7 @@ class ControleurGenerique
                     if (VerificationEmail::aValideEmail($ep)) {
                         ConnexionUtilisateur::connecter($ep->getSiret());
                         MessageFlash::ajouter("success", "Connexion réussie");
-                        self::redirectionVersUrl("controleurFrontal.php?action=afficherListe&controleur=EcolePartenaire");
+                        self::redirectionVersUrl("controleurFrontal.php");
                     } else {
                         MessageFlash::ajouter("warning", "Vous n'avez pas validé votre mail, regardez votre boite mail");
                         self::redirectionVersUrl("controleurFrontal.php");

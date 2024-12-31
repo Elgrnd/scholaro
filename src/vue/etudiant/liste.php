@@ -7,17 +7,20 @@
 
         if (ConfigurationSite::getDebug()) echo "get"; else echo "post" ?> action="controleurFrontal.php">
             <?php
-            foreach ((new AgregationRepository())->recuperer() as $agregation) {
-                $id = $agregation->getIdAgregation();
-                if (in_array($agregation->getIdAgregation(), Preferences::lire("choixFiltres"))) {
-                    echo "<input type=checkbox name='idAgregations$id' value='" . $agregation->getIdAgregation() . "' id='" . $agregation->getIdAgregation() . "' checked onchange='this.form.submit()'>
+            /** @var \App\Sae\Modele\DataObject\Agregation $agregations */
+            if($agregations) {
+                foreach ($agregations as $agregation) {
+                    $id = $agregation->getIdAgregation();
+                    if (in_array($agregation->getIdAgregation(), Preferences::lire("choixFiltres"))) {
+                        echo "<input type=checkbox name='idAgregations$id' value='" . $agregation->getIdAgregation() . "' id='" . $agregation->getIdAgregation() . "' checked onchange='this.form.submit()'>
                 <label for='" . $agregation->getIdAgregation() . "' > " . htmlspecialchars($agregation->getNomAgregation()) . " </label>";
-                } else {
-                    echo "<input type=checkbox name='idAgregations$id' value='" . $agregation->getIdAgregation() . "' id='" . $agregation->getIdAgregation() . "' onchange='this.form.submit()'>
+                    } else {
+                        echo "<input type=checkbox name='idAgregations$id' value='" . $agregation->getIdAgregation() . "' id='" . $agregation->getIdAgregation() . "' onchange='this.form.submit()'>
                 <label for='" . $agregation->getIdAgregation() . "' > " . htmlspecialchars($agregation->getNomAgregation()) . " </label> 
             ";
-                }
+                    }
 
+                }
             }
             ?>
             <input type='hidden' name='action' value='enregistrerFiltres'>
@@ -29,6 +32,10 @@
         <div class="table-title">
             <h1>Liste Etudiant</h1>
         </div>
+        <?php
+
+        if (\App\Sae\Lib\ConnexionUtilisateur::estAdministrateur()) {
+        ?>
         <div class="bouton-importation">
             <form action="controleurFrontal.php" method="post" enctype="multipart/form-data">
                 <input type="hidden" name="controleur" value="etudiant">
@@ -41,9 +48,12 @@
                     </label>
                 </div>
             </form>
-
         </div>
     </div>
+    <?php
+    }
+    ?>
+
 
     <table>
         <thead>
@@ -51,7 +61,7 @@
             <th>Id Etudiant</th>
             <th>Nom</th>
             <th>Prenom</th>
-            <?php /** @var \App\Sae\Modele\DataObject\Agregation $agregations */
+            <?php
             if (!empty($agregations)) {
                 foreach ($agregations as $agregation) {
                     if (!$agregation) {
