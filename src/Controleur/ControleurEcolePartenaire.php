@@ -18,19 +18,16 @@ class ControleurEcolePartenaire extends ControleurGenerique
 
     private static function construireDepuisFormulaire(array $tableauDonneesFormulaire): Ecole
     {
-        $mdpHache = MotDePasse::hacher($tableauDonneesFormulaire['mdp']);
-        $estValide = false;
-
         return new Ecole(
             $tableauDonneesFormulaire['siret'],
             $tableauDonneesFormulaire['nomEcole'],
             $tableauDonneesFormulaire['villeEcole'],
             $tableauDonneesFormulaire['tel'],
             $tableauDonneesFormulaire['email'],
-            $tableauDonneesFormulaire['emailAValider'] ?? null,
+            false,
+            false,
             MotDePasse::genererChaineAleatoire(32), // Génération aléatoire pour le nonce.
-            $estValide,
-            $mdpHache
+            MotDePasse::hacher($tableauDonneesFormulaire['mdp'])
         );
     }
 
@@ -46,51 +43,49 @@ class ControleurEcolePartenaire extends ControleurGenerique
                     if ($_REQUEST["mdp"] === $_REQUEST["mdp2"]) {
                         // Construction de l'objet Ecole
 
-                        $mdpHache = MotDePasse::hacher($_REQUEST['mdp']);
-                        $estValide = false;
-
                         $ecole = new Ecole(
                             $_REQUEST['siret'],
                             $_REQUEST['nomEcole'],
                             $_REQUEST['villeEcole'],
                             $_REQUEST['tel'],
-                            "",
                             $_REQUEST['email'],
+                            false,
+                            false,
                             MotDePasse::genererChaineAleatoire(32), // Génération aléatoire pour le nonce.
-                            $estValide,
-                            $mdpHache
+                            MotDePasse::hacher($_REQUEST['mdp'])
                         );
 
                         // Ajout à la base de données
-                        $test = (new EcoleRepository())->ajouter($ecole);
-
+                        (new EcoleRepository())->ajouter($ecole);
                         VerificationEmail::envoiEmailValidation($ecole);
-                        MessageFlash::ajouter("success", "Compte créé !");
+                        MessageFlash::ajouter("success", "Compte créé ! Veuillez valider votre email");
+
                         self::redirectionVersUrl("controleurFrontal.php?action=afficherFormulaireConnexion");
                     } else {
                         MessageFlash::ajouter("warning", "Les mots de passe ne correspondent pas");
-                        self::redirectionVersUrl("controleurFrontal.php?action=afficherFormulaireCreationCompte");
+                        self::redirectionVersUrl("controleurFrontal.php?controleur=ecolePartenaire&action=afficherFormulaireCreationCompte");
                     }
                 } else {
                     MessageFlash::ajouter("warning", "Format d'email invalide");
-                    self::redirectionVersUrl("controleurFrontal.php?action=afficherFormulaireCreationCompte");
+                    self::redirectionVersUrl("controleurFrontal.php?controleur=ecolePartenaire&action=afficherFormulaireCreationCompte");
                 }
             }else{
                 MessageFlash::ajouter("warning", "Erreur l'entreprise existe déjà");
-                self::redirectionVersUrl("controleurFrontal.php?action=afficherFormulaireCreationCompte");
+                self::redirectionVersUrl("controleurFrontal.php?controleur=ecolePartenaire&action=afficherFormulaireCreationCompte");
             }
         } else {
             MessageFlash::ajouter("warning", "Données manquantes");
-            self::redirectionVersUrl("controleurFrontal.php?action=afficherFormulaireCreationCompte");
+            self::redirectionVersUrl("controleurFrontal.php?controleur=ecolePartenaire&action=afficherFormulaireCreationCompte");
         }
     }
     public static function validerEmail()
     {
-        if (isset($_REQUEST['login']) && isset($_REQUEST['nonce'])) {
-            $booleen = VerificationEmail::traiterEmailValidation($_REQUEST['login'], $_REQUEST['nonce']);
+        if (isset($_REQUEST['siret']) && isset($_REQUEST['nonce'])) {
+            $booleen = VerificationEmail::traiterEmailValidation($_REQUEST['siret'], $_REQUEST['nonce']);
             if ($booleen === true) {
-                $utilisateur = (new EcoleRepository())->recupererParClePrimaire($_REQUEST['login']);
-                MessageFlash::ajouter("success", "Mail validé");
+                $ecole = (new EcoleRepository())->recupererParClePrimaire($_REQUEST['siret']);
+                VerificationEmail::validerParAdmin($ecole);
+                MessageFlash::ajouter("success", "Mail validé ! En attente de vérification de l'administrateur.");
                 ControleurGenerique::redirectionVersUrl("controleurFrontal.php");
             } else {
                 self::afficherErreur("pb avec l'email");
@@ -100,5 +95,20 @@ class ControleurEcolePartenaire extends ControleurGenerique
         }
     }
 
+    public static function validerEcole()
+    {
+        if (isset($_REQUEST['siret']) && isset($_REQUEST['nonce'])){
+            $ecole = (new EcoleRepository())->recupererParClePrimaire($_REQUEST['siret']);
+
+            if ($ecole && $ecole->getNonce() === $_REQUEST['nonce']) {
+                $ecole->setEstValide(true);
+                $ecole->setNonce("");
+                (new EcoleRepository())->mettreAJour($ecole);
+                VerificationEmail::notificationValidation($ecole);
+                MessageFlash::ajouter("success", "Mail validé !");
+                ControleurGenerique::redirectionVersUrl("controleurFrontal.php");
+            }
+        }
+    }
 
 }

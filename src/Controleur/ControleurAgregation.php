@@ -14,7 +14,8 @@ use App\Sae\Modele\Repository\RessourceRepository;
 class ControleurAgregation extends ControleurGenerique
 {
     /**
-     * @return void affiche la liste des agregations
+     * @return void
+     * affiche la liste des agregations
      */
     public static function afficherListe(): void
     {
@@ -36,7 +37,8 @@ class ControleurAgregation extends ControleurGenerique
     }
 
     /**
-     * @return void affiche la compostion d'une agrégation
+     * @return void
+     * affiche la compostion d'une agrégation
      */
     public static function afficherDetail(): void
     {
@@ -79,6 +81,10 @@ class ControleurAgregation extends ControleurGenerique
         }
     }
 
+    /**
+     * @return void
+     * affiche la vue liste agregation et appelle la méthode supprimer
+     * */
     public static function supprimer(): void
     {
         $id = $_REQUEST['id'];
@@ -95,7 +101,8 @@ class ControleurAgregation extends ControleurGenerique
     }
 
     /**
-     * @return void affiche la vue formulaire de créer agrégation
+     * @return void
+     * affiche la vue formulaire de créer agrégation
      */
     public static function afficherFormulaire(): void
     {
@@ -109,6 +116,10 @@ class ControleurAgregation extends ControleurGenerique
         }
     }
 
+    /**
+     * @return void
+     * Permet de
+     */
     public static function construireDepuisFormulaire(): void
     {
         if (!ConnexionUtilisateur::estAdministrateur()) {
