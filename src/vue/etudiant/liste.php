@@ -1,25 +1,25 @@
 <div class="marge">
     <div class="Filtre">
         <h1>Filtre :</h1>
-        <form class = "filtres" method=<?php use App\Sae\Configuration\ConfigurationSite;
+        <!-- Affichage des différents filtres disponibles -->
+        <form class = "filtres" method=<?php
+
+        use App\Sae\Configuration\ConfigurationSite;
         use App\Sae\Lib\Preferences;
         use App\Sae\Modele\Repository\AgregationRepository;
 
         if (ConfigurationSite::getDebug()) echo "get"; else echo "post" ?> action="controleurFrontal.php">
             <?php
-            /** @var \App\Sae\Modele\DataObject\Agregation $agregations */
-            if($agregations) {
-                foreach ($agregations as $agregation) {
-                    $id = $agregation->getIdAgregation();
-                    if (in_array($agregation->getIdAgregation(), Preferences::lire("choixFiltres"))) {
-                        echo "<input type=checkbox name='idAgregations$id' value='" . $agregation->getIdAgregation() . "' id='" . $agregation->getIdAgregation() . "' checked onchange='this.form.submit()'>
-                <label for='" . $agregation->getIdAgregation() . "' > " . htmlspecialchars($agregation->getNomAgregation()) . " </label>";
-                    } else {
-                        echo "<input type=checkbox name='idAgregations$id' value='" . $agregation->getIdAgregation() . "' id='" . $agregation->getIdAgregation() . "' onchange='this.form.submit()'>
-                <label for='" . $agregation->getIdAgregation() . "' > " . htmlspecialchars($agregation->getNomAgregation()) . " </label> 
+            foreach ((new AgregationRepository())->recuperer() as $agregation) {
+                $idAgregation = $agregation->getIdAgregation();
+                $nomAgregationHtml = htmlspecialchars($agregation->getNomAgregation());
+                if (in_array($idAgregation, Preferences::lire("choixFiltres"))) {
+                    echo "<input type=checkbox name='idAgregations$idAgregation' value='" . $idAgregation . "' id='" . $idAgregation . "' checked onchange='this.form.submit()'>
+                <label for='" . $idAgregation . "' > " . $nomAgregationHtml . " </label>";
+                } else {
+                    echo "<input type=checkbox name='idAgregations$idAgregation' value='" . $idAgregation . "' id='" . $idAgregation . "' onchange='this.form.submit()'>
+                <label for='" . $idAgregation . "' > " . $nomAgregationHtml . " </label> 
             ";
-                    }
-
                 }
             }
             ?>
@@ -28,14 +28,11 @@
         </form>
     </div>
 
+    <!-- Affichage du Titre de la page ainsi que le bouton d'importation -->
     <div class="titre">
         <div class="table-title">
             <h1>Liste Etudiant</h1>
         </div>
-        <?php
-
-        if (\App\Sae\Lib\ConnexionUtilisateur::estAdministrateur()) {
-        ?>
         <div class="bouton-importation">
             <form action="controleurFrontal.php" method="post" enctype="multipart/form-data">
                 <input type="hidden" name="controleur" value="etudiant">
@@ -48,28 +45,27 @@
                     </label>
                 </div>
             </form>
+
         </div>
     </div>
-    <?php
-    }
-    ?>
 
-
+    <!-- Affichage du Tableau contenant la liste des étudiants -->
     <table>
         <thead>
         <tr>
             <th>Id Etudiant</th>
             <th>Nom</th>
             <th>Prenom</th>
-            <?php
+            <?php /** @var \App\Sae\Modele\DataObject\Agregation $agregations */
             if (!empty($agregations)) {
                 foreach ($agregations as $agregation) {
                     if (!$agregation) {
                         continue;
                     }
+                    $idAgregation = $agregation->getIdAgregation();
                     echo '<th>' . htmlspecialchars($agregation->getNomAgregation()) .
-                        '<a href="?controleur=etudiant&action=triDecroissant&idAgregation=' . $agregation->getIdAgregation() .'"> <img class="fleche" src="../ressources/images/fleche_haut.png" alt="fleche_haut"> </a>
-                    <a href="?controleur=etudiant&action=triCroissant&idAgregation=' . $agregation->getIdAgregation() .'"><img class="fleche" src="../ressources/images/fleche_bas.png" alt="fleche_bas"></a> </th>';
+                        '<a href="?controleur=etudiant&action=triDecroissant&idAgregation=' . $idAgregation .'"> <img class="fleche" src="../ressources/images/fleche_haut.png" alt="fleche_haut"> </a>
+                    <a href="?controleur=etudiant&action=triCroissant&idAgregation=' . $idAgregation .'"><img class="fleche" src="../ressources/images/fleche_bas.png" alt="fleche_bas"></a> </th>';
                 }
 
             } ?>
@@ -87,11 +83,12 @@
 
 
     foreach ($etudiants as $etudiant) {
+        $idEtudiant = $etudiant->getEtudid();
         echo '
        <tr>
-        <td> <a href="?controleur=etudiant&action=afficherEtudiantPage&regarder=admin&idEtudiant='.$etudiant->getEtudid().'">'. $etudiant->getEtudid() . '</a></td>
-        <td> <a href="?controleur=etudiant&action=afficherEtudiantPage&regarder=admin&idEtudiant='.$etudiant->getEtudid().'">' . htmlspecialchars($etudiant->getNomEtu()) . '</a> </td> 
-        <td> <a href="?controleur=etudiant&action=afficherEtudiantPage&regarder=admin&idEtudiant='.$etudiant->getEtudid().'">' . htmlspecialchars($etudiant->getPrenomEtu()) . '</a></td>
+        <td> <a href="?controleur=etudiant&action=afficherEtudiantPage&regarder=admin&idEtudiant='.$idEtudiant.'">'. $idEtudiant . '</a></td>
+        <td> <a href="?controleur=etudiant&action=afficherEtudiantPage&regarder=admin&idEtudiant='.$idEtudiant.'">' . htmlspecialchars($etudiant->getNomEtu()) . '</a> </td> 
+        <td> <a href="?controleur=etudiant&action=afficherEtudiantPage&regarder=admin&idEtudiant='.$idEtudiant.'">' . htmlspecialchars($etudiant->getPrenomEtu()) . '</a></td>
         
         
         ';

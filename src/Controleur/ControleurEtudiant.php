@@ -123,6 +123,7 @@ class ControleurEtudiant extends ControleurGenerique
         $notes = (new EtudiantRepository())->getNotesEtudiant($_REQUEST['idEtudiant']);
         $notesAgregees = (new EtudiantRepository())->recupererNotesAgregees($_REQUEST['idEtudiant']);
         $avis = (new EcoleRepository())->recupererAvis($_REQUEST["idEtudiant"]);
+        $moyennes = array();
         foreach ($notesAgregees as $note) {
             $moyennes[] = (new AgregationRepository())->moyenne($note['idAgregation']);
         }

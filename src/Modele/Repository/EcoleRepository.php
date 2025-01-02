@@ -22,12 +22,12 @@ class EcoleRepository extends AbstractDataRepository
 
     protected function getNomColonnes(): array
     {
-        return ['siret', 'nomEcole', 'villeEcole', 'telEcole', 'mailEcole', 'emailAValider', 'nonce', 'estValide', 'mdpHache'];
+        return ['siret', 'nomEcole', 'villeEcole', 'telEcole', 'mailEcole', 'estValide', 'mailValider', 'nonce', 'mdpHache'];
     }
 
     protected function construireDepuisTableauSQL(array $objetFormatTableau) : Ecole {
         return new Ecole($objetFormatTableau["siret"], $objetFormatTableau["nomEcole"], $objetFormatTableau["villeEcole"], $objetFormatTableau['telEcole'],
-        $objetFormatTableau['mailEcole'], $objetFormatTableau['emailAValider'], $objetFormatTableau['nonce'], $objetFormatTableau['estValide'], $objetFormatTableau['mdpHache']);
+        $objetFormatTableau['mailEcole'], $objetFormatTableau['estValide'], $objetFormatTableau["mailValider"], $objetFormatTableau['nonce'], $objetFormatTableau['mdpHache']);
     }
     protected function formatTableauSQL(AbstractDataObject $objet): array
     {
@@ -37,9 +37,9 @@ class EcoleRepository extends AbstractDataRepository
             "villeEcoleTag" => $objet->getVilleEcole(),
             "telEcoleTag" => $objet->getTel(),
             "mailEcoleTag" => $objet->getMail(),
-            "emailAValiderTag" => $objet->getEmailAValider(),
+            "estValideTag" => $objet->isEstValide()?1:0,
+            "mailValiderTag" => $objet->isMailValider()?1:0,
             "nonceTag" => $objet->getNonce(),
-            "estValideTag" => intval($objet->isEstValide()),
             "mdpHacheTag" => $objet->getMdpHache()
         );
     }

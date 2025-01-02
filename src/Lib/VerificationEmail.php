@@ -6,50 +6,106 @@ use App\Sae\Configuration\ConfigurationSite;
 use App\Sae\Modele\DataObject\Ecole;
 use App\Sae\Modele\Repository\EcoleRepository;
 
+require_once __DIR__ . '/vendor/autoload.php';
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 class VerificationEmail
 {
-    public static function envoiEmailValidation(Ecole $utilisateur): void
+    public static function envoiEmailValidation(Ecole $ecole): void
     {
-        $destinataire = $utilisateur->getEmailAValider();
-        $sujet = "Validation de l'adresse email";
-        // Pour envoyer un email contenant du HTML
-        $enTete = "MIME-Version: 1.0\r\n";
-        $enTete .= "Content-type:text/html;charset=UTF-8\r\n";
+        $mail = new PHPMailer(true);
 
-        // Corps de l'email
-        $loginURL = rawurlencode($utilisateur->getSiret());
-        $nonceURL = rawurlencode($utilisateur->getNonce());
-        $URLAbsolue = ConfigurationSite::getURLAbsolue();
-        $lienValidationEmail = "http://localhost$URLAbsolue?action=validerEmail&controleur=EcolePartenaire&login=$loginURL&nonce=$nonceURL";
-        $corpsEmailHTML = "<a href=\"$lienValidationEmail\">Validation</a>";
+        try {
+            $mail->isSMTP();
+            $mail->Host       = 'smtp.gmail.com';
+            $mail->SMTPAuth   = true;
+            $mail->Username   = 'scolaroiut@gmail.com'; // Votre adresse email
+            $mail->Password   = 'ilmg ytrc ieab vcwz'; // Mot de passe d'application généré
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            $mail->Port       = 587;
 
-        // Temporairement avant d'envoyer un vrai mail
-        //echo "Simulation d'envoi d'un mail<br> Destinataire : $destinataire<br> Sujet : $sujet<br> Corps : <br>$corpsEmailHTML";
-        mail($utilisateur->getEmailAValider(), $sujet, $corpsEmailHTML, $enTete);
-        // Quand vous aurez configué l'envoi de mail via PHP
-        // mail($destinataire, $sujet, $corpsEmailHTML, $enTete);
+            $mail->setFrom('no-reply@example.com', "Validation de l'adresse email");
+            $mail->addAddress($ecole->getMailEcole());
+
+            $mail->isHTML(true);
+            $mail->Subject = 'Validation de l\'adresse email';
+            $siret = rawurlencode($ecole->getSiret());
+            $nonceURL = rawurlencode($ecole->getNonce());
+            $URLAbsolue = ConfigurationSite::getURLAbsolue();
+            $lienValidationEmail = "http://localhost$URLAbsolue?action=validerEmail&controleur=EcolePartenaire&siret=$siret&nonce=$nonceURL";
+            $mail->Body    = 'Veuillez cliquer sur le lien pour valider votre mail. <a href='.$lienValidationEmail.'>Validation</a>';
+
+            $mail->send();
+        } catch (Exception $e) {
+        }
     }
 
-    public static function traiterEmailValidation($login, $nonce): bool
+    public static function traiterEmailValidation($siret, $nonce): bool
     {
-        $utilisateur = (new EcoleRepository())->recupererParClePrimaire($login);
-        if ($utilisateur && $utilisateur->getNonce() === $nonce) {
-            $utilisateur->setMail($utilisateur->getEmailAValider());
-            $utilisateur->setNonce("");
-            (new EcoleRepository())->mettreAJour($utilisateur);
+        $ecole = (new EcoleRepository())->recupererParClePrimaire($siret);
+        if ($ecole && $ecole->getNonce() === $nonce) {
+            $ecole->setMailValider(true);
+            $ecole->setNonce(MotDePasse::genererChaineAleatoire(32));
+            (new EcoleRepository())->mettreAJour($ecole);
             return true;
         } else {
             return false;
         }
     }
 
-    public static function aValideEmail(Ecole $utilisateur): bool
+    public static function validerParAdmin(Ecole $ecole)
     {
-        if ($utilisateur->getMail() != "") {
-            return true;
-        } else {
-            return false;
-        }
+        $mail = new PHPMailer(true);
+        try {
+            $mail->isSMTP();
+            $mail->Host       = 'smtp.gmail.com';
+            $mail->SMTPAuth   = true;
+            $mail->Username   = 'scolaroiut@gmail.com'; // Votre adresse email
+            $mail->Password   = 'ilmg ytrc ieab vcwz'; // Mot de passe d'application généré
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            $mail->Port       = 587;
 
+            $mail->setFrom('no-reply@example.com', "Demande de validation");
+            $mail->addAddress("scolaroiut@gmail.com");
+
+            $mail->isHTML(true);
+            $siret = $ecole->getSiret();
+            $nom = htmlspecialchars($ecole->getNomEcole());
+            $mail->Subject = 'Demande de Validation de ' . $nom;
+            $nonceURL = rawurlencode($ecole->getNonce());
+            $URLAbsolue = ConfigurationSite::getURLAbsolue();
+            $lienValidationEmail = "http://localhost$URLAbsolue?action=validerEcole&controleur=EcolePartenaire&siret=$siret&nonce=$nonceURL";
+            $mail->Body    = 'L\'école '.$nom.' demande une vérification de compte <a href='.$lienValidationEmail.'>Validation</a>';
+
+            $mail->send();
+        } catch (Exception $e) {
+
+        }
+    }
+
+    public static function notificationValidation(Ecole $ecole)
+    {
+        $mail = new PHPMailer(true);
+
+        try {
+            $mail->isSMTP();
+            $mail->Host       = 'smtp.gmail.com';
+            $mail->SMTPAuth   = true;
+            $mail->Username   = 'scolaroiut@gmail.com'; // Votre adresse email
+            $mail->Password   = 'ilmg ytrc ieab vcwz'; // Mot de passe d'application généré
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            $mail->Port       = 587;
+
+            $mail->setFrom('no-reply@example.com', "Validation de l'adresse email");
+            $mail->addAddress($ecole->getMailEcole());
+
+            $mail->isHTML(true);
+            $mail->Subject = 'Validation du compte';
+            $mail->Body    = 'Votre demande de création de compte est achever et validé';
+
+            $mail->send();
+        } catch (Exception $e) {
+        }
     }
 }
