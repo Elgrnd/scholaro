@@ -8,6 +8,7 @@ use App\Sae\Lib\Preferences;
 use App\Sae\Modele\DataObject\Agregation;
 use App\Sae\Modele\DataObject\Etudiant;
 use App\Sae\Modele\Repository\AgregationRepository;
+use App\Sae\Modele\Repository\EcoleRepository;
 use App\Sae\Modele\Repository\EtudiantRepository;
 use App\Sae\Modele\Repository\RessourceRepository;
 
@@ -19,12 +20,17 @@ class ControleurAgregation extends ControleurGenerique
      */
     public static function afficherListe(): void
     {
-        if (!ConnexionUtilisateur::estAdministrateur()) {
+        $login = ConnexionUtilisateur::getLoginUtilisateurConnecte();
+        if (!ConnexionUtilisateur::estAdministrateur() && !ConnexionUtilisateur::estEcolePartenaire($login)) {
             MessageFlash::ajouter("danger", "Vous n'avez pas les droits administrateurs");
             self::redirectionVersUrl("controleurFrontal.php");
             return;
         }
-        $agregations = (new AgregationRepository())->recuperer();
+        if (ConnexionUtilisateur::estEcolePartenaire($login)){
+            $agregations = (new AgregationRepository())->recupererParUtilisateur($login);
+        } else {
+            $agregations = (new AgregationRepository())->recupererParUtilisateur("prof");
+        }
         foreach ($agregations as $agregation) {
             $listeRessources = (new AgregationRepository())->listeRessourcesAgregees($agregation->getIdAgregation());
             $listeAgregation = (new AgregationRepository())->listeAgregationsAgregees($agregation->getIdAgregation());
@@ -42,7 +48,7 @@ class ControleurAgregation extends ControleurGenerique
      */
     public static function afficherDetail(): void
     {
-        if (!ConnexionUtilisateur::estAdministrateur()) {
+        if (!ConnexionUtilisateur::estAdministrateur() && !ConnexionUtilisateur::estEcolePartenaire(ConnexionUtilisateur::getLoginUtilisateurConnecte())) {
             MessageFlash::ajouter("danger", "Vous n'avez pas les droits administrateurs");
             self::redirectionVersUrl("controleurFrontal.php");
             return;
@@ -89,7 +95,7 @@ class ControleurAgregation extends ControleurGenerique
     {
         $id = $_REQUEST['id'];
 
-        if (!ConnexionUtilisateur::estAdministrateur()) {
+        if (!ConnexionUtilisateur::estAdministrateur() && !ConnexionUtilisateur::estEcolePartenaire(ConnexionUtilisateur::getLoginUtilisateurConnecte())) {
             MessageFlash::ajouter("danger", "Vous n'avez pas les droits administrateurs");
             self::redirectionVersUrl("controleurFrontal.php");
             return;
@@ -106,11 +112,16 @@ class ControleurAgregation extends ControleurGenerique
      */
     public static function afficherFormulaire(): void
     {
-        if (!ConnexionUtilisateur::estAdministrateur()) {
+        $login = ConnexionUtilisateur::getLoginUtilisateurConnecte();
+        if (!ConnexionUtilisateur::estAdministrateur() && !ConnexionUtilisateur::estEcolePartenaire($login)) {
             MessageFlash::ajouter("danger", "Vous n'avez pas les droits administrateurs");
             self::redirectionVersUrl("controleurFrontal.php");
         } else {
-            $agregations = (new AgregationRepository())->recuperer();
+            if (ConnexionUtilisateur::estEcolePartenaire($login)){
+                $agregations = (new AgregationRepository())->recupererParUtilisateur($login);
+            } else {
+                $agregations = (new AgregationRepository())->recupererParUtilisateur("prof");
+            }
             $ressources = (new RessourceRepository())->recuperer();
             ControleurGenerique::afficherVue("vueGenerale.php", ['titre' => "creer agrégation", "cheminCorpsVue" => "agregation/agregationFormulaire.php", "agregations" => $agregations, "ressources" => $ressources]);
         }
@@ -122,7 +133,7 @@ class ControleurAgregation extends ControleurGenerique
      */
     public static function construireDepuisFormulaire(): void
     {
-        if (!ConnexionUtilisateur::estAdministrateur()) {
+        if (!ConnexionUtilisateur::estAdministrateur() && !ConnexionUtilisateur::estEcolePartenaire(ConnexionUtilisateur::getLoginUtilisateurConnecte())) {
             MessageFlash::ajouter("danger", "Vous n'avez pas les droits administrateurs");
             self::redirectionVersUrl("controleurFrontal.php");
             return;
@@ -160,7 +171,15 @@ class ControleurAgregation extends ControleurGenerique
         // Création et enregistrement de l'agrégation
 
         //LE LOGIN EST TEMPORAIRE, IL SERA CHANGE DES QU ON AURA LA CONNEXION PROF ET ECOLE PARTENAIRE
-        $agregation = new Agregation(null, $nomAgregation, "prof", null);
+        $loginCreateur = null;
+        $siretCreateur = null;
+        if (ConnexionUtilisateur::estAdministrateur()){
+            $loginCreateur = "prof";
+        }
+        if (ConnexionUtilisateur::estEcolePartenaire(ConnexionUtilisateur::getLoginUtilisateurConnecte())){
+            $siretCreateur = ConnexionUtilisateur::getLoginUtilisateurConnecte();
+        }
+        $agregation = new Agregation(null, $nomAgregation, $loginCreateur, $siretCreateur);
         $idAgregation = $agregationRepo->ajouter($agregation);
 
         // Enregistrement des ressources/agregations liées

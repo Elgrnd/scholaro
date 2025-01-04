@@ -57,6 +57,8 @@ class EcoleRepository extends AbstractDataRepository
         return $tableauObjets;
     }
 
+
+
     public function recupererAvis($idEtudiant)
     {
         $sql = "SELECT siret, avis, commentaire FROM ecoleFavoris WHERE idEtudiant = :idEtudiantTag";

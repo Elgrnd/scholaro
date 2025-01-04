@@ -133,7 +133,7 @@ class ControleurGenerique
             $ep = (new EcoleRepository())->recupererParClePrimaire($_REQUEST['login']);
             if ($ep && MotDePasse::verifier($_REQUEST['mdp'], $ep->getMdpHache())) {
                 if($ep->isEstValide()) {
-                    if (VerificationEmail::aValideEmail($ep)) {
+                    if ($ep->isMailValider()) {
                         ConnexionUtilisateur::connecter($ep->getSiret());
                         MessageFlash::ajouter("success", "Connexion réussie");
                         self::redirectionVersUrl("controleurFrontal.php");

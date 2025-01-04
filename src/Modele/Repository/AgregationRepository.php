@@ -127,6 +127,23 @@ class AgregationRepository extends AbstractDataRepository
         }
         return $tab;
     }
-}
 
-?>
+    public function recupererParUtilisateur(string $utilisateur)
+    {
+        if ($utilisateur == "prof"){
+            $sql = "SELECT * FROM agregation WHERE loginCreateur = :utilisateurTag";
+        } else {
+            $sql = "SELECT * FROM agregation WHERE siretCreateur = :utilisateurTag";
+        }
+        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
+        $values = array(
+            "utilisateurTag" => $utilisateur
+        );
+        $pdoStatement->execute($values);
+        $tab = array();
+        foreach ($pdoStatement as $row){
+            $tab[] = (new AgregationRepository())->construireDepuisTableauSQL($row);
+        }
+        return $tab;
+    }
+}

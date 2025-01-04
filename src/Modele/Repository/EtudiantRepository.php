@@ -15,6 +15,10 @@ class EtudiantRepository extends AbstractDataRepository
 
     protected function construireDepuisTableauSQL(array $objetFormatTableau): Etudiant
     {
+        $avis = "";
+        if ($objetFormatTableau['avis'] != null){
+            $avis = $objetFormatTableau['avis'];
+        }
         return new Etudiant($objetFormatTableau['etudid'],
             $objetFormatTableau['codenip'],
             $objetFormatTableau['civ'],
@@ -23,7 +27,7 @@ class EtudiantRepository extends AbstractDataRepository
             $objetFormatTableau['bac'],
             $objetFormatTableau['specialite'],
             $objetFormatTableau['rg_admis'],
-            $objetFormatTableau['avis'],
+            $avis,
             $objetFormatTableau['login']);
     }
 
@@ -216,9 +220,14 @@ class EtudiantRepository extends AbstractDataRepository
     /**
      * @return array return la liste des etudiants trié dans l'ordre decroissant par rapport à leur note d'une agrégation
      */
-    public function triDecroissantNoteEtudiants($idAgregation) : ?array
+    public function triDecroissantNoteEtudiants($idAgregation, $utilisateur) : ?array
     {
-        $sql = "SELECT e.* FROM etudiant e LEFT JOIN etudiantAgregation a ON a.etudid = e.etudid AND a.idAgregation = :idAgregationTag ORDER BY a.note DESC;";
+//        if ($utilisateur == "prof"){
+            $sql = "SELECT e.* FROM etudiant e LEFT JOIN etudiantAgregation a ON a.etudid = e.etudid AND a.idAgregation = :idAgregationTag ORDER BY a.note DESC;";
+//        } else {
+//            $sql = "SELECT e.* FROM etudiant e LEFT JOIN etudiantAgregation a ON a.etudid = e.etudid AND a.idAgregation = :idAgregationTag
+//                    JOIN ecoleFavoris on etudiant.etudid = ecoleFavoris.idEtudiant WHERE siret = :siretTag ORDER BY a.note DESC;";
+//        }
         $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
         $values = array(
             "idAgregationTag" => $idAgregation,
@@ -317,6 +326,19 @@ class EtudiantRepository extends AbstractDataRepository
             $values = array("commentaireTag" => $commentaires[$ecoleFavoris->getIdEcole()], "idEtudiantTag" => $idEtudiant, "idEcole" => $ecoleFavoris->getIdEcole());
             $pdoStatement->execute($values);
         }
+    }
+
+    public function recupererEtudiantFavoris($siret)
+    {
+        $sql = "SELECT * FROM etudiant JOIN ecoleFavoris on etudiant.etudid = ecoleFavoris.idEtudiant WHERE siret = :siretTag";
+        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
+        $values = array("siretTag" => $siret);
+        $pdoStatement->execute($values);
+        $tableauObjets = [];
+        foreach ($pdoStatement as $objetFormatTableau) {
+            $tableauObjets[] = $this->construireDepuisTableauSQL($objetFormatTableau);
+        }
+        return $tableauObjets;
     }
 
 

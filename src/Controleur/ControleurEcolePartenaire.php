@@ -22,17 +22,8 @@ class ControleurEcolePartenaire extends ControleurGenerique
 
     public static function afficherListe()
     {
-        $agregations = (new EcoleRepository())->recupererAgregations(ConnexionUtilisateur::getLoginUtilisateurConnecte());
-        $etudiants = [];
-
-        if ($agregations) {
-            foreach ($agregations as $agregation) {
-                $listeEtudiants = (new AgregationRepository())->recupererEtudiants($agregation->getIdAgregation());
-                foreach ($listeEtudiants as $etudiant) {
-                    $etudiants[$etudiant->getIdEtudiant()] = $etudiant;
-                }
-            }
-        }
+        $agregations = (new AgregationRepository())->recupererParUtilisateur(ConnexionUtilisateur::getLoginUtilisateurConnecte());
+        $etudiants = (new EtudiantRepository())->recupererEtudiantFavoris(ConnexionUtilisateur::getLoginUtilisateurConnecte());
         ControleurGenerique::afficherVue("vueGenerale.php", ["titre" => "Liste des étudiants", "cheminCorpsVue" => "etudiant/liste.php", "etudiants" => $etudiants, "agregations" => $agregations]);
     }
 
