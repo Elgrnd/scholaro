@@ -8,7 +8,7 @@ class AgregationRepository extends AbstractDataRepository
 {
     protected function construireDepuisTableauSQL(array $objetFormatTableau): Agregation
     {
-        return new Agregation($objetFormatTableau['idAgregation'], $objetFormatTableau['nomAgregation'], $objetFormatTableau['loginCreateur']);
+        return new Agregation($objetFormatTableau['idAgregation'], $objetFormatTableau['nomAgregation'], $objetFormatTableau['loginCreateur'], $objetFormatTableau['siretCreateur']);
     }
 
     protected function getNomTable(): string
@@ -23,7 +23,7 @@ class AgregationRepository extends AbstractDataRepository
 
     protected function getNomColonnes(): array
     {
-        return ['idAgregation', 'nomAgregation', 'loginCreateur'];
+        return ['idAgregation', 'nomAgregation', 'loginCreateur', 'siretCreateur'];
     }
 
     protected function formatTableauSQL(AbstractDataObject $objet): array
@@ -32,6 +32,7 @@ class AgregationRepository extends AbstractDataRepository
             "idAgregationTag" => $objet->getIdAgregation(),
             "nomAgregationTag" => $objet->getNomAgregation(),
             "loginCreateurTag" => $objet->getLoginCreateur(),
+            "siretCreateurTag" => $objet->getSiretCreateur(),
         );
     }
 
@@ -113,6 +114,36 @@ class AgregationRepository extends AbstractDataRepository
         return round($moyenne, 2);
     }
 
-}
+    public function recupererEtudiants(int $idAgregation): array{
+        $sql = "SELECT e.* FROM etudiant e JOIN etudiantAgregation a ON e.etudid = a.etudid WHERE a.idAgregation = :idAgregationTag";
+        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
+        $values = array(
+            "idAgregationTag" => $idAgregation
+        );
+        $pdoStatement->execute($values);
+        $tab = array();
+        foreach ($pdoStatement as $row){
+            $tab[] = (new EtudiantRepository())->construireDepuisTableauSQL($row);
+        }
+        return $tab;
+    }
 
-?>
+    public function recupererParUtilisateur(string $utilisateur)
+    {
+        if ($utilisateur == "prof"){
+            $sql = "SELECT * FROM agregation WHERE loginCreateur = :utilisateurTag";
+        } else {
+            $sql = "SELECT * FROM agregation WHERE siretCreateur = :utilisateurTag";
+        }
+        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
+        $values = array(
+            "utilisateurTag" => $utilisateur
+        );
+        $pdoStatement->execute($values);
+        $tab = array();
+        foreach ($pdoStatement as $row){
+            $tab[] = (new AgregationRepository())->construireDepuisTableauSQL($row);
+        }
+        return $tab;
+    }
+}

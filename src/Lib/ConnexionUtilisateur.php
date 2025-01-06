@@ -5,6 +5,7 @@ namespace App\Sae\Lib;
 use App\Sae\Configuration\ConfigurationLDAP;
 use App\Sae\Configuration\ConfigurationSite;
 use App\Sae\Modele\HTTP\Session;
+use App\Sae\Modele\Repository\EcoleRepository;
 use App\Sae\Modele\Repository\EtudiantRepository;
 use App\Sae\Modele\Repository\ProfesseurRepository;
 
@@ -51,7 +52,7 @@ class ConnexionUtilisateur
             || self::estUtilisateur("laurentg")
             || self::estUtilisateur("nedjary")
             || (self::estUtilisateur("messaoui")
-            || (self::estUtilisateur("desertg")));
+                || (self::estUtilisateur("desertg")));
     }
 
     /**
@@ -67,35 +68,30 @@ class ConnexionUtilisateur
         if (!self::estConnecte()) {
             return false;
         }
-        ConfigurationLDAP::connecterServeur();
-        foreach (ConfigurationLDAP::getAll() as $etudiant) {
-            if ($etudiant['login'] == self::getLoginUtilisateurConnecte() && ($etudiant['promotion'] == 'Ann1'
-                    || $etudiant['promotion'] == 'Ann2'
-                    || $etudiant['promotion'] == 'Ann3')) {
-                return true;
+        if ($_SERVER["HTTP_HOST"] == "webinfo.iutmontp.univ-montp2.fr") {
+            ConfigurationLDAP::connecterServeur();
+            foreach (ConfigurationLDAP::getAll() as $etudiant) {
+                if ($etudiant['login'] == self::getLoginUtilisateurConnecte() && ($etudiant['promotion'] == 'Ann1'
+                        || $etudiant['promotion'] == 'Ann2'
+                        || $etudiant['promotion'] == 'Ann3')) {
+                    return true;
+                }
             }
         }
         return false;
     }
 
     /**
-     * @throws \Exception
+     * @param string $login
+     * @return bool return true si le login appartient à une école partenaire sinon return false
      */
-    public static function estProfesseur(): bool
+    public static function estEcolePartenaire(string $login): bool
     {
-        if (ConfigurationSite::getDebug()) {
+        $ep = (new EcoleRepository())->recupererParClePrimaire($login);
+        if ($ep) {
+            return true;
+        } else {
             return false;
         }
-
-        if (!self::estConnecte()) {
-            return false;
-        }
-        ConfigurationLDAP::connecterServeur();
-        foreach (ConfigurationLDAP::getAll() as $professeur) {
-            if ($professeur['login'] == self::getLoginUtilisateurConnecte() && ($professeur['promotion'] == "Personnel")) {
-                return true;
-            }
-        }
-        return false;
     }
 }

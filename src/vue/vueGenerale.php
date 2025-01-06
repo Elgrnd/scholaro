@@ -12,7 +12,7 @@
          */
         ?></title>
     <link rel="stylesheet" href="../ressources/css/vueGeneraleStyle.css">
-    <link href="../ressources/css/<?= str_replace(".php", "Style.css", $cheminCorpsVue) ?>" rel="stylesheet">
+    <link href="../ressources/css/<?= str_replace(".php", "Style.css", $cheminCorpsVue)?>" rel="stylesheet">
 </head>
 <body>
 <header>
@@ -23,20 +23,19 @@
             <ul>
                 <?php
 
-                use App\Sae\Lib\ConnexionUtilisateur;
-                use App\Sae\Modele\Repository\EtudiantRepository;
+                    use App\Sae\Lib\ConnexionUtilisateur;
+                    use App\Sae\Modele\Repository\EtudiantRepository;
 
-                if (ConnexionUtilisateur::estProfesseur() || ConnexionUtilisateur::estAdministrateur()) {
+                if (ConnexionUtilisateur::estAdministrateur() || (ConnexionUtilisateur::estConnecte() && ConnexionUtilisateur::estEcolePartenaire(ConnexionUtilisateur::getLoginUtilisateurConnecte()))) {
                     echo "<li>
                     <a href='controleurFrontal.php?action=afficherListe'>LISTE ETUDIANTS</a>
-                </li>";
-                    echo "<li>
+                </li>
+                <li>
                     <a href='controleurFrontal.php?action=afficherFormulaire&controleur=agregation'>CREER AGREGATION</a>
                 </li>
                 <li>
                     <a href='controleurFrontal.php?action=afficherListe&controleur=agregation'>LISTE AGREGATIONS</a>
                 </li>";
-
                 }
                 if (ConnexionUtilisateur::estEtudiant()) {
                     $login = rawurlencode(ConnexionUtilisateur::getLoginUtilisateurConnecte());
@@ -52,7 +51,7 @@
                     echo "<li>
                     <a href='controleurFrontal.php?action=deconnecter'><img class='logout' src='../ressources/images/logout.png' alt='se déconnecter'></a>
                 </li>";
-                } ?>
+                }?>
             </ul>
         </div>
     </nav>
@@ -60,7 +59,7 @@
     <div>
         <?php
         /** @var string[][] $messagesFlash */
-        foreach ($messagesFlash as $type => $messagesFlashPourUnType) {
+        foreach($messagesFlash as $type => $messagesFlashPourUnType) {
             // $type est l'une des valeurs suivantes : "success", "info", "warning", "danger"
             // $messagesFlashPourUnType est la liste des messages flash d'un type
             foreach ($messagesFlashPourUnType as $messageFlash) {

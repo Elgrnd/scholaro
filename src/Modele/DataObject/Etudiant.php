@@ -144,7 +144,10 @@ class Etudiant extends AbstractDataObject
     }
 
 
-
+    /**
+     * @return float
+     * permet de calculer la moyenne d'un étudiant
+    */
     public function calculerMoyenne(array $tabNom, array $tabCoeff): float
     {
         $etudiants = (new EtudiantRepository())->recuperer();

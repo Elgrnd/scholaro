@@ -51,5 +51,4 @@ class RessourceRepository extends AbstractDataRepository
         return round($moyenne, 2);
     }
 
-
 }

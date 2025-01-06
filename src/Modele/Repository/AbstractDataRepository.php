@@ -35,7 +35,7 @@ abstract class AbstractDataRepository
         }
         $colonnesTag = substr($colonnesTag, 0, -2);
 
-        $sql = "INSERT IGNORE INTO $nomTable ($nomsColonnes) VALUES ($colonnesTag)";
+        $sql = "INSERT INTO $nomTable ($nomsColonnes) VALUES ($colonnesTag)";
         $pdo = ConnexionBaseDeDonnees::getPdo();
         $pdoStatement = $pdo->prepare($sql);
         $values = $this->formatTableauSQL($objet);
@@ -114,4 +114,22 @@ abstract class AbstractDataRepository
         }
         return true;
     }
+
+    public function mettreAJour(AbstractDataObject $objet): bool
+    {
+        $sql = 'Update '.$this->getNomTable().' set ';
+        $colonnes = $this->getNomColonnes();
+        array_shift($colonnes);
+        foreach ($colonnes as $colonne) {
+            $setClause[] = "$colonne = :{$colonne}Tag";
+        }
+        $sql .= implode(", ", $setClause);
+        $sql .= " WHERE " . $this->getNomClePrimaire() . " = :".$this->getNomClePrimaire()."Tag";
+        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
+        $values = $this->formatTableauSQL($objet);
+        $pdoStatement->execute($values);
+        return true;
+    }
+
+
 }

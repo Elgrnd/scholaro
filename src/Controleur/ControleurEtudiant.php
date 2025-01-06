@@ -27,32 +27,39 @@ class ControleurEtudiant extends ControleurGenerique
      */
     public static function afficherListe(): void
     {
-        if (!ConnexionUtilisateur::estAdministrateur()) {
+        $login = ConnexionUtilisateur::getLoginUtilisateurConnecte();
+        if (!ConnexionUtilisateur::estAdministrateur() && !ConnexionUtilisateur::estEcolePartenaire($login)) {
             MessageFlash::ajouter("danger", "Vous n'avez pas les droits administrateurs");
             self::redirectionVersUrl("controleurFrontal.php");
             return;
         }
-        $agregations = [];
-        $etudiants = (new EtudiantRepository())->recuperer();
-        foreach (Preferences::lire("choixFiltres") as $idAgregation) {
-            $agregations[] = (new AgregationRepository())->recupererParClePrimaire($idAgregation);
+
+        if (ConnexionUtilisateur::estEcolePartenaire($login)){
+            $agregations = (new AgregationRepository())->recupererParUtilisateur($login);
+            $etudiants = (new EtudiantRepository())->recupererEtudiantFavoris($login);
+        } else {
+            $agregations = (new AgregationRepository())->recupererParUtilisateur("prof");
+            $etudiants = (new EtudiantRepository())->recuperer();
         }
-        ControleurGenerique::afficherVue("vueGenerale.php", ["titre" => "Liste des étudiants", "cheminCorpsVue" => "etudiant/liste.php", "etudiants" => $etudiants, "agregations" => $agregations]);
+        ControleurGenerique::afficherVue("vueGenerale.php", ["titre" => "Listes test des étudiants", "cheminCorpsVue" => "etudiant/liste.php", "etudiants" => $etudiants, "agregations" => $agregations]);
     }
     public static function triDecroissant(): void
     {
-        if (!ConnexionUtilisateur::estAdministrateur()) {
+        $login = ConnexionUtilisateur::getLoginUtilisateurConnecte();
+        if (!ConnexionUtilisateur::estAdministrateur() && !ConnexionUtilisateur::estEcolePartenaire($login)) {
             MessageFlash::ajouter("danger", "Vous n'avez pas les droits administrateurs");
             self::redirectionVersUrl("controleurFrontal.php?action=afficherEtudiantPage");
             return;
         }
 
         if (isset($_REQUEST['idAgregation'])) {
-            $agregations = array();
-            foreach (Preferences::lire("choixFiltres") as $agregation) {
-                $agregations[] = (new AgregationRepository())->recupererParClePrimaire($agregation);
+            if (ConnexionUtilisateur::estEcolePartenaire($login)){
+                $agregations = (new AgregationRepository())->recupererParUtilisateur($login);
+                $etudiants = (new EtudiantRepository())->triDecroissantNoteEtudiants($_REQUEST['idAgregation'], $login);
+            } else {
+                $agregations = (new AgregationRepository())->recupererParUtilisateur("prof");
+                $etudiants = (new EtudiantRepository())->triDecroissantNoteEtudiants($_REQUEST['idAgregation'], "prof");
             }
-            $etudiants = (new EtudiantRepository())->triDecroissantNoteEtudiants($_REQUEST['idAgregation']);
             if ($etudiants != null) {
                 ControleurGenerique::afficherVue("vueGenerale.php", ["titre" => "Liste des étudiants", "cheminCorpsVue" => "etudiant/liste.php", "etudiants" => $etudiants, "agregations" => $agregations]);
             } else {
@@ -65,17 +72,20 @@ class ControleurEtudiant extends ControleurGenerique
 
     public static function triCroissant(): void
     {
-        if (!ConnexionUtilisateur::estAdministrateur()) {
+        $login = ConnexionUtilisateur::getLoginUtilisateurConnecte();
+        if (!ConnexionUtilisateur::estAdministrateur() && !ConnexionUtilisateur::estEcolePartenaire($login)) {
             MessageFlash::ajouter("danger", "Vous n'avez pas les droits administrateurs");
             self::redirectionVersUrl("controleurFrontal.php");
             return;
         }
         if (isset($_REQUEST['idAgregation'])) {
-            $agregations = array();
-            foreach (Preferences::lire("choixFiltres") as $agregation) {
-                $agregations[] = (new AgregationRepository())->recupererParClePrimaire($agregation);
+            if (ConnexionUtilisateur::estEcolePartenaire($login)){
+                $agregations = (new AgregationRepository())->recupererParUtilisateur($login);
+                $etudiants = (new EtudiantRepository())->triCroissantNoteEtudiants($_REQUEST['idAgregation'], $login);
+            } else {
+                $agregations = (new AgregationRepository())->recupererParUtilisateur("prof");
+                $etudiants = (new EtudiantRepository())->triCroissantNoteEtudiants($_REQUEST['idAgregation'], "prof");
             }
-            $etudiants = (new EtudiantRepository())->triCroissantNoteEtudiants($_REQUEST['idAgregation']);
             if ($etudiants != null) {
                 ControleurGenerique::afficherVue("vueGenerale.php", ["titre" => "Liste des étudiants", "cheminCorpsVue" => "etudiant/liste.php", "etudiants" => $etudiants, "agregations" => $agregations]);
             } else {
@@ -92,7 +102,8 @@ class ControleurEtudiant extends ControleurGenerique
      */
     public static function afficherEtudiantPage(): void
     {
-        if (!ConnexionUtilisateur::estConnecte()) {
+        $login = ConnexionUtilisateur::getLoginUtilisateurConnecte();
+        if (!ConnexionUtilisateur::estConnecte() && !ConnexionUtilisateur::estEcolePartenaire($login)) {
             MessageFlash::ajouter("warning", "Vous n'êtes pas connectés");
             self::redirectionVersUrl("controleurFrontal.php");
             return;
@@ -107,23 +118,31 @@ class ControleurEtudiant extends ControleurGenerique
             self::afficherErreur("Aucunes infos sur l'étudiant");
             return;
         }
-        if (!ConfigurationSite::getDebug()) {
-            ConfigurationLDAP::connecterServeur();
-            if (!ConnexionUtilisateur::estUtilisateur(ConfigurationLDAP::getAvecUidNumber($_REQUEST['idEtudiant'])) && !ConnexionUtilisateur::estAdministrateur()) {
-                MessageFlash::ajouter("danger", "Les détails d'un étudiant ne peuvent être vu que par lui même et un administrateur.");
-                self::redirectionVersUrl("controleurFrontal.php");
-                return;
-            }
-        }
+//        if (!ConfigurationSite::getDebug()) {
+//            ConfigurationLDAP::connecterServeur();
+//            if (!ConnexionUtilisateur::estUtilisateur(ConfigurationLDAP::getAvecUidNumber($_REQUEST['idEtudiant'])) && !ConnexionUtilisateur::estAdministrateur() && !ConnexionUtilisateur::estEcolePartenaire(ConnexionUtilisateur::getLoginUtilisateurConnecte())) {
+//                MessageFlash::ajouter("danger", "Les détails d'un étudiant ne peuvent être vu que par lui même et un administrateur.");
+//                self::redirectionVersUrl("controleurFrontal.php");
+//                return;
+//            }
+//        }
         $regarder = "";
         if (isset($_REQUEST["regarder"])){
             $regarder = $_REQUEST["regarder"];
         }
         $ecolechoisi = (new EcoleRepository())->recupererEcoleFavoris($_REQUEST["idEtudiant"]);
         $notes = (new EtudiantRepository())->getNotesEtudiant($_REQUEST['idEtudiant']);
-        $notesAgregees = (new EtudiantRepository())->recupererNotesAgregees($_REQUEST['idEtudiant']);
+        if (ConnexionUtilisateur::estEcolePartenaire($login)){
+            $notesAgregees = (new EtudiantRepository())->recupererNotesAgregees($_REQUEST['idEtudiant'], $login);
+        } else {
+            $notesAgregees = (new EtudiantRepository())->recupererNotesAgregees($_REQUEST['idEtudiant'], "prof");
+        }
         $avis = (new EcoleRepository())->recupererAvis($_REQUEST["idEtudiant"]);
-        ControleurGenerique::afficherVue("vueGenerale.php", ["titre" => "page Etudiant", "cheminCorpsVue" => "etudiant/etudiantPage.php", "etudiant" => $etudiant, "notes" => $notes, "notesAgregees" => $notesAgregees, "ecolesChoisie"=>$ecolechoisi, "regarder" => $regarder, "avis" => $avis]);
+        $moyennes = array();
+        foreach ($notesAgregees as $note) {
+            $moyennes[] = (new AgregationRepository())->moyenne($note['idAgregation']);
+        }
+        ControleurGenerique::afficherVue("vueGenerale.php", ["titre" => "page Etudiant", "cheminCorpsVue" => "etudiant/etudiantPage.php", "etudiant" => $etudiant, "notes" => $notes, "notesAgregees" => $notesAgregees, "ecolesChoisie"=>$ecolechoisi, "regarder" => $regarder, "avis" => $avis, "moyennes" => $moyennes]);
     }
 
     public static function ajouterEcoleFavoris()
