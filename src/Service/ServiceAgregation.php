@@ -21,9 +21,7 @@ class ServiceAgregation
      */
     public function recupererListe($login): array
     {
-        if (!ConnexionUtilisateur::estAdministrateur() && !ConnexionUtilisateur::estEcolePartenaire($login)) {
-            throw new DroitException("Vous n'avez pas les droits");
-        }
+        (new ServiceGenerique())->verifDroit($login);
         if (ConnexionUtilisateur::estEcolePartenaire($login)) {
             $agregations = (new AgregationRepository())->recupererParUtilisateur($login);
         } else {
@@ -47,12 +45,9 @@ class ServiceAgregation
      */
     public function detail($idAgregation): array
     {
-        if (!ConnexionUtilisateur::estAdministrateur() && !ConnexionUtilisateur::estEcolePartenaire(ConnexionUtilisateur::getLoginUtilisateurConnecte())) {
-            throw new DroitException("Vous n'avez pas les droits");
-        }
-        if (!$idAgregation) {
-            throw new ArgNullException("L'id n'a pas été transmise");
-        }
+        (new ServiceGenerique())->verifDroit(ConnexionUtilisateur::getLoginUtilisateurConnecte());
+        (new ServiceGenerique())->idVide($idAgregation);
+
         $repository = new AgregationRepository();
         $ressourceRepo = new RessourceRepository();
 
@@ -103,9 +98,7 @@ class ServiceAgregation
      */
     public function supprimer($idAgregation): void
     {
-        if (!$idAgregation) {
-            throw new ArgNullException("L'id n'est pas passé en paramètre.");
-        }
+        (new ServiceGenerique())->idVide($idAgregation);
         $repository = new AgregationRepository();
         $login = ConnexionUtilisateur::getLoginUtilisateurConnecte();
         $agregation = $repository->recupererParClePrimaire($idAgregation);
@@ -127,16 +120,14 @@ class ServiceAgregation
     public function preparerFormulaire(): array
     {
         $login = ConnexionUtilisateur::getLoginUtilisateurConnecte();
-        if (!ConnexionUtilisateur::estAdministrateur() && !ConnexionUtilisateur::estEcolePartenaire($login)) {
-            throw new DroitException("Vous n'avez pas les droits");
+        (new ServiceGenerique())->verifDroit($login);
+        if (ConnexionUtilisateur::estEcolePartenaire($login)) {
+            $agregations = (new AgregationRepository())->recupererParUtilisateur($login);
         } else {
-            if (ConnexionUtilisateur::estEcolePartenaire($login)) {
-                $agregations = (new AgregationRepository())->recupererParUtilisateur($login);
-            } else {
-                $agregations = (new AgregationRepository())->recupererParUtilisateur("prof");
-            }
-            $ressources = (new RessourceRepository())->recuperer();
+            $agregations = (new AgregationRepository())->recupererParUtilisateur("prof");
         }
+        $ressources = (new RessourceRepository())->recuperer();
+
         return [
             'agregations' => $agregations,
             'ressources' => $ressources
@@ -148,16 +139,14 @@ class ServiceAgregation
      */
     public function enregistrerNote()
     {
-        if (!ConnexionUtilisateur::estAdministrateur() && !ConnexionUtilisateur::estEcolePartenaire(ConnexionUtilisateur::getLoginUtilisateurConnecte())) {
-            throw new DroitException("Vous n'avez pas les droits");
-        }
+        (new ServiceGenerique())->verifDroit(ConnexionUtilisateur::getLoginUtilisateurConnecte());
 
         $nomAgregation = $_REQUEST['nomAgregation'] ?? null;
         $count = $_REQUEST['count'] ?? 0;
 
         if (!$nomAgregation || !$count) {
             throw new ArgNullException("Vous avez oublié le nom de l'agrégation et/ou de sélectionner des ressources");
-          //  self::redirectionVersUrl("controleurFrontal.php?action=afficherFormulaire&controleur=agregation");
+            //  self::redirectionVersUrl("controleurFrontal.php?action=afficherFormulaire&controleur=agregation");
         }
 
         $tabNom = [];
