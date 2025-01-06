@@ -14,7 +14,7 @@ $chargeurDeClasse->addNamespace("App\Sae", __DIR__ . '/../src');
 $nomDeClasseControleur = '';
 
 if (ConnexionUtilisateur::estConnecte()) {
-    if (ConnexionUtilisateur::estAdministrateur()) {
+    if (ConnexionUtilisateur::estAdministrateur() || ConnexionUtilisateur::estProfesseur()) {
         $action = 'afficherListe';
     } else if (ConnexionUtilisateur::estEtudiant()) {
         $action = 'afficherEtudiantPage';

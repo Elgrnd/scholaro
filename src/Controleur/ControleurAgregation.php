@@ -40,7 +40,7 @@ class ControleurAgregation extends ControleurGenerique
      */
     public static function afficherDetail(): void
     {
-        if (!ConnexionUtilisateur::estAdministrateur()) {
+        if (!ConnexionUtilisateur::estAdministrateur() || !ConnexionUtilisateur::estProfesseur()) {
             MessageFlash::ajouter("danger", "Vous n'avez pas les droits administrateurs");
             self::redirectionVersUrl("controleurFrontal.php");
             return;
@@ -99,7 +99,7 @@ class ControleurAgregation extends ControleurGenerique
      */
     public static function afficherFormulaire(): void
     {
-        if (!ConnexionUtilisateur::estAdministrateur()) {
+        if (!ConnexionUtilisateur::estAdministrateur() || !ConnexionUtilisateur::estProfesseur()) {
             MessageFlash::ajouter("danger", "Vous n'avez pas les droits administrateurs");
             self::redirectionVersUrl("controleurFrontal.php");
         } else {
@@ -111,7 +111,7 @@ class ControleurAgregation extends ControleurGenerique
 
     public static function construireDepuisFormulaire(): void
     {
-        if (!ConnexionUtilisateur::estAdministrateur()) {
+        if (!ConnexionUtilisateur::estAdministrateur() || !ConnexionUtilisateur::estProfesseur()) {
             MessageFlash::ajouter("danger", "Vous n'avez pas les droits administrateurs");
             self::redirectionVersUrl("controleurFrontal.php");
             return;

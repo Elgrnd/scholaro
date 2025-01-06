@@ -38,10 +38,12 @@ if (!empty($listeAgregations)) {
 echo "<h1> Moyenne : $moyenne  </h1>";
 
 // Bouton de suppression
-echo '<a href="controleurFrontal.php?action=supprimer&controleur=agregation&id=' . htmlspecialchars($agregation->getIdAgregation()) . '" 
+if (\App\Sae\Lib\ConnexionUtilisateur::estAdministrateur()) {
+    echo '<a href="controleurFrontal.php?action=supprimer&controleur=agregation&id=' . htmlspecialchars($agregation->getIdAgregation()) . '" 
        class="delete-agregation-link" 
        onclick="return confirm(\'Êtes-vous sûr de vouloir supprimer cette agrégation ? \nCela peut modifier d\\\'autres agrégations.\');">';
-echo '<div class="delete-agregation-button">Supprimer l\'agrégation</div>';
-echo '</a>';
+    echo '<div class="delete-agregation-button">Supprimer l\'agrégation</div>';
+    echo '</a>';
 
-echo '</div>';
+    echo '</div>';
+}

@@ -77,4 +77,25 @@ class ConnexionUtilisateur
         }
         return false;
     }
+
+    /**
+     * @throws \Exception
+     */
+    public static function estProfesseur(): bool
+    {
+        if (ConfigurationSite::getDebug()) {
+            return false;
+        }
+
+        if (!self::estConnecte()) {
+            return false;
+        }
+        ConfigurationLDAP::connecterServeur();
+        foreach (ConfigurationLDAP::getAll() as $professeur) {
+            if ($professeur['login'] == self::getLoginUtilisateurConnecte() && ($professeur['promotion'] == "Personnel")) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
