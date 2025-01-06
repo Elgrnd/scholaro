@@ -146,7 +146,8 @@ class ControleurGenerique
                     self::redirectionVersUrl("controleurFrontal.php");
                 }
             } else {
-                self::afficherErreur(" Login et/ou mot de passe incorrect.");
+                MessageFlash::ajouter("warning", "Le mot de passe ou l'identifiant est incorrecte");
+                self::redirectionVersUrl("controleurFrontal.php");
             }
 
         } else {

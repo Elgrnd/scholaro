@@ -91,13 +91,18 @@
          * @var \App\Sae\Modele\DataObject\Etudiant[] $etudiants
          */
 
+        if (ConnexionUtilisateur::estAdministrateur()) $regarder = "admin";
+        else if (ConnexionUtilisateur::estEcolePartenaire(ConnexionUtilisateur::getLoginUtilisateurConnecte())) $regarder = "ecole";
+        else $regarder = "";
+
+
         foreach ($etudiants as $etudiant) {
             $idEtudiant = $etudiant->getEtudid();
             echo '
        <tr>
-        <td> <a href="?controleur=etudiant&action=afficherEtudiantPage&regarder=admin&idEtudiant=' . $idEtudiant . '">' . $idEtudiant . '</a></td>
-        <td> <a href="?controleur=etudiant&action=afficherEtudiantPage&regarder=admin&idEtudiant=' . $idEtudiant . '">' . htmlspecialchars($etudiant->getNomEtu()) . '</a> </td> 
-        <td> <a href="?controleur=etudiant&action=afficherEtudiantPage&regarder=admin&idEtudiant=' . $idEtudiant . '">' . htmlspecialchars($etudiant->getPrenomEtu()) . '</a></td>
+        <td> <a href="?controleur=etudiant&action=afficherEtudiantPage&regarder='.$regarder.'&idEtudiant=' . $idEtudiant . '">' . $idEtudiant . '</a></td>
+        <td> <a href="?controleur=etudiant&action=afficherEtudiantPage&regarder='.$regarder.'&idEtudiant=' . $idEtudiant . '">' . htmlspecialchars($etudiant->getNomEtu()) . '</a> </td> 
+        <td> <a href="?controleur=etudiant&action=afficherEtudiantPage&regarder='.$regarder.'&idEtudiant=' . $idEtudiant . '">' . htmlspecialchars($etudiant->getPrenomEtu()) . '</a></td>
         
         
         ';
@@ -105,7 +110,7 @@
                 foreach ($agregationFiltres as $agregationFiltre) {
                     foreach ($agregations as $agregation) {
                         if ($agregation->getIdAgregation() == $agregationFiltre) {
-                            echo '<td> <a href="?controleur=etudiant&action=afficherEtudiantPage&regarder=admin&idEtudiant=' . $etudiant->getEtudid() . '">' . (new \App\Sae\Modele\Repository\EtudiantRepository())->getNoteEtudiantAgregation($etudiant->getEtudid(), $agregation->getIdAgregation()) . '</a></td>';
+                            echo '<td> <a href="?controleur=etudiant&action=afficherEtudiantPage&'.$regarder.'=admin&idEtudiant=' . $etudiant->getEtudid() . '">' . (new \App\Sae\Modele\Repository\EtudiantRepository())->getNoteEtudiantAgregation($etudiant->getEtudid(), $agregation->getIdAgregation()) . '</a></td>';
                         }
                     }
                 }

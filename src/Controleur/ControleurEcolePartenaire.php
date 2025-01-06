@@ -101,10 +101,12 @@ class ControleurEcolePartenaire extends ControleurGenerique
                 MessageFlash::ajouter("success", "Mail validé ! En attente de vérification de l'administrateur.");
                 ControleurGenerique::redirectionVersUrl("controleurFrontal.php");
             } else {
-                self::afficherErreur("pb avec l'email");
+                MessageFlash::ajouter("warning", "Erreur de vérification de mail");
+                ControleurGenerique::redirectionVersUrl("controleurFrontal.php");
             }
         } else {
-            self::afficherErreur("erreur login ou nonce");
+            MessageFlash::ajouter("warning", "Erreur de login ou de nonce");
+            ControleurGenerique::redirectionVersUrl("controleurFrontal.php");
         }
     }
 

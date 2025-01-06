@@ -84,7 +84,7 @@
                 <input type="submit" name="valider" value="Valider">
                 </form>';
             }
-        } else {
+        } else if ($regarder == ""){
             echo '<h1>Ecole Favorite</h1>
             <form method="'. $methode .'" action="?">
            ';

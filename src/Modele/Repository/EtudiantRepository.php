@@ -105,13 +105,21 @@ class EtudiantRepository extends AbstractDataRepository
      * @param $etuid
      * @return array|null retourne la liste des notes agrégées
      */
-    public function recupererNotesAgregees($etuid): ?array
+    public function recupererNotesAgregees($etuid, $utilisateur): ?array
     {
-        $sql = "Select * from agregation a JOIN etudiantAgregation ea ON ea.idAgregation = a.idAgregation where etudid = :etudidTag";
-        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
         $values = array(
             "etudidTag" => $etuid,
         );
+        if ($utilisateur == "prof"){
+            $sql = "Select * from agregation a JOIN etudiantAgregation ea ON ea.idAgregation = a.idAgregation
+                    where etudid = :etudidTag AND loginCreateur = :loginCreateurTag";
+            $values["loginCreateurTag"] = $utilisateur;
+        } else {
+            $sql = "Select * from agregation a JOIN etudiantAgregation ea ON ea.idAgregation = a.idAgregation where etudid = :etudidTag AND siretCreateur = :siretCreateurTag";
+            $values["siretCreateurTag"] = $utilisateur;
+        }
+        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
+
         $tab = array();
         try {
             $pdoStatement->execute($values);
@@ -222,16 +230,18 @@ class EtudiantRepository extends AbstractDataRepository
      */
     public function triDecroissantNoteEtudiants($idAgregation, $utilisateur) : ?array
     {
-//        if ($utilisateur == "prof"){
-            $sql = "SELECT e.* FROM etudiant e LEFT JOIN etudiantAgregation a ON a.etudid = e.etudid AND a.idAgregation = :idAgregationTag ORDER BY a.note DESC;";
-//        } else {
-//            $sql = "SELECT e.* FROM etudiant e LEFT JOIN etudiantAgregation a ON a.etudid = e.etudid AND a.idAgregation = :idAgregationTag
-//                    JOIN ecoleFavoris on etudiant.etudid = ecoleFavoris.idEtudiant WHERE siret = :siretTag ORDER BY a.note DESC;";
-//        }
-        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
         $values = array(
             "idAgregationTag" => $idAgregation,
         );
+        if ($utilisateur == "prof"){
+            $sql = "SELECT e.* FROM etudiant e LEFT JOIN etudiantAgregation a ON a.etudid = e.etudid AND a.idAgregation = :idAgregationTag ORDER BY a.note DESC;";
+        } else {
+            $sql = "SELECT e.* FROM etudiant e LEFT JOIN etudiantAgregation a ON a.etudid = e.etudid AND a.idAgregation = :idAgregationTag
+                    JOIN ecoleFavoris on e.etudid = ecoleFavoris.idEtudiant WHERE siret = :siretTag ORDER BY a.note DESC;";
+            $values["siretTag"] = $utilisateur;
+        }
+        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
+
         try {
             $pdoStatement->execute($values);
         }catch (Exception $e) {
@@ -248,14 +258,23 @@ class EtudiantRepository extends AbstractDataRepository
      * @param $idAgregation
      * @return array|null return la liste des etudiants trié dans l'ordre croissant par rapport à leur note d'une agrégation
      */
-    public function triCroissantNoteEtudiants($idAgregation) : ?array
+    public function triCroissantNoteEtudiants($idAgregation, $utilisateur) : ?array
     {
-        $sql = "SELECT e.* FROM etudiantAgregation ea RIGHT JOIN etudiant e ON e.etudid = ea.etudid AND idAgregation = :idAgregationTag ORDER BY 
-                CASE WHEN note IS NULL THEN 1 ELSE 0 END, note ASC;";
-        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
         $values = array(
             "idAgregationTag" => $idAgregation,
         );
+        if ($utilisateur == "prof"){
+            $sql = "SELECT e.* FROM etudiantAgregation ea RIGHT JOIN etudiant e ON e.etudid = ea.etudid AND idAgregation = :idAgregationTag 
+                    ORDER BY CASE WHEN note IS NULL THEN 1 ELSE 0 END, note ASC;";
+        } else {
+            $sql = "SELECT e.* FROM etudiantAgregation ea RIGHT JOIN etudiant e ON e.etudid = ea.etudid AND idAgregation = :idAgregationTag
+                    JOIN ecoleFavoris on e.etudid = ecoleFavoris.idEtudiant WHERE siret = :siretTag 
+                    ORDER BY CASE WHEN note IS NULL THEN 1 ELSE 0 END, note ASC;";
+            $values["siretTag"] = $utilisateur;
+        }
+
+        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
+
         try {
             $pdoStatement->execute($values);
         }catch (Exception $e) {
