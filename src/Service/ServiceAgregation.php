@@ -118,6 +118,10 @@ class ServiceAgregation
         $repository->supprimer($idAgregation);
     }
 
+    /**
+     * @return array renvoie toutes les informations que le formulaire à besoin
+     * @throws DroitException
+     */
     public function preparerFormulaire(): array
     {
         $login = ConnexionUtilisateur::getLoginUtilisateurConnecte();
