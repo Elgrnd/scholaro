@@ -27,8 +27,7 @@ class ControleurAgregation extends ControleurGenerique
             $login = ConnexionUtilisateur::getLoginUtilisateurConnecte();
             $agregations = (new ServiceAgregation())->recupererListe($login);
             ControleurGenerique::afficherVue("vueGenerale.php", ["titre" => "Liste des agregations", "cheminCorpsVue" => "agregation/liste.php", "agregations" => $agregations]);
-        }
-        catch (DroitException $e){
+        } catch (DroitException $e) {
             MessageFlash::ajouter("danger", $e->getMessage());
             self::redirectionVersUrl("controleurFrontal.php");
         }
@@ -68,15 +67,14 @@ class ControleurAgregation extends ControleurGenerique
     public static function supprimer(): void
     {
         try {
-
             (new ServiceAgregation())->supprimer($_REQUEST['id']);
             MessageFlash::ajouter("success", "Agrégation supprimée");
             self::redirectionVersUrl("controleurFrontal.php?action=afficherListe&controleur=agregation");
-        }catch (DroitException $e){
+
+        } catch (DroitException $e) {
             MessageFlash::ajouter("danger", $e->getMessage());
             self::redirectionVersUrl("controleurFrontal.php?action=afficherListe&controleur=agregation");
-        }
-        catch (ArgNullException $e){
+        } catch (ArgNullException $e) {
             MessageFlash::ajouter("warning", $e->getMessage());
             self::redirectionVersUrl("controleurFrontal.php?action=afficherListe&controleur=agregation");
         }
@@ -88,26 +86,27 @@ class ControleurAgregation extends ControleurGenerique
      */
     public static function afficherFormulaire(): void
     {
-        $login = ConnexionUtilisateur::getLoginUtilisateurConnecte();
-        if (!ConnexionUtilisateur::estAdministrateur() && !ConnexionUtilisateur::estEcolePartenaire($login)) {
-            MessageFlash::ajouter("danger", "Vous n'avez pas les droits administrateurs");
+        try {
+            $info = (new ServiceAgregation())->preparerFormulaire();
+            ControleurGenerique::afficherVue("vueGenerale.php", [
+                'titre' => "Créer une agrégation",
+                'cheminCorpsVue' => "agregation/agregationFormulaire.php",
+                'agregations' => $info['agregations'],
+                'ressources' => $info['ressources']
+            ]);
+        } catch (DroitException $e) {
+            MessageFlash::ajouter("danger", $e->getMessage());
             self::redirectionVersUrl("controleurFrontal.php");
-        } else {
-            if (ConnexionUtilisateur::estEcolePartenaire($login)){
-                $agregations = (new AgregationRepository())->recupererParUtilisateur($login);
-            } else {
-                $agregations = (new AgregationRepository())->recupererParUtilisateur("prof");
-            }
-            $ressources = (new RessourceRepository())->recuperer();
-            ControleurGenerique::afficherVue("vueGenerale.php", ['titre' => "creer agrégation", "cheminCorpsVue" => "agregation/agregationFormulaire.php", "agregations" => $agregations, "ressources" => $ressources]);
         }
     }
+
 
     /**
      * @return void
      * Permet de
      */
-    public static function construireDepuisFormulaire(): void
+    public
+    static function construireDepuisFormulaire(): void
     {
         if (!ConnexionUtilisateur::estAdministrateur() && !ConnexionUtilisateur::estEcolePartenaire(ConnexionUtilisateur::getLoginUtilisateurConnecte())) {
             MessageFlash::ajouter("danger", "Vous n'avez pas les droits administrateurs");
@@ -149,10 +148,10 @@ class ControleurAgregation extends ControleurGenerique
         //LE LOGIN EST TEMPORAIRE, IL SERA CHANGE DES QU ON AURA LA CONNEXION PROF ET ECOLE PARTENAIRE
         $loginCreateur = null;
         $siretCreateur = null;
-        if (ConnexionUtilisateur::estAdministrateur()){
+        if (ConnexionUtilisateur::estAdministrateur()) {
             $loginCreateur = "prof";
         }
-        if (ConnexionUtilisateur::estEcolePartenaire(ConnexionUtilisateur::getLoginUtilisateurConnecte())){
+        if (ConnexionUtilisateur::estEcolePartenaire(ConnexionUtilisateur::getLoginUtilisateurConnecte())) {
             $siretCreateur = ConnexionUtilisateur::getLoginUtilisateurConnecte();
         }
         $agregation = new Agregation(null, $nomAgregation, $loginCreateur, $siretCreateur);

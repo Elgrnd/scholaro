@@ -93,6 +93,12 @@ class ServiceAgregation
         ];
     }
 
+    /**
+     * @param $idAgregation
+     * @return void verifie les exceptions et supprime l'agregation
+     * @throws ArgNullException
+     * @throws DroitException
+     */
     public function supprimer($idAgregation): void
     {
         if (!$idAgregation) {
@@ -110,5 +116,24 @@ class ServiceAgregation
             throw new DroitException("Vous n'avez pas les droits pour supprimer cette agrégation.");
         }
         $repository->supprimer($idAgregation);
+    }
+
+    public function preparerFormulaire(): array
+    {
+        $login = ConnexionUtilisateur::getLoginUtilisateurConnecte();
+        if (!ConnexionUtilisateur::estAdministrateur() && !ConnexionUtilisateur::estEcolePartenaire($login)) {
+            throw new DroitException("Vous n'avez pas les droits");
+        } else {
+            if (ConnexionUtilisateur::estEcolePartenaire($login)) {
+                $agregations = (new AgregationRepository())->recupererParUtilisateur($login);
+            } else {
+                $agregations = (new AgregationRepository())->recupererParUtilisateur("prof");
+            }
+            $ressources = (new RessourceRepository())->recuperer();
+        }
+        return [
+            'agregations' => $agregations,
+            'ressources' => $ressources
+        ];
     }
 }
