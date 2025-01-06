@@ -103,80 +103,25 @@ class ControleurAgregation extends ControleurGenerique
 
     /**
      * @return void
-     * Permet de
+     * Permet d'enregistrer une agrégation dans la bd
      */
     public
     static function construireDepuisFormulaire(): void
     {
-        if (!ConnexionUtilisateur::estAdministrateur() && !ConnexionUtilisateur::estEcolePartenaire(ConnexionUtilisateur::getLoginUtilisateurConnecte())) {
-            MessageFlash::ajouter("danger", "Vous n'avez pas les droits administrateurs");
+        try {
+            $idAgregation = (new ServiceAgregation())->enregistrerNote();
+            MessageFlash::ajouter("success", "Agrégation créée avec succès !");
+            self::redirectionVersUrl('controleurFrontal.php?action=afficherDetail&controleur=agregation&id=' . $idAgregation);
+        }
+        catch (DroitException $e) {
+            MessageFlash::ajouter("danger", $e->getMessage());
             self::redirectionVersUrl("controleurFrontal.php");
-            return;
         }
-
-        $nomAgregation = $_REQUEST['nomAgregation'] ?? null;
-        $count = $_REQUEST['count'] ?? 0;
-
-        if (!$nomAgregation || !$count) {
-            MessageFlash::ajouter("warning", "Vous avez oublié le nom de l'agrégation et/ou de sélectionner des ressources");
+        catch (ArgNullException $e){
+            MessageFlash::ajouter("warning", $e->getMessage());
             self::redirectionVersUrl("controleurFrontal.php?action=afficherFormulaire&controleur=agregation");
-            return;
         }
-
-        $tabNom = [];
-        $tabCoeff = [];
-
-        for ($i = 0; $i < $count; $i++) {
-            $coeff = $_REQUEST['coeff' . $i] ?? 0;
-            if ($coeff > 0) {
-                $tabNom[] = $_REQUEST['idNom' . $i];
-                $tabCoeff[] = $coeff;
-            }
-        }
-
-        if (empty($tabNom) || empty($tabCoeff)) {
-            MessageFlash::ajouter("warning", "Aucune ressource ou agrégation n'a été enregistrée");
-            self::redirectionVersUrl("controleurFrontal.php?action=afficherFormulaire&controleur=agregation");
-            return;
-        }
-
-        $agregationRepo = new AgregationRepository();
-        $etudiantRepo = new EtudiantRepository();
-
-        // Création et enregistrement de l'agrégation
-
-        //LE LOGIN EST TEMPORAIRE, IL SERA CHANGE DES QU ON AURA LA CONNEXION PROF ET ECOLE PARTENAIRE
-        $loginCreateur = null;
-        $siretCreateur = null;
-        if (ConnexionUtilisateur::estAdministrateur()) {
-            $loginCreateur = "prof";
-        }
-        if (ConnexionUtilisateur::estEcolePartenaire(ConnexionUtilisateur::getLoginUtilisateurConnecte())) {
-            $siretCreateur = ConnexionUtilisateur::getLoginUtilisateurConnecte();
-        }
-        $agregation = new Agregation(null, $nomAgregation, $loginCreateur, $siretCreateur);
-        $idAgregation = $agregationRepo->ajouter($agregation);
-
-        // Enregistrement des ressources/agregations liées
-        foreach ($tabNom as $index => $nom) {
-            if ($nom[0] === 'R') {
-                $etudiantRepo->enregistrerRessourceAgregee($nom, $idAgregation, $tabCoeff[$index]);
-            } else {
-                $etudiantRepo->enregistrerAgregationAgregee($idAgregation, $nom, $tabCoeff[$index]);
-            }
-        }
-
-        // Calcul et enregistrement des moyennes des étudiants
-        $etudiants = $etudiantRepo->recuperer();
-        foreach ($etudiants as $etudiant) {
-            $moyenne = $etudiant->calculerMoyenne($tabNom, $tabCoeff);
-            if ($moyenne != -1) {
-                $agregationRepo->ajouterEtudiant($idAgregation, $etudiant->getEtudid(), $moyenne);
-            }
-        }
-
-        MessageFlash::ajouter("success", "Agrégation créée avec succès !");
-        self::redirectionVersUrl('controleurFrontal.php?action=afficherDetail&controleur=agregation&id=' . $idAgregation);
     }
+
 
 }

@@ -6,7 +6,9 @@ use App\Sae\Exception\ArgNullException;
 use App\Sae\Exception\DroitException;
 use App\Sae\Lib\ConnexionUtilisateur;
 use App\Sae\Lib\MessageFlash;
+use App\Sae\Modele\DataObject\Agregation;
 use App\Sae\Modele\Repository\AgregationRepository;
+use App\Sae\Modele\Repository\EtudiantRepository;
 use App\Sae\Modele\Repository\RessourceRepository;
 use mysql_xdevapi\Exception;
 
@@ -139,5 +141,74 @@ class ServiceAgregation
             'agregations' => $agregations,
             'ressources' => $ressources
         ];
+    }
+
+    /**
+     * @return false|string|void permet d'enregistrer une note dans la bd
+     */
+    public function enregistrerNote()
+    {
+        if (!ConnexionUtilisateur::estAdministrateur() && !ConnexionUtilisateur::estEcolePartenaire(ConnexionUtilisateur::getLoginUtilisateurConnecte())) {
+            throw new DroitException("Vous n'avez pas les droits");
+        }
+
+        $nomAgregation = $_REQUEST['nomAgregation'] ?? null;
+        $count = $_REQUEST['count'] ?? 0;
+
+        if (!$nomAgregation || !$count) {
+            throw new ArgNullException("Vous avez oublié le nom de l'agrégation et/ou de sélectionner des ressources");
+          //  self::redirectionVersUrl("controleurFrontal.php?action=afficherFormulaire&controleur=agregation");
+        }
+
+        $tabNom = [];
+        $tabCoeff = [];
+
+        for ($i = 0; $i < $count; $i++) {
+            $coeff = $_REQUEST['coeff' . $i] ?? 0;
+            if ($coeff > 0) {
+                $tabNom[] = $_REQUEST['idNom' . $i];
+                $tabCoeff[] = $coeff;
+            }
+        }
+
+        if (empty($tabNom) || empty($tabCoeff)) {
+            throw new ArgNullException("Aucune ressource ou agrégation n'a été enregistrée");
+        }
+
+        $agregationRepo = new AgregationRepository();
+        $etudiantRepo = new EtudiantRepository();
+
+        // Création et enregistrement de l'agrégation
+
+        //LE LOGIN EST TEMPORAIRE, IL SERA CHANGE DES QU ON AURA LA CONNEXION PROF ET ECOLE PARTENAIRE
+        $loginCreateur = null;
+        $siretCreateur = null;
+        if (ConnexionUtilisateur::estAdministrateur()) {
+            $loginCreateur = "prof";
+        }
+        if (ConnexionUtilisateur::estEcolePartenaire(ConnexionUtilisateur::getLoginUtilisateurConnecte())) {
+            $siretCreateur = ConnexionUtilisateur::getLoginUtilisateurConnecte();
+        }
+        $agregation = new Agregation(null, $nomAgregation, $loginCreateur, $siretCreateur);
+        $idAgregation = $agregationRepo->ajouter($agregation);
+
+        // Enregistrement des ressources/agregations liées
+        foreach ($tabNom as $index => $nom) {
+            if ($nom[0] === 'R') {
+                $etudiantRepo->enregistrerRessourceAgregee($nom, $idAgregation, $tabCoeff[$index]);
+            } else {
+                $etudiantRepo->enregistrerAgregationAgregee($idAgregation, $nom, $tabCoeff[$index]);
+            }
+        }
+
+        // Calcul et enregistrement des moyennes des étudiants
+        $etudiants = $etudiantRepo->recuperer();
+        foreach ($etudiants as $etudiant) {
+            $moyenne = $etudiant->calculerMoyenne($tabNom, $tabCoeff);
+            if ($moyenne != -1) {
+                $agregationRepo->ajouterEtudiant($idAgregation, $etudiant->getEtudid(), $moyenne);
+            }
+        }
+        return $idAgregation;
     }
 }
