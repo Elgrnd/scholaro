@@ -2,6 +2,8 @@
 
 namespace App\Sae\Controleur;
 
+use App\Sae\Exception\ArgNullException;
+use App\Sae\Exception\DroitException;
 use App\Sae\Lib\ConnexionUtilisateur;
 use App\Sae\Lib\MessageFlash;
 use App\Sae\Lib\Preferences;
@@ -11,6 +13,7 @@ use App\Sae\Modele\Repository\AgregationRepository;
 use App\Sae\Modele\Repository\EcoleRepository;
 use App\Sae\Modele\Repository\EtudiantRepository;
 use App\Sae\Modele\Repository\RessourceRepository;
+use App\Sae\Service\ServiceAgregation;
 
 class ControleurAgregation extends ControleurGenerique
 {
@@ -20,26 +23,15 @@ class ControleurAgregation extends ControleurGenerique
      */
     public static function afficherListe(): void
     {
-        $login = ConnexionUtilisateur::getLoginUtilisateurConnecte();
-        if (!ConnexionUtilisateur::estAdministrateur() && !ConnexionUtilisateur::estEcolePartenaire($login)) {
-            MessageFlash::ajouter("danger", "Vous n'avez pas les droits administrateurs");
+        try {
+            $login = ConnexionUtilisateur::getLoginUtilisateurConnecte();
+            $agregations = (new ServiceAgregation())->recupererListe($login);
+            ControleurGenerique::afficherVue("vueGenerale.php", ["titre" => "Liste des agregations", "cheminCorpsVue" => "agregation/liste.php", "agregations" => $agregations]);
+        }
+        catch (DroitException $e){
+            MessageFlash::ajouter("danger", $e->getMessage());
             self::redirectionVersUrl("controleurFrontal.php");
-            return;
         }
-        if (ConnexionUtilisateur::estEcolePartenaire($login)){
-            $agregations = (new AgregationRepository())->recupererParUtilisateur($login);
-        } else {
-            $agregations = (new AgregationRepository())->recupererParUtilisateur("prof");
-        }
-        foreach ($agregations as $agregation) {
-            $listeRessources = (new AgregationRepository())->listeRessourcesAgregees($agregation->getIdAgregation());
-            $listeAgregation = (new AgregationRepository())->listeAgregationsAgregees($agregation->getIdAgregation());
-            if (empty($listeAgregation) && empty($listeRessources)) {
-                (new AgregationRepository())->supprimer($agregation->getIdAgregation());
-            }
-        }
-        ControleurGenerique::afficherVue("vueGenerale.php", ["titre" => "Liste des agregations", "cheminCorpsVue" => "agregation/liste.php", "agregations" => $agregations]);
-
     }
 
     /**
@@ -48,41 +40,23 @@ class ControleurAgregation extends ControleurGenerique
      */
     public static function afficherDetail(): void
     {
-        if (!ConnexionUtilisateur::estAdministrateur() && !ConnexionUtilisateur::estEcolePartenaire(ConnexionUtilisateur::getLoginUtilisateurConnecte())) {
-            MessageFlash::ajouter("danger", "Vous n'avez pas les droits administrateurs");
-            self::redirectionVersUrl("controleurFrontal.php");
-            return;
-        }
-        if ($_REQUEST['id']) {
-            $agregation = (new AgregationRepository())->recupererParClePrimaire($_REQUEST['id']);
-            if ($agregation) {
-                $listeRessources = (new AgregationRepository())->listeRessourcesAgregees($_REQUEST['id']);
-                $listeAgregations = (new AgregationRepository())->listeAgregationsAgregees($_REQUEST['id']);
-                $moyenne = 0;
-                $coefRessource = 0;
-                if (!empty($listeRessources)) {
-                    foreach ($listeRessources as $ressource) {
-                        $moyenne += (new RessourceRepository())->moyenne($ressource[0]) * $ressource[1];
-                        $coefRessource += $ressource[1];
-                    }
+        try {
+            $details = (new ServiceAgregation())->detail($_REQUEST['id']);
 
-                }
-                $coefAgreg = 0;
-                if (!empty($listeAgregations)) {
-                    foreach ($listeAgregations as $agreg) {
-                        $moyenne += (new AgregationRepository())->moyenne($agreg[0]) * $agreg[1];
-                        $coefAgreg += $agreg[1];
-                    }
-                }
-                $moyenne /= $coefRessource + $coefAgreg;
-                $moyenne = round($moyenne, 2);
-                ControleurGenerique::afficherVue("vueGenerale.php", ["titre" => "page Agrégation", "cheminCorpsVue" => "agregation/detail.php", "agregation" => $agregation, "listeRessources" => $listeRessources, "listeAgregations" => $listeAgregations, "moyenne" => $moyenne]);
-            } else {
-                MessageFlash::ajouter("warning", "L'id n'est pas celle d'une agrégation");
-                self::redirectionVersUrl("controleurFrontal.php?action=afficherListe&controleur=agregation");
-            }
-        } else {
-            MessageFlash::ajouter("warning", "L'id de l'agrégation n'a pas été transmis");
+            // Affichage de la vue
+            self::afficherVue("vueGenerale.php", [
+                "titre" => "Page Agrégation",
+                "cheminCorpsVue" => "agregation/detail.php",
+                "agregation" => $details['agregation'],
+                "listeRessources" => $details['listeRessources'],
+                "listeAgregations" => $details['listeAgregations'],
+                "moyenne" => $details['moyenne']
+            ]);
+        } catch (DroitException $e) {
+            MessageFlash::ajouter("danger", $e->getMessage());
+            self::redirectionVersUrl("controleurFrontal.php");
+        } catch (ArgNullException $e) {
+            MessageFlash::ajouter("warning", $e->getMessage());
             self::redirectionVersUrl("controleurFrontal.php?action=afficherListe&controleur=agregation");
         }
     }
