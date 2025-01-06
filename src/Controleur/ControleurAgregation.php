@@ -54,7 +54,7 @@ class ControleurAgregation extends ControleurGenerique
             ]);
         } catch (DroitException $e) {
             MessageFlash::ajouter("danger", $e->getMessage());
-            self::redirectionVersUrl("controleurFrontal.php");
+            self::redirectionVersUrl("controleurFrontal.php?action=afficherListe&controleur=agregation");
         } catch (ArgNullException $e) {
             MessageFlash::ajouter("warning", $e->getMessage());
             self::redirectionVersUrl("controleurFrontal.php?action=afficherListe&controleur=agregation");
@@ -67,17 +67,19 @@ class ControleurAgregation extends ControleurGenerique
      * */
     public static function supprimer(): void
     {
-        $id = $_REQUEST['id'];
+        try {
 
-        if (!ConnexionUtilisateur::estAdministrateur() && !ConnexionUtilisateur::estEcolePartenaire(ConnexionUtilisateur::getLoginUtilisateurConnecte())) {
-            MessageFlash::ajouter("danger", "Vous n'avez pas les droits administrateurs");
-            self::redirectionVersUrl("controleurFrontal.php");
-            return;
+            (new ServiceAgregation())->supprimer($_REQUEST['id']);
+            MessageFlash::ajouter("success", "Agrégation supprimée");
+            self::redirectionVersUrl("controleurFrontal.php?action=afficherListe&controleur=agregation");
+        }catch (DroitException $e){
+            MessageFlash::ajouter("danger", $e->getMessage());
+            self::redirectionVersUrl("controleurFrontal.php?action=afficherListe&controleur=agregation");
         }
-        (new AgregationRepository())->supprimer($id);
-        MessageFlash::ajouter("success", "Agrégation supprimée");
-        self::redirectionVersUrl("controleurFrontal.php?action=afficherListe&controleur=agregation");
-
+        catch (ArgNullException $e){
+            MessageFlash::ajouter("warning", $e->getMessage());
+            self::redirectionVersUrl("controleurFrontal.php?action=afficherListe&controleur=agregation");
+        }
     }
 
     /**
