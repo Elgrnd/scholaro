@@ -1,4 +1,3 @@
-
 <div class="detail content">
     <h1>
         Généralités
@@ -21,16 +20,16 @@
 
     ?>
 
-    <p> Code Nip : <?=$codeNip?></p>
-    <p> Nom : <?=$nomEtudiant?> </p>
-    <p> Prénom : <?=$prenomEtudiant?> </p>
-    <p> Civilité : <?=$civ?> </p>
-    <p> Baccalauréat : <?=$bac?> </p>
-    <p> Spécialité : <?=$spe?> </p>
+    <p> Code Nip : <?= $codeNip ?></p>
+    <p> Nom : <?= $nomEtudiant ?> </p>
+    <p> Prénom : <?= $prenomEtudiant ?> </p>
+    <p> Civilité : <?= $civ ?> </p>
+    <p> Baccalauréat : <?= $bac ?> </p>
+    <p> Spécialité : <?= $spe ?> </p>
 
     <?php
     $loginURL = $etudiant->getEtudid();
-        echo "<p><a href=\"controleurFrontal.php?controleur=etudiant&action=afficherPdf&idEtudiant=$loginURL\">Afficher la fiche Avis Poursuite d'Études</a></p>"
+    echo "<p><a href=\"controleurFrontal.php?controleur=etudiant&action=afficherPdf&idEtudiant=$loginURL\">Afficher la fiche Avis Poursuite d'Études</a></p>"
     ?>
 
 
@@ -40,72 +39,76 @@
     if ($regarder == "admin") $action = "ajouterAvis"; else $action = "ajouterEcoleFavoris";
     if (\App\Sae\Configuration\ConfigurationSite::getDebug()) $methode = "get"; else $methode = "post";
 
-        if ($regarder == "admin"){
-            if (!empty($ecolesChoisie)){
-                echo '<h1>Ecole Favorite</h1>
-                <form method="'. $methode .'" action="?">
+    if ($regarder == "admin") {
+        if (!empty($ecolesChoisie)) {
+            echo '<h1>Ecole Favorite</h1>
+                <form method="' . $methode . '" action="?">
                ';
-                foreach ($ecolesChoisie as $ecole) {
-                    $TFselected = "";
-                    $Fselected = "";
-                    $Rselected = "";
-                    $commentaire = "";
-                    if (!empty($avis)){
-                        if ($avis[$ecole->getSiret()][0] == "Tres-Favorable"){
-                            $TFselected = "selected";
-                        } else if ($avis[$ecole->getSiret()][0] == "Favorable"){
-                            $Fselected = "selected";
-                        } else if ($avis[$ecole->getSiret()][0] == "Reserve"){
-                            $Rselected = "selected";
-                        }
-                        if (!empty($avis[$ecole->getSiret()][1])){
-                            $commentaire = $avis[$ecole->getSiret()][1];
-                        }
+            foreach ($ecolesChoisie as $ecole) {
+                $TFselected = "";
+                $Fselected = "";
+                $Rselected = "";
+                $commentaire = "";
+                if (!empty($avis)) {
+                    if ($avis[$ecole->getSiret()][0] == "Tres-Favorable") {
+                        $TFselected = "selected";
+                    } else if ($avis[$ecole->getSiret()][0] == "Favorable") {
+                        $Fselected = "selected";
+                    } else if ($avis[$ecole->getSiret()][0] == "Reserve") {
+                        $Rselected = "selected";
                     }
+                    if (!empty($avis[$ecole->getSiret()][1])) {
+                        $commentaire = $avis[$ecole->getSiret()][1];
+                    }
+                }
 
-                    $ecolesChoisieNom = htmlspecialchars($ecole->getNomEcole());
-                    $ecolesChoisieVille = htmlspecialchars($ecole->getVilleEcole());
-                    echo '<div><label for="'. $ecole->getSiret() . '">'. $ecolesChoisieNom . ' -> ' . $ecolesChoisieVille . '</label>' .
-                        '<select name="avisEcoles[]" id="'.$ecole->getSiret().'">
-                            <option value="Tres-Favorable_'.$ecole->getSiret().'" '.$TFselected.'>Très Favorable</option>
-                            <option value="Favorable_'.$ecole->getSiret().'" '. $Fselected.'>Favorable</option>
-                            <option value="Reserve_'.$ecole->getSiret().'" '. $Rselected.'>Réservé</option>
+                $ecolesChoisieNom = htmlspecialchars($ecole->getNomEcole());
+                $ecolesChoisieVille = htmlspecialchars($ecole->getVilleEcole());
+                echo '<div><label for="' . $ecole->getSiret() . '">' . $ecolesChoisieNom . ' -> ' . $ecolesChoisieVille . '</label>' .
+                    '<select name="avisEcoles[]" id="' . $ecole->getSiret() . '">
+                            <option value="Tres-Favorable_' . $ecole->getSiret() . '" ' . $TFselected . '>Très Favorable</option>
+                            <option value="Favorable_' . $ecole->getSiret() . '" ' . $Fselected . '>Favorable</option>
+                            <option value="Reserve_' . $ecole->getSiret() . '" ' . $Rselected . '>Réservé</option>
                         </select>
                         </div>
                         <div>
-                        <label for="commentaire'.$ecole->getSiret().'">Commentaire :</label><br>
-                        <textarea id="commentaire'.$ecole->getSiret().'" name="commentaires['.$ecole->getSiret().']" rows="5" cols="40" style="border: 2px solid black; padding: 5px;">'.htmlspecialchars($commentaire).'</textarea>
+                        <label for="commentaire' . $ecole->getSiret() . '">Commentaire :</label><br>
+                        <textarea id="commentaire' . $ecole->getSiret() . '" name="commentaires[' . $ecole->getSiret() . ']" rows="5" cols="40" style="border: 2px solid black; padding: 5px;">' . htmlspecialchars($commentaire) . '</textarea>
                         </div>';
-                }
-                echo '<input type="hidden" name="idEtudiant" value="'.$etudiant->getEtudid().'">
-                <input type="hidden" name="action" value="'.$action.'">
+            }
+            echo '<input type="hidden" name="idEtudiant" value="' . $etudiant->getEtudid() . '">
+                <input type="hidden" name="action" value="' . $action . '">
                 <input type="hidden" name="controleur" value="etudiant">
                 <input type="hidden" name="regarder" value="admin">
                 <input type="submit" name="valider" value="Valider">
                 </form>';
-            }
-        } else if ($regarder == ""){
-            echo '<h1>Ecole Favorite</h1>
-            <form method="'. $methode .'" action="?">
+        }
+    } else if ($regarder == "") {
+        echo '<h1>Ecole Favorite</h1>
+            <form method="' . $methode . '" action="?">
            ';
-            foreach ((new \App\Sae\Modele\Repository\EcoleRepository())->recuperer() as $ecole) {
+        foreach ((new \App\Sae\Modele\Repository\EcoleRepository())->recuperer() as $ecole) {
+            if ($ecole->isEstValide()) {
+
+
                 $check = "";
-                if (!empty($ecolesChoisie)){
-                    if (in_array($ecole, $ecolesChoisie)){
+                if (!empty($ecolesChoisie)) {
+                    if (in_array($ecole, $ecolesChoisie)) {
                         $check = "checked";
                     }
                 }
-                echo '<input type="hidden" name="idEcoles[]" value="'.$ecole->getIdEcole().'False">
-                <input type="checkbox" name="idEcoles[]" value="'.$ecole->getIdEcole().'" id="'.$ecole->getIdEcole().'" '. $check .'>
-        <label for="'.$ecole->getIdEcole().'">'.htmlspecialchars($ecole->getNomEcole()).'</label>
+                echo '<input type="hidden" name="idEcoles[]" value="' . $ecole->getSiret() . 'False">
+                <input type="checkbox" name="idEcoles[]" value="' . $ecole->getSiret() . '" id="' . $ecole->getSiret() . '" ' . $check . '>
+        <label for="' . $ecole->getSiret() . '">' . htmlspecialchars($ecole->getNomEcole()) . '</label>
         ';
             }
-            echo '<input type="hidden" name="idEtudiant" value="'.$etudiant->getEtudid().'">
-                <input type="hidden" name="action" value="'.$action.'">
+        }
+        echo '<input type="hidden" name="idEtudiant" value="' . $etudiant->getEtudid() . '">
+                <input type="hidden" name="action" value="' . $action . '">
                 <input type="hidden" name="controleur" value="etudiant">
                 <input type="submit" name="valider" value="Valider">
                 </form>';
-        }
+    }
     ?>
 
 </div>
@@ -116,7 +119,7 @@
     <?php
 
     /**
-     *@var $notesAgregees \App\Sae\Modele\DataObject\Agregation[]
+     * @var $notesAgregees \App\Sae\Modele\DataObject\Agregation[]
      */
 
     $idEtu = $etudiant->getEtudid();
@@ -124,13 +127,13 @@
         $id = 0;
         foreach ($notes as $note) {
             echo "<p>$note[2] : $note[3] </p>";
-            $id+= 1;
+            $id += 1;
         }
     } else {
         echo "<p> L'étudiant n'a pas de notes</p>";
     }
 
-    if($etudiant->getAvis() != null) {
+    if ($etudiant->getAvis() != null) {
         echo '<p> Avis </p>';
         echo '<p>' . htmlspecialchars($etudiant->getAvis()) . ' </p>';
     }
@@ -139,129 +142,130 @@
 <div class="content">
     <h1> Graph </h1>
     <?php
-        if($notesAgregees != null){
-            $labels = [];
-            $notes = [];
-            foreach ($notesAgregees as $noteAgregee) {
-                $labels[] = $noteAgregee['nomAgregation'];
-                $notes[] = $noteAgregee['note'];
-            }
-            $labelsJSON = json_encode($labels);
-            $notesJSON = json_encode($notes);
-            /**
-             * @var $moyennes array
-             */
-            $moyennesJSON = json_encode($moyennes);
-            ?>
-            <form id="filterForm">
-                <h3>Sélectionner les agrégations à afficher :</h3>
-                <?php foreach ($notesAgregees as $index => $noteAgregee): ?>
-                    <label>
-                        <input type="checkbox" name="filters[]" value="<?= $index ?>" checked>
-                        <?= $noteAgregee['nomAgregation'] ?>
-                    </label><br>
-                <?php endforeach; ?>
-                <button type="button" onclick="updateChart()">Mettre à jour le graphique</button>
-            </form>
+    if ($notesAgregees != null) {
+        $labels = [];
+        $notes = [];
+        foreach ($notesAgregees as $noteAgregee) {
+            $labels[] = $noteAgregee['nomAgregation'];
+            $notes[] = $noteAgregee['note'];
+        }
+        $labelsJSON = json_encode($labels);
+        $notesJSON = json_encode($notes);
+        /**
+         * @var $moyennes array
+         */
+        $moyennesJSON = json_encode($moyennes);
+        ?>
+        <form id="filterForm">
+            <h3>Sélectionner les agrégations à afficher :</h3>
+            <?php foreach ($notesAgregees as $index => $noteAgregee): ?>
+                <label>
+                    <input type="checkbox" name="filters[]" value="<?= $index ?>" checked>
+                    <?= $noteAgregee['nomAgregation'] ?>
+                </label><br>
+            <?php endforeach; ?>
+            <button type="button" onclick="updateChart()">Mettre à jour le graphique</button>
+        </form>
 
-            <div style="width: 750px; height: 750px; margin: 0 auto;">
-                <canvas id="radarChart"></canvas>
-            </div>
+        <div style="width: 750px; height: 750px; margin: 0 auto;">
+            <canvas id="radarChart"></canvas>
+        </div>
 
-            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-            <script>
-                const labels = <?php echo $labelsJSON; ?>;
-                const notes = <?php echo $notesJSON; ?>;
-                const moyennes = <?php echo $moyennesJSON; ?>;
-                const ctx = document.getElementById('radarChart').getContext('2d');
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+            const labels = <?php echo $labelsJSON; ?>;
+            const notes = <?php echo $notesJSON; ?>;
+            const moyennes = <?php echo $moyennesJSON; ?>;
+            const ctx = document.getElementById('radarChart').getContext('2d');
 
-                function updateChart() {
-                    const selectedIndexes = Array.from(document.querySelectorAll('input[name="filters[]"]:checked')).map(input => parseInt(input.value));
-                    const filteredLabels = selectedIndexes.map(index => labels[index]);
-                    const filteredNotes = selectedIndexes.map(index => notes[index]);
-                    const filteredMoyennes = selectedIndexes.map(index => moyennes[index]);
+            function updateChart() {
+                const selectedIndexes = Array.from(document.querySelectorAll('input[name="filters[]"]:checked')).map(input => parseInt(input.value));
+                const filteredLabels = selectedIndexes.map(index => labels[index]);
+                const filteredNotes = selectedIndexes.map(index => notes[index]);
+                const filteredMoyennes = selectedIndexes.map(index => moyennes[index]);
 
-                    const config = {
-                        type: 'radar',
-                        data: {
-                            labels: filteredLabels,
-                            datasets: [
-                                {
-                                    label: 'Notes Agrégées',
-                                    data: filteredNotes,
-                                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                                    borderColor: 'rgba(54, 162, 235, 1)',
-                                    borderWidth: 2,
-                                    pointBackgroundColor: 'rgba(255, 99, 132, 1)',
-                                    pointBorderColor: '#fff',
-                                    pointHoverRadius: 6,
+                const config = {
+                    type: 'radar',
+                    data: {
+                        labels: filteredLabels,
+                        datasets: [
+                            {
+                                label: 'Notes Agrégées',
+                                data: filteredNotes,
+                                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                                borderColor: 'rgba(54, 162, 235, 1)',
+                                borderWidth: 2,
+                                pointBackgroundColor: 'rgba(255, 99, 132, 1)',
+                                pointBorderColor: '#fff',
+                                pointHoverRadius: 6,
+                            },
+                            {
+                                label: 'Moyennes',
+                                data: filteredMoyennes,
+                                backgroundColor: 'rgba(255, 206, 86, 0.2)',
+                                borderColor: 'rgba(255, 206, 86, 1)',
+                                borderWidth: 2,
+                                pointBackgroundColor: 'rgba(75, 192, 192, 1)',
+                                pointBorderColor: '#fff',
+                                pointHoverRadius: 6,
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            r: {
+                                min: 0,
+                                max: 20,
+                                ticks: {
+                                    stepSize: 2,
+                                    showLabelBackdrop: false,
+                                    color: '#666',
+                                    backdropPadding: 3,
+                                    z: 1
                                 },
-                                {
-                                    label: 'Moyennes',
-                                    data: filteredMoyennes,
-                                    backgroundColor: 'rgba(255, 206, 86, 0.2)',
-                                    borderColor: 'rgba(255, 206, 86, 1)',
-                                    borderWidth: 2,
-                                    pointBackgroundColor: 'rgba(75, 192, 192, 1)',
-                                    pointBorderColor: '#fff',
-                                    pointHoverRadius: 6,
-                                }
-                            ]
-                        },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            scales: {
-                                r: {
-                                    min: 0,
-                                    max: 20,
-                                    ticks: {
-                                        stepSize: 2,
-                                        showLabelBackdrop: false,
-                                        color: '#666',
-                                        backdropPadding: 3,
-                                        z: 1
+                                grid: {
+                                    color: 'rgba(200, 200, 200, 0.3)',
+                                },
+                                angleLines: {
+                                    color: 'rgba(200, 200, 200, 0.5)',
+                                    display: true,
+                                },
+                                pointLabels: {
+                                    font: {
+                                        size: 16
                                     },
-                                    grid: {
-                                        color: 'rgba(200, 200, 200, 0.3)',
-                                    },
-                                    angleLines: {
-                                        color: 'rgba(200, 200, 200, 0.5)',
-                                        display: true,
-                                    },
-                                    pointLabels: {
-                                        font: {
-                                            size: 16
-                                        },
-                                        color: '#333',
-                                        padding: 10,
-                                    }
-                                }
-                            },
-                            plugins: {
-                                legend: {
-                                    position: 'top'
-                                }
-                            },
-                            layout: {
-                                padding: {
-                                    top: 30,
-                                    bottom: 30,
+                                    color: '#333',
+                                    padding: 10,
                                 }
                             }
+                        },
+                        plugins: {
+                            legend: {
+                                position: 'top'
+                            }
+                        },
+                        layout: {
+                            padding: {
+                                top: 30,
+                                bottom: 30,
+                            }
                         }
-                    };
-                    if (window.chartInstance) {
-                        window.chartInstance.destroy();
                     }
-                    window.chartInstance = new Chart(ctx, config);
+                };
+                if (window.chartInstance) {
+                    window.chartInstance.destroy();
                 }
-                updateChart();
-            </script>
-            <?php
-        } else {
-            echo '<p>Aucune note agrégée à modéliser pour cet étudiant</p>';
-        }
+                window.chartInstance = new Chart(ctx, config);
+            }
+
+            updateChart();
+        </script>
+        <?php
+    } else {
+        echo '<p>Aucune note agrégée à modéliser pour cet étudiant</p>';
+    }
     ?>
 
 </div>
