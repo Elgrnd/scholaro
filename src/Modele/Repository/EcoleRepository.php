@@ -94,5 +94,4 @@ class EcoleRepository extends AbstractDataRepository
         }
         return $tableauObjets;
     }
-
 }

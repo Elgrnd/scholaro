@@ -118,14 +118,14 @@ class ControleurEtudiant extends ControleurGenerique
             self::afficherErreur("Aucunes infos sur l'étudiant");
             return;
         }
-//        if (!ConfigurationSite::getDebug()) {
-//            ConfigurationLDAP::connecterServeur();
-//            if (!ConnexionUtilisateur::estUtilisateur(ConfigurationLDAP::getAvecUidNumber($_REQUEST['idEtudiant'])) && !ConnexionUtilisateur::estAdministrateur() && !ConnexionUtilisateur::estEcolePartenaire(ConnexionUtilisateur::getLoginUtilisateurConnecte())) {
-//                MessageFlash::ajouter("danger", "Les détails d'un étudiant ne peuvent être vu que par lui même et un administrateur.");
-//                self::redirectionVersUrl("controleurFrontal.php");
-//                return;
-//            }
-//        }
+        if (!ConfigurationSite::getDebug()) {
+            ConfigurationLDAP::connecterServeur();
+            if (!ConnexionUtilisateur::estUtilisateur(ConfigurationLDAP::getAvecUidNumber($_REQUEST['idEtudiant'])) && !ConnexionUtilisateur::estAdministrateur() && !ConnexionUtilisateur::estEcolePartenaire(ConnexionUtilisateur::getLoginUtilisateurConnecte())) {
+                MessageFlash::ajouter("danger", "Les détails d'un étudiant ne peuvent être vu que par lui même et un administrateur.");
+                self::redirectionVersUrl("controleurFrontal.php");
+                return;
+            }
+        }
         $regarder = "";
         if (isset($_REQUEST["regarder"])){
             $regarder = $_REQUEST["regarder"];
