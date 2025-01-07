@@ -56,7 +56,7 @@ class ServiceAgregation
         if (!$agregation) {
             throw new ArgNullException("L'id n'est pas celui d'une agrégation");
         }
-        if ($agregation->getSiretCreateur() != ConnexionUtilisateur::getLoginUtilisateurConnecte()) {
+        if ($agregation->getSiretCreateur() != ConnexionUtilisateur::getLoginUtilisateurConnecte() && ((ConnexionUtilisateur::estAdministrateur() || ConnexionUtilisateur::estProfesseur()) && $agregation->getLoginCreateur() != "prof")) {
             throw new DroitException("Vous n'avez pas créée cette agrégation");
         }
         // Récupération des listes associées
@@ -172,7 +172,7 @@ class ServiceAgregation
         //LE LOGIN EST TEMPORAIRE, IL SERA CHANGE DES QU ON AURA LA CONNEXION PROF ET ECOLE PARTENAIRE
         $loginCreateur = null;
         $siretCreateur = null;
-        if (ConnexionUtilisateur::estAdministrateur()) {
+        if (ConnexionUtilisateur::estAdministrateur() ||ConnexionUtilisateur::estProfesseur()) {
             $loginCreateur = "prof";
         }
         if (ConnexionUtilisateur::estEcolePartenaire(ConnexionUtilisateur::getLoginUtilisateurConnecte())) {

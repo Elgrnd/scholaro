@@ -13,7 +13,7 @@ class ServiceGenerique {
      */
     public function verifDroit($login)
     {
-        if (!ConnexionUtilisateur::estAdministrateur() && !ConnexionUtilisateur::estEcolePartenaire($login)) {
+        if (!ConnexionUtilisateur::estAdministrateur() && !ConnexionUtilisateur::estEcolePartenaire($login) && !ConnexionUtilisateur::estProfesseur()) {
             throw new DroitException("Vous n'avez pas les droits");
         }
     }
