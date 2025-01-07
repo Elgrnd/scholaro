@@ -52,7 +52,7 @@ class ConnexionUtilisateur
             || self::estUtilisateur("laurentg")
             || self::estUtilisateur("nedjary")
             || (self::estUtilisateur("messaoui")
-                || (self::estUtilisateur("desertg")));
+                );
     }
 
     /**
@@ -93,5 +93,26 @@ class ConnexionUtilisateur
         } else {
             return false;
         }
+    }
+
+    public static function estProfesseur(): bool
+    {
+
+        if (!self::estConnecte()) {
+            return false;
+        }
+
+        if (ConfigurationSite::getDebug()) {
+            return true;
+        }
+        if ($_SERVER["HTTP_HOST"] == "webinfo.iutmontp.univ-montp2.fr") {
+            ConfigurationLDAP::connecterServeur();
+            foreach (ConfigurationLDAP::getAll() as $professeur) {
+                if ($professeur['login'] == self::getLoginUtilisateurConnecte() && ($professeur['promotion'] == "Personnel")) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

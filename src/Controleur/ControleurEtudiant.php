@@ -28,7 +28,7 @@ class ControleurEtudiant extends ControleurGenerique
     public static function afficherListe(): void
     {
         $login = ConnexionUtilisateur::getLoginUtilisateurConnecte();
-        if (!ConnexionUtilisateur::estAdministrateur() && !ConnexionUtilisateur::estEcolePartenaire($login)) {
+        if (!ConnexionUtilisateur::estAdministrateur() && !ConnexionUtilisateur::estEcolePartenaire($login) && !ConnexionUtilisateur::estProfesseur()) {
             MessageFlash::ajouter("danger", "Vous n'avez pas les droits administrateurs");
             self::redirectionVersUrl("controleurFrontal.php");
             return;
@@ -46,7 +46,7 @@ class ControleurEtudiant extends ControleurGenerique
     public static function triDecroissant(): void
     {
         $login = ConnexionUtilisateur::getLoginUtilisateurConnecte();
-        if (!ConnexionUtilisateur::estAdministrateur() && !ConnexionUtilisateur::estEcolePartenaire($login)) {
+        if (!ConnexionUtilisateur::estAdministrateur() && !ConnexionUtilisateur::estEcolePartenaire($login) && !ConnexionUtilisateur::estProfesseur()) {
             MessageFlash::ajouter("danger", "Vous n'avez pas les droits administrateurs");
             self::redirectionVersUrl("controleurFrontal.php?action=afficherEtudiantPage");
             return;
@@ -73,7 +73,7 @@ class ControleurEtudiant extends ControleurGenerique
     public static function triCroissant(): void
     {
         $login = ConnexionUtilisateur::getLoginUtilisateurConnecte();
-        if (!ConnexionUtilisateur::estAdministrateur() && !ConnexionUtilisateur::estEcolePartenaire($login)) {
+        if (!ConnexionUtilisateur::estAdministrateur() && !ConnexionUtilisateur::estEcolePartenaire($login) && !ConnexionUtilisateur::estProfesseur()) {
             MessageFlash::ajouter("danger", "Vous n'avez pas les droits administrateurs");
             self::redirectionVersUrl("controleurFrontal.php");
             return;
@@ -103,7 +103,7 @@ class ControleurEtudiant extends ControleurGenerique
     public static function afficherEtudiantPage(): void
     {
         $login = ConnexionUtilisateur::getLoginUtilisateurConnecte();
-        if (!ConnexionUtilisateur::estConnecte() && !ConnexionUtilisateur::estEcolePartenaire($login)) {
+        if (!ConnexionUtilisateur::estConnecte() && !ConnexionUtilisateur::estEcolePartenaire($login) && !ConnexionUtilisateur::estProfesseur()) {
             MessageFlash::ajouter("warning", "Vous n'êtes pas connectés");
             self::redirectionVersUrl("controleurFrontal.php");
             return;

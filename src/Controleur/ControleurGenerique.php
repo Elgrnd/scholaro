@@ -73,7 +73,7 @@ class ControleurGenerique
         if (ConfigurationSite::getDebug()) {
             ConnexionUtilisateur::connecter("desertg");
             MessageFlash::ajouter("success", "Connexion réussie");
-            if (ConnexionUtilisateur::estAdministrateur()) {
+            if (ConnexionUtilisateur::estAdministrateur() || ConnexionUtilisateur::estProfesseur()) {
                 self::redirectionVersUrl("controleurFrontal.php?action=afficherListe");
             } else {
                 self::redirectionVersUrl("controleurFrontal.php?action=afficherEtudiantPage");
