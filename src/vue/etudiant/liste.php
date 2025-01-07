@@ -92,7 +92,7 @@
          */
 
         if (ConnexionUtilisateur::estAdministrateur()) $regarder = "admin";
-        else if (ConnexionUtilisateur::estEcolePartenaire(ConnexionUtilisateur::getLoginUtilisateurConnecte())) $regarder = "ecole";
+        else if (ConnexionUtilisateur::estEcolePartenaire(ConnexionUtilisateur::getLoginUtilisateurConnecte()) || ConnexionUtilisateur::estProfesseur()) $regarder = "ecole";
         else $regarder = "";
 
 

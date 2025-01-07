@@ -52,7 +52,7 @@ class ConnexionUtilisateur
             || self::estUtilisateur("laurentg")
             || self::estUtilisateur("nedjary")
             || (self::estUtilisateur("messaoui")
-            || (self::estUtilisateur("desertg")));
+            );
     }
 
     /**
@@ -103,7 +103,7 @@ class ConnexionUtilisateur
         }
 
         if (ConfigurationSite::getDebug()) {
-            return false;
+            return true;
         }
         if ($_SERVER["HTTP_HOST"] == "webinfo.iutmontp.univ-montp2.fr") {
             ConfigurationLDAP::connecterServeur();
