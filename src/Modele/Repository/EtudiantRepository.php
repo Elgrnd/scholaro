@@ -312,12 +312,12 @@ class EtudiantRepository extends AbstractDataRepository
     {
         foreach ($idEcoles as $idEcole){
             if (stripos($idEcole, "False") == false) {
-                $sql = "INSERT IGNORE INTO ecoleFavoris (idEcole, idEtudiant) VALUES (:idEcoleTag, :idEtudiantTag)";
+                $sql = "INSERT IGNORE INTO ecoleFavoris (siret, idEtudiant) VALUES (:idEcoleTag, :idEtudiantTag)";
                 $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
                 $values = array("idEcoleTag" => $idEcole, "idEtudiantTag" => $idEtudiant);
                 $pdoStatement->execute($values);
             } else {
-                $sql = "DELETE FROM ecoleFavoris WHERE idEtudiant = :idEtudiantTag AND idEcole = :idEcoleTag";
+                $sql = "DELETE FROM ecoleFavoris WHERE idEtudiant = :idEtudiantTag AND siret = :idEcoleTag";
                 $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
                 $nouvelle_chaine = str_replace("False", "", $idEcole);
                 $values = array("idEtudiantTag" => $idEtudiant, "idEcoleTag" => $nouvelle_chaine);
