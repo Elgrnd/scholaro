@@ -10,12 +10,16 @@ use App\Sae\Lib\MessageFlash;
 use App\Sae\Lib\MotDePasse;
 use App\Sae\Lib\Preferences;
 use App\Sae\Modele\DataObject\Agregation;
+use App\Sae\Modele\DataObject\Avis;
+use App\Sae\Modele\DataObject\Formation;
 use App\Sae\Modele\DataObject\Noter;
 use App\Sae\Modele\Repository\AgregationRepository;
+use App\Sae\Modele\Repository\AvisRepository;
 use App\Sae\Modele\Repository\EcoleRepository;
 use App\Sae\Modele\Repository\EtudiantRepository;
 use App\Sae\Modele\DataObject\Etudiant;
 use App\Sae\Modele\Repository\NoterRepository;
+use App\Sae\Modele\Repository\FormationRepository;
 use mysql_xdevapi\Exception;
 
 
@@ -279,4 +283,120 @@ class ControleurEtudiant extends ControleurGenerique
         }
     }
 
+    public static function afficherPE() : void {
+        if (!ConnexionUtilisateur::estAdministrateur()) {
+            MessageFlash::ajouter("danger", "Vous n'avez pas les droits administrateurs");
+            self::redirectionVersUrl("controleurFrontal.php");
+            return;
+        }
+        $avis = (new AvisRepository())->recuperer();
+        $formations = (new FormationRepository())->recuperer();
+        ControleurGenerique::afficherVue("vueGenerale.php", ["titre" => "Poursuite d'étude", "cheminCorpsVue" => "rpe/formulairePE.php", "avisListe" => $avis, "formations" => $formations]);
+    }
+
+    public static function enregistrerAvis() : void {
+        if (!ConnexionUtilisateur::estConnecte()) {
+            MessageFlash::ajouter("warning", "Vous n'êtes pas connectés");
+            self::redirectionVersUrl("controleurFrontal.php");
+            return;
+        }
+        if (!ConnexionUtilisateur::estAdministrateur()) {
+            MessageFlash::ajouter("warning", "Vous n'avez pas les droits.");
+            self::redirectionVersUrl("controleurFrontal.php");
+            return;
+        }
+        if (!isset($_REQUEST['avis'])) {
+            MessageFlash::ajouter("warning", "Aucun avis entrer en paramètre.");
+            self::redirectionVersUrl("controleurFrontal.php?action=afficherPE&controleur=etudiant");
+            return;
+        }
+        if ((new AvisRepository())->existeAvis($_REQUEST['avis'])) {
+            MessageFlash::ajouter("warning", "Avis déjà existant.");
+            self::redirectionVersUrl("controleurFrontal.php?action=afficherPE&controleur=etudiant");
+            return;
+        }
+        $avis = new Avis($_REQUEST['avis']);
+        (new AvisRepository())->ajouter($avis);
+        MessageFlash::ajouter("success", "Avis prédéfini ajouté.");
+        self::afficherPE();
+    }
+
+    public static function enregistrerFormation() : void {
+        if (!ConnexionUtilisateur::estConnecte()) {
+            MessageFlash::ajouter("warning", "Vous n'êtes pas connectés");
+            self::redirectionVersUrl("controleurFrontal.php");
+            return;
+        }
+        if (!ConnexionUtilisateur::estAdministrateur()) {
+            MessageFlash::ajouter("warning", "Vous n'avez pas les droits.");
+            self::redirectionVersUrl("controleurFrontal.php");
+            return;
+        }
+        if (!isset($_REQUEST['nomFormation'])) {
+            MessageFlash::ajouter("warning", "Aucune formation entrée en paramètre.");
+            self::redirectionVersUrl("controleurFrontal.php?action=afficherPE&controleur=etudiant");
+            return;
+        }
+        if ((new FormationRepository())->existeFormation($_REQUEST['nomFormation'])) {
+            MessageFlash::ajouter("warning", "Formation déjà existante.");
+            self::redirectionVersUrl("controleurFrontal.php?action=afficherPE&controleur=etudiant");
+            return;
+        }
+        $formation = new Formation($_REQUEST['nomFormation']);
+        (new FormationRepository())->ajouter($formation);
+        MessageFlash::ajouter("success", "Formation prédéfinie ajoutée.");
+        self::afficherPE();
+    }
+
+    public static function supprimerAvis(): void
+    {
+        if (!ConnexionUtilisateur::estConnecte()) {
+            MessageFlash::ajouter("warning", "Vous n'êtes pas connectés");
+            self::redirectionVersUrl("controleurFrontal.php");
+            return;
+        }
+        if (!ConnexionUtilisateur::estAdministrateur()) {
+            MessageFlash::ajouter("warning", "Vous n'avez pas les droits.");
+            self::redirectionVersUrl("controleurFrontal.php");
+            return;
+        }
+        if (!isset($_REQUEST['avis'])) {
+            MessageFlash::ajouter("warning", "Aucun avis entré en paramètre.");
+            self::redirectionVersUrl("controleurFrontal.php");
+            return;
+        }
+        if (!(new AvisRepository())->supprimer($_REQUEST['avis'])) {
+            MessageFlash::ajouter("fail", "Aucun avis correspondant");
+        }
+        else {
+            MessageFlash::ajouter("success", "Avis prédéfini supprimé");
+        }
+        self::afficherPE();
+    }
+
+    public static function supprimerFormation(): void
+    {
+        if (!ConnexionUtilisateur::estConnecte()) {
+            MessageFlash::ajouter("warning", "Vous n'êtes pas connectés");
+            self::redirectionVersUrl("controleurFrontal.php");
+            return;
+        }
+        if (!ConnexionUtilisateur::estAdministrateur()) {
+            MessageFlash::ajouter("warning", "Vous n'avez pas les droits.");
+            self::redirectionVersUrl("controleurFrontal.php");
+            return;
+        }
+        if (!isset($_REQUEST['nomFormation'])) {
+            MessageFlash::ajouter("warning", "Aucune formation entrée en paramètre.");
+            self::redirectionVersUrl("controleurFrontal.php");
+            return;
+        }
+        if (!(new FormationRepository())->supprimer($_REQUEST['nomFormation'])) {
+            MessageFlash::ajouter("fail", "Aucune formation correspondante");
+        }
+        else {
+            MessageFlash::ajouter("success", "Formation prédéfinie supprimée");
+        }
+        self::afficherPE();
+    }
 }

@@ -17,6 +17,4 @@ class ConfigurationSite
     public static function getDebug(): bool {
         return true;
     }
-
-
 }

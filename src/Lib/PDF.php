@@ -15,7 +15,7 @@ class PDF extends \FPDF
         $this->AddPage();
         $this->SetFont('Arial', 'b', 10);
 
-        $this->Cell(0,4.5, mb_convert_encoding("Fiche Avis Poursuite d'Études - Promotion 2023-2024", 'ISO-8859-1', 'UTF-8'), 0, 1, 'C');
+        $this->Cell(0,4.5, mb_convert_encoding("Fiche Avis Poursuite d'Études - Promotion 2024-2025", 'ISO-8859-1', 'UTF-8'), 0, 1, 'C');
         $this->Cell(0,4.5, mb_convert_encoding("Département Informatique", 'ISO-8859-1', 'UTF-8'), 0, 1, 'C');
         $this->Cell(0,4.5, 'IUT Montpellier-Sete', 0, 1, 'C');
         $this->Cell(0, 10, 'FICHE D\'INFORMATION ETUDIANT(E)', 0, 1, 'L');

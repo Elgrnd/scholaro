@@ -37,6 +37,11 @@
                 <li>
                     <a href='controleurFrontal.php?action=afficherListe&controleur=agregation'>LISTE AGREGATIONS</a>
                 </li>";
+                    if (ConnexionUtilisateur::estAdministrateur()) {
+                        echo "<li>
+                                <a href='controleurFrontal.php?action=afficherPE&controleur=etudiant'>POURSUITE D'ETUDE</a>
+                              </li>";
+                    }
                 }
                 if (ConnexionUtilisateur::estEtudiant()) {
                     $login = rawurlencode(ConnexionUtilisateur::getLoginUtilisateurConnecte());
