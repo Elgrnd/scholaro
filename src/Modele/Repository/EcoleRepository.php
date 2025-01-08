@@ -57,21 +57,6 @@ class EcoleRepository extends AbstractDataRepository
         return $tableauObjets;
     }
 
-
-
-    public function recupererAvis($idEtudiant)
-    {
-        $sql = "SELECT siret, avis, commentaire FROM ecoleFavoris WHERE idEtudiant = :idEtudiantTag";
-        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
-        $values = array("idEtudiantTag" => $idEtudiant);
-        $pdoStatement->execute($values);
-        $tableauObjets = [];
-        foreach ($pdoStatement as $objetFormatTableau) {
-            $tableauObjets[$objetFormatTableau["siret"]] = [$objetFormatTableau["avis"], $objetFormatTableau["commentaire"]];
-        }
-        return $tableauObjets;
-    }
-
     /**
      * @param $siret
      * @return Agregation|array recupere les agrégations d'une école partenaire

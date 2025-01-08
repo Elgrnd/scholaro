@@ -26,7 +26,7 @@ if (!empty($listeAgregations)) {
     echo '<div class="agregations-section">';
     echo '<h3 class="agregations-title">Liste des agrégations :</h3>';
     foreach ($listeAgregations as $agregations) {
-        $id = htmlspecialchars($agregations[0]);
+        $id = $agregations[0];
         echo '<div class="agregation-item">';
         echo '<p class="agregation-id">ID : <a href="controleurFrontal.php?action=afficherDetail&controleur=agregation&id=' . $id . '" class="agregation-link">' . $id . '</a></p>';
         echo '<p class="agregation-coef">Coefficient : ' . htmlspecialchars($agregations[1]) . '</p>';
@@ -38,8 +38,8 @@ if (!empty($listeAgregations)) {
 echo "<h1> Moyenne : $moyenne  </h1>";
 
 // Bouton de suppression
-if (\App\Sae\Lib\ConnexionUtilisateur::estAdministrateur()) {
-    echo '<a href="controleurFrontal.php?action=supprimer&controleur=agregation&id=' . htmlspecialchars($agregation->getIdAgregation()) . '" 
+if (\App\Sae\Lib\ConnexionUtilisateur::estAdministrateur() || \App\Sae\Lib\ConnexionUtilisateur::estEcolePartenaire(\App\Sae\Lib\ConnexionUtilisateur::getLoginUtilisateurConnecte())) {
+    echo '<a href="controleurFrontal.php?action=supprimer&controleur=agregation&id=' . $agregation->getIdAgregation(). '" 
        class="delete-agregation-link" 
        onclick="return confirm(\'Êtes-vous sûr de vouloir supprimer cette agrégation ? \nCela peut modifier d\\\'autres agrégations.\');">';
     echo '<div class="delete-agregation-button">Supprimer l\'agrégation</div>';

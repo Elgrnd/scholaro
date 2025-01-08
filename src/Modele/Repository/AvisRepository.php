@@ -54,4 +54,18 @@ class AvisRepository extends AbstractDataRepository
             return $result !== false;
         }
     }
+
+    public function recupererAvis($idEtudiant)
+    {
+        $sql = "SELECT etudid, avis, formation FROM etreAvis WHERE etudid = :idEtudiantTag";
+        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
+        $values = array("idEtudiantTag" => $idEtudiant);
+        $pdoStatement->execute($values);
+        $tableauObjets = [];
+        foreach ($pdoStatement as $objetFormatTableau) {
+            $tableauObjets[$objetFormatTableau["siret"]] = [$objetFormatTableau["avis"], $objetFormatTableau["commentaire"]];
+        }
+        return $tableauObjets;
+    }
+
 }

@@ -326,15 +326,41 @@ class EtudiantRepository extends AbstractDataRepository
         }
     }
 
-    public function ajouterAvisEcole($avisTot , $idEtudiant)
+    public function ajouterAvisEcole($avisFormation , $idEtudiant)
     {
-        foreach ($avisTot as $avis){
-            $parti = explode("_", $avis);
-            $sql = "UPDATE ecoleFavoris SET avis = :avisTag WHERE idEtudiant = :idEtudiantTag AND idEcole = :idEcole";
-            $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
-            $values = array("avisTag" => $parti[0], "idEtudiantTag" => $idEtudiant, "idEcole" => $parti[1]);
-            $pdoStatement->execute($values);
+        foreach ($avisFormation as $formation=>$avis) {
+
+            // Vérifier si l'avis existe déjà
+            $checkSql = "SELECT COUNT(*) FROM etreAvis WHERE etudid = :idEtudiantTag AND nomFormation = :formationTag";
+            $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($checkSql);
+            $pdoStatement->execute([
+                "idEtudiantTag" => $idEtudiant,
+                "formationTag" => $formation
+            ]);
+            $exists = $pdoStatement->fetchColumn();
+            if ($exists) {
+                // Mettre à jour l'avis existant
+                $updateSql = "UPDATE etreAvis SET avis = :avisTag WHERE etudid = :idEtudiantTag AND nomFormation = :formationTag";
+                $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($updateSql);
+                $values = [
+                    "avisTag" => $avis,
+                    "idEtudiantTag" => $idEtudiant,
+                    "formationTag" => $formation
+                ];
+                $pdoStatement->execute($values);
+            } else {
+                // Insérer un nouvel avis
+                $insertSql = "INSERT INTO ecoleFavoris (etudid, avis, nomFormation) VALUES (:idEtudiantTag, :avisTag, :formationTag)";
+                $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($insertSql);
+                $values = [
+                    "avisTag" => $avis,
+                    "idEtudiantTag" => $idEtudiant,
+                    "formationTag" => $formation
+                ];
+                $pdoStatement->execute($values);
+            }
         }
+
     }
 
     public function ajouterCommentaireEcole($commentaires , $idEtudiant)

@@ -40,42 +40,27 @@
     if (\App\Sae\Configuration\ConfigurationSite::getDebug()) $methode = "get"; else $methode = "post";
 
     if ($regarder == "admin") {
-        if (!empty($ecolesChoisie)) {
-            echo '<h1>Ecole Favorite</h1>
+        $avisTot = (new \App\Sae\Modele\Repository\AvisRepository())->recuperer();
+        $formations = (new \App\Sae\Modele\Repository\FormationRepository())->recuperer();
+        if (!empty($avisTot)) {
+            echo '<h1>Avis Formation</h1>
                 <form method="' . $methode . '" action="?">
                ';
-            foreach ($ecolesChoisie as $ecole) {
-                $TFselected = "";
-                $Fselected = "";
-                $Rselected = "";
-                $commentaire = "";
-                if (!empty($avis)) {
-                    if ($avis[$ecole->getSiret()][0] == "Tres-Favorable") {
-                        $TFselected = "selected";
-                    } else if ($avis[$ecole->getSiret()][0] == "Favorable") {
-                        $Fselected = "selected";
-                    } else if ($avis[$ecole->getSiret()][0] == "Reserve") {
-                        $Rselected = "selected";
-                    }
-                    if (!empty($avis[$ecole->getSiret()][1])) {
-                        $commentaire = $avis[$ecole->getSiret()][1];
-                    }
+            foreach ($formations as $formation) {
+                $formationNom = $formation->getFormation();
+
+                echo '<div>';
+                echo '<label for="' . urldecode($formationNom) . '">' . htmlspecialchars($formationNom) . '</label>';
+                echo '<select name="avisFormation[' . urldecode($formationNom) . ']" id="' . urldecode($formationNom) . '">';
+
+                foreach ($avisTot as $avis) {
+                    echo '<option value="' . urldecode($avis->getAvis()) . '">' . htmlspecialchars($avis->getAvis()) . '</option>';
                 }
 
-                $ecolesChoisieNom = htmlspecialchars($ecole->getNomEcole());
-                $ecolesChoisieVille = htmlspecialchars($ecole->getVilleEcole());
-                echo '<div><label for="' . $ecole->getSiret() . '">' . $ecolesChoisieNom . ' -> ' . $ecolesChoisieVille . '</label>' .
-                    '<select name="avisEcoles[]" id="' . $ecole->getSiret() . '">
-                            <option value="Tres-Favorable_' . $ecole->getSiret() . '" ' . $TFselected . '>Très Favorable</option>
-                            <option value="Favorable_' . $ecole->getSiret() . '" ' . $Fselected . '>Favorable</option>
-                            <option value="Reserve_' . $ecole->getSiret() . '" ' . $Rselected . '>Réservé</option>
-                        </select>
-                        </div>
-                        <div>
-                        <label for="commentaire' . $ecole->getSiret() . '">Commentaire :</label><br>
-                        <textarea id="commentaire' . $ecole->getSiret() . '" name="commentaires[' . $ecole->getSiret() . ']" rows="5" cols="40" style="border: 2px solid black; padding: 5px;">' . htmlspecialchars($commentaire) . '</textarea>
-                        </div>';
+                echo '</select>';
+                echo '</div>';
             }
+
             echo '<input type="hidden" name="idEtudiant" value="' . $etudiant->getEtudid() . '">
                 <input type="hidden" name="action" value="' . $action . '">
                 <input type="hidden" name="controleur" value="etudiant">

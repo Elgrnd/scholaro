@@ -138,10 +138,14 @@ class ControleurEtudiant extends ControleurGenerique
         $notes = (new EtudiantRepository())->getNotesEtudiant($_REQUEST['idEtudiant']);
         if (ConnexionUtilisateur::estEcolePartenaire($login)){
             $notesAgregees = (new EtudiantRepository())->recupererNotesAgregees($_REQUEST['idEtudiant'], $login);
-        } else {
+        } else if (ConnexionUtilisateur::estAdministrateur() || ConnexionUtilisateur::estProfesseur()) {
             $notesAgregees = (new EtudiantRepository())->recupererNotesAgregees($_REQUEST['idEtudiant'], "prof");
+        } else {
+            $notesAgregees = array();
         }
-        $avis = (new EcoleRepository())->recupererAvis($_REQUEST["idEtudiant"]);
+//        $avis = (new EcoleRepository())->recupererAvis($_REQUEST["idEtudiant"]);
+        $avis= [];
+//        $avisRenseigner = (new AvisRepository())->recupererAvis($_REQUEST['idEtudiant']);
         $moyennes = array();
         foreach ($notesAgregees as $note) {
             $moyennes[] = (new AgregationRepository())->moyenne($note['idAgregation']);
@@ -168,9 +172,8 @@ class ControleurEtudiant extends ControleurGenerique
             self::afficherErreur("Vous n'êtes pas connectés");
             return;
         }
-        if (isset($_REQUEST['avisEcoles'])) {
-            (new EtudiantRepository())->ajouterAvisEcole($_REQUEST["avisEcoles"], $_REQUEST["idEtudiant"]);
-            (new EtudiantRepository())->ajouterCommentaireEcole($_REQUEST["commentaires"], $_REQUEST["idEtudiant"]);
+        if (isset($_REQUEST['avisFormation'])) {
+            (new EtudiantRepository())->ajouterAvisEcole($_REQUEST["avisFormation"], $_REQUEST["idEtudiant"]);
         }
         self::afficherEtudiantPage();
     }

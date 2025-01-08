@@ -17,7 +17,7 @@
             echo '
    <tr>
     <td> <a href="?controleur=agregation&action=afficherDetail&id=' . $agregation->getIdAgregation() . '">' . $agregation->getIdAgregation() . '</a></td>
-    <td><a href="?controleur=agregation&action=afficherDetail&id=' . $agregation->getIdAgregation() . '">' . htmlspecialchars($agregation->getNomAgregation()) . '</a></td> 
+    <td><a href="?controleur=agregation&action=afficherDetail&id=' . $agregation->getIdAgregation() . '">' . urldecode($agregation->getNomAgregation()) . '</a></td> 
     </tr>';
         }
         ?>

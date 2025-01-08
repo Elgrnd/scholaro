@@ -47,8 +47,8 @@ if (\App\Sae\Configuration\ConfigurationSite::getDebug()) echo "get"; else echo 
                 foreach ($ressources as $ressource) {
                     if ($ressource->getNomRessource()[1] == $semestre) {
                         echo "<div class='ressource-item'>
-                            <span class='ressource-name'>" . $ressource->getNomRessource() . "</span>
-                            <input type='hidden' name='idNom$id' value='" . $ressource->getNomRessource() . "'>
+                            <span class='ressource-name'>" . htmlspecialchars($ressource->getNomRessource()) . "</span>
+                            <input type='hidden' name='idNom$id' value='" . urldecode($ressource->getNomRessource()) . "'>
                             <input type='number' class='input-coeff' name='coeff$id' value='0' id='coefRessource$id'>
                         </div>";
                         $id += 1;

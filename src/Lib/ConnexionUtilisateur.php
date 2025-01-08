@@ -34,6 +34,9 @@ class ConnexionUtilisateur
 
     public static function getLoginUtilisateurConnecte(): ?string
     {
+        if (!self::estConnecte()){
+            return "false";
+        }
         return $_SESSION[ConnexionUtilisateur::$cleConnexion];
     }
 
@@ -48,7 +51,6 @@ class ConnexionUtilisateur
             return false;
         }
         return self::estUtilisateur("tordeuxm")
-            || self::estUtilisateur("lyfoungn")
             || self::estUtilisateur("laurentg")
             || self::estUtilisateur("nedjary")
             || (self::estUtilisateur("messaoui")
@@ -97,7 +99,6 @@ class ConnexionUtilisateur
 
     public static function estProfesseur(): bool
     {
-
         if (!self::estConnecte()) {
             return false;
         }

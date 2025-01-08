@@ -93,7 +93,6 @@ abstract class AbstractDataRepository
 
         $objetFormatTableau = $pdoStatement->fetch();
         if ($objetFormatTableau == null) {
-            //echo "ERREUR MADE IN MOI";
             return null;
         }
         return $this->construireDepuisTableauSQL($objetFormatTableau);
