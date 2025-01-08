@@ -10,6 +10,7 @@ use App\Sae\Lib\Preferences;
 use App\Sae\Lib\ConnexionUtilisateur;
 use App\Sae\Lib\MessageFlash;
 use App\Sae\Lib\VerificationEmail;
+use App\Sae\Modele\HTTP\Cookie;
 use App\Sae\Modele\Repository\AgregationRepository;
 use App\Sae\Modele\Repository\EcoleRepository;
 class ControleurGenerique
@@ -176,5 +177,14 @@ class ControleurGenerique
     {
         header("Location: $url");
         exit();
+    }
+
+    public static function afficherCGU() {
+        self::afficherVue("vueGenerale.php", ["titre" => "Condition Générales d'Utilisation", "cheminCorpsVue" => "cgu.php"]);
+    }
+
+    public static function accepterCGU() {
+        Cookie::enregistrer("cgu", [true]);
+        self::redirectionVersUrl("controleurFrontal.php");
     }
 }

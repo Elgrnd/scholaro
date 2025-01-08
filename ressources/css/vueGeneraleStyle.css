@@ -130,3 +130,61 @@ footer {
     background-color: #f2dede;
     border-color: #ebccd1;
 }
+
+.cgu-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+/* Contenu du pop-up */
+.cgu-popup {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.cgu-popup h2 {
+    margin-top: 0;
+    color: #007BFF;
+}
+
+.cgu-popup p {
+    margin: 15px 0;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.cgu-popup a {
+    color: #007BFF;
+    text-decoration: none;
+}
+
+.cgu-popup a:hover {
+    text-decoration: underline;
+}
+
+.cgu-popup button {
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.cgu-popup button:hover {
+    background-color: #218838;
+}

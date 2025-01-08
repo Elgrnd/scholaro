@@ -24,7 +24,8 @@
                 <?php
 
                     use App\Sae\Lib\ConnexionUtilisateur;
-                    use App\Sae\Modele\Repository\EtudiantRepository;
+                use App\Sae\Modele\HTTP\Cookie;
+                use App\Sae\Modele\Repository\EtudiantRepository;
 
                 if (ConnexionUtilisateur::estAdministrateur() || (ConnexionUtilisateur::estConnecte() && ConnexionUtilisateur::estEcolePartenaire(ConnexionUtilisateur::getLoginUtilisateurConnecte())) || ConnexionUtilisateur::estProfesseur()) {
                     echo "<li>
@@ -79,11 +80,29 @@
 
 
     require __DIR__ . "/{$cheminCorpsVue}";
+
+    // Vérifie si l'utilisateur a accepté les CGU via un cookie
+    $cgu_accepted = isset($_COOKIE['cgu']) && Cookie::lire('cgu') == true;
+
+    if (!$cgu_accepted && !($cheminCorpsVue == "cgu.php")) {
+        echo "<div id='cgu-overlay' class='cgu-overlay'>
+        <div class='cgu-popup'>
+            <h2>Conditions Générales d'Utilisation</h2>
+            <p>Bienvenue sur notre site ! Avant de continuer, veuillez lire et accepter nos
+                <a href='controleurFrontal.php?action=afficherCGU' target='_blank'>Conditions Générales d'Utilisation</a>.
+            </p>
+            <form action='controleurFrontal.php' method='post'>
+            <input type='hidden' name='action' value='accepterCGU'>
+            <button type='submit' id='accept-cgu'>Accepter</button>
+            </form>    
+        </div>
+    </div>";
+    }
     ?>
 </main>
 <footer>
     <div class="footer-container">
-        <p class="co"> Copyright © 2024 All rights reserved </p>
+        <p class="co"> Copyright © 2024 All rights reserved (<a href='controleurFrontal.php?action=afficherCGU' target='_blank'>Conditions Générales d'Utilisation</a>)</p>
     </div>
 </footer>
 </body>
