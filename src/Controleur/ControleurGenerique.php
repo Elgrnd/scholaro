@@ -86,7 +86,29 @@ class ControleurGenerique
             self::redirectionVersUrl("controleurFrontal.php");
             return;
         }
-        if ($_SERVER["HTTP_HOST"] == "webinfo.iutmontp.univ-montp2.fr") {
+        if (ConnexionUtilisateur::estEcolePartenaire($_REQUEST['login'])) {
+            $ep = (new EcoleRepository())->recupererParClePrimaire($_REQUEST['login']);
+            if ($ep && MotDePasse::verifier($_REQUEST['mdp'], $ep->getMdpHache())) {
+                if($ep->isEstValide()) {
+                    if ($ep->isMailValider()) {
+                        ConnexionUtilisateur::connecter($ep->getSiret());
+                        MessageFlash::ajouter("success", "Connexion réussie");
+                        self::redirectionVersUrl("controleurFrontal.php");
+                    } else {
+                        MessageFlash::ajouter("warning", "Vous n'avez pas validé votre mail, regardez votre boite mail");
+                        self::redirectionVersUrl("controleurFrontal.php");
+                    }
+                }else{
+                    MessageFlash::ajouter("warning", "L'Admin n'a pas validé votre compte");
+                    self::redirectionVersUrl("controleurFrontal.php");
+                }
+            } else {
+                MessageFlash::ajouter("warning", "Le mot de passe ou l'identifiant est incorrecte");
+                self::redirectionVersUrl("controleurFrontal.php");
+            }
+
+        }
+        else if ($_SERVER["HTTP_HOST"] == "webinfo.iutmontp.univ-montp2.fr") {
             $ldapConnection = ConfigurationLDAP::connecterServeur();
 
             // Login / mot de passe ˋa tester
@@ -126,27 +148,6 @@ class ControleurGenerique
                 }
             } else {
                 MessageFlash::ajouter("warning", "Identifiants incorrects");
-                self::redirectionVersUrl("controleurFrontal.php");
-            }
-
-        } else if (ConnexionUtilisateur::estEcolePartenaire($_REQUEST['login'])) {
-            $ep = (new EcoleRepository())->recupererParClePrimaire($_REQUEST['login']);
-            if ($ep && MotDePasse::verifier($_REQUEST['mdp'], $ep->getMdpHache())) {
-                if($ep->isEstValide()) {
-                    if ($ep->isMailValider()) {
-                        ConnexionUtilisateur::connecter($ep->getSiret());
-                        MessageFlash::ajouter("success", "Connexion réussie");
-                        self::redirectionVersUrl("controleurFrontal.php");
-                    } else {
-                        MessageFlash::ajouter("warning", "Vous n'avez pas validé votre mail, regardez votre boite mail");
-                        self::redirectionVersUrl("controleurFrontal.php");
-                    }
-                }else{
-                    MessageFlash::ajouter("warning", "L'Admin n'a pas validé votre compte");
-                    self::redirectionVersUrl("controleurFrontal.php");
-                }
-            } else {
-                MessageFlash::ajouter("warning", "Le mot de passe ou l'identifiant est incorrecte");
                 self::redirectionVersUrl("controleurFrontal.php");
             }
 
