@@ -1,16 +1,19 @@
 body {
     font-family: Arial, sans-serif;
     line-height: 1.6;
-    margin: 20px;
     padding: 0;
     background-color: #f9f9f9;
     color: #333;
 }
 h1, h2 {
-    color: #007BFF;
+    color: rgb(255, 86, 96);
+}
+a.mail {
+    color: rgb(255, 86, 96);
+    text-decoration: none;
 }
 a {
-    color: #007BFF;
+    color: rgb(255, 255, 255);
     text-decoration: none;
 }
 a:hover {

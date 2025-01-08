@@ -17,7 +17,7 @@
             * champs requis
         </h5>
         <h5>
-            Vous êtes une école partenaire et vous n'avez pas de compte ?
+            Vous êtes une école partenaire et vous n'avez pas encore de compte ?
         </h5>
         <p style="font-size: small;"><a href="?controleur=ecolePartenaire&action=afficherFormulaireCreationCompte"> Créer un compte</a></p>
     </fieldset>
