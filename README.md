@@ -1,78 +1,67 @@
-# sae3a-base
+# Projet SAE3A - Assistance à la Poursuite d'Études
 
-<h2>Installation du site</h2>
+## Installation du site web
 
-<h3>1. Connexion au conteneur</h3>
+1. **Clonage du dépôt**
+    - Clonez le dépôt Git dans le conteneur `serveurWebIUT` :
+      ```bash
+      git clone https://gitlabinfo.iutmontp.univ-montp2.fr/sae3a/projets/lyfoungn-desertg-tordeuxm-nedjary-laurentg/sae3a-base.git
+      cd <NOM_DU_DEPOT>
+      ```  
 
-Connectez-vous à votre conteneur en utilisant Docker ou un autre outil d'administration de conteneurs.
+2. **Configuration des droits**
+    - Assurez-vous que les droits sur les fichiers et dossiers sont correctement définis :
+      ```bash
+      chmod -R 755 .
+      ```  
 
-    docker exec -it serveurWebIUT /bin/bash
+3. **Configuration du serveur**
+    - Placez les fichiers du projet dans le répertoire racine de votre serveur web (généralement `/var/www/html/`).
+    - Vérifiez que les modules nécessaires sont activés (PHP, MySQL).
 
-<h3>2. Clonage du dépôt Git</h3>
+---
 
-Dans le conteneur, naviguez vers le répertoire où vous souhaitez installer le site web, puis clonez le dépôt Git contenant le code source du site.
+## Déploiement sur webinfo
 
-    cd /var/www/html  # Exemple de répertoire web par défaut
-    git clone https://gitlabinfo.iutmontp.univ-montp2.fr/sae3a/projets/lyfoungn-desertg-tordeuxm-nedjary-laurentg/sae3a-base.git
+Le site est déployé à l'URL suivante :  
+[Scolaro](https://webinfo.iutmontp.univ-montp2.fr/~lyfoungn/sae3a-base/web/controleurFrontal.php)
 
-<h3>3. Configuration des droits d'accès</h3>
+---
 
-Assurez-vous que le serveur web a les droits nécessaires pour accéder aux fichiers du site. Réglez les permissions pour le répertoire cloné.
+## Informations sur la base de données
 
-    chown -R www-data:www-data siteWebIUT  # Remplacez `www-data` par l'utilisateur web si différent
-    chmod -R 755 siteWebIUT
+- **Nom de la base de données** : `SAE3A_Q2B`
+- **Utilisateurs et mots de passe** :
+    - Responsable :
+      - Login : `laurentg`
+      - Mot de passe : `jsp`
+  - Enseignant :
+      - Login : `Utiliser vos login LDAP`
+      - Mot de passe : `Utiliser votre MDP LDAP`
+  - Étudiant :
+      - Login : `lyfoungn`
+      - Mot de passe : `080342376AJ`
+  - Ecole Partenaire :
+      - Login : `12342567`
+      - Mot de passe : `azer`
 
-<h3>4. Installation des dépendances</h3>
+---
 
-    cd siteWebIUT
-    composer install
+## Principales fonctionnalités développées
 
-<h3>5. Configuration de l'environnement</h3>
+1. **Importation de données**
+    - Importation des informations des étudiants et des notes via des fichiers CSV.
 
-Créez un fichier de configuration d’environnement pour stocker les variables sensibles (comme les identifiants de base de données).
+2. **Trier des étudiants**
+    - Permet un tri croissant ou décroissant des étudiants liéer au notes d'une agrégation.
 
-    cp .env.example .env
+3. **Agrégation de notes**
+    - Création d'agrégation qui calcul automatiquement les moyennes.
 
-Modifiez .env pour inclure les informations spécifiques à votre environnement :
+4. **Generation de la feuille gérants la poursuite d'étude**
+    - Le responsable de poursuite d'étude peut géner la feuille de poursuite d'étude.
 
-    nano .env
-    
-Enregistrez et quittez.
+5. **Gestion des utilisateurs**
+    - Connexion sécurisée avec différents rôles (enseignant, étudiant, entreprise).
 
-<h3>6. Démarrage du serveur</h3>
-
-Lancez ou redémarrez le serveur web pour prendre en compte les nouvelles configurations.
-
-    service apache2 restart  # Exemple pour Apache
-    # ou
-    service nginx restart    # Exemple pour Nginx
-
-<h3>7. Vérification de l'installation</h3>
-
-Accédez à l'URL de votre serveur pour vérifier que le site web est correctement installé. Par exemple :
-
-    http://localhost  # Si vous êtes en local dans le conteneur
-
-Note : Assurez-vous que le conteneur serveurWebIUT dispose des ports réseau ouverts pour autoriser l'accès externe si nécessaire.
-
-<h2>URL du site</h2>
-
->https://webinfo.iutmontp.univ-montp2.fr/~lyfoungn/sae3a-base/web/controleurFrontal.php
-
-<h2> Login / mot de passe </h2>
-
-    Professeur (admin): pallejax / ok
-    Professeur (non admin) pallejan / okok
-    Etudiant : 99 / 22000151
-
-<h2> Fonctionnalités </h2>
-
-    1 - Importation des informations des étudiants en .csv
-
-    2 - Agrégations de notes
-
-    3 - Agrégations d'agrégations
-
-    4 - Connexion d'un professeur
-
-    5 - Connexion d'un étudiant
+---

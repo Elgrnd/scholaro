@@ -35,13 +35,46 @@ abstract class AbstractDataRepository
         }
         $colonnesTag = substr($colonnesTag, 0, -2);
 
-        $sql = "INSERT IGNORE INTO $nomTable ($nomsColonnes) VALUES ($colonnesTag)";
+        $sql = "INSERT INTO $nomTable ($nomsColonnes) VALUES ($colonnesTag)";
         $pdo = ConnexionBaseDeDonnees::getPdo();
         $pdoStatement = $pdo->prepare($sql);
         $values = $this->formatTableauSQL($objet);
         $pdoStatement->execute($values);
         return $pdo->lastInsertId();
     }
+
+    public function ajouterPlusieurs(array $objets)
+    {
+        if (empty($objets)) {
+            return null;
+        }
+
+        $colonnes = $this->getNomColonnes();
+        $nomTable = $this->getNomTable();
+        $nomsColonnes = join(",", $this->getNomColonnes());
+
+        $colonneObjet = [];
+        $values = [];
+        foreach ($objets as $index => $objet) {
+            $formattedObjet = $this->formatTableauSQL($objet);
+            $tags = [];
+            foreach ($colonnes as $colonne) {
+                $tag = ":{$colonne}Tag{$index}";
+                $tags[] = $tag;
+
+                $colonneTag = "{$colonne}Tag";
+                $values[$tag] = $formattedObjet[$colonneTag];
+            }
+            $colonneObjet[] = "(" . join(", ", $tags) . ")";
+        }
+        $nomColonneObjets = join(',', $colonneObjet);
+        $sql = "INSERT IGNORE INTO $nomTable ($nomsColonnes) VALUES $nomColonneObjets";
+        $pdo = ConnexionBaseDeDonnees::getPdo();
+        $pdoStatement = $pdo->prepare($sql);
+        $pdoStatement->execute($values);
+        return $pdo->lastInsertId();
+    }
+
     public function recupererParClePrimaire(string $clefPrimTag): ?AbstractDataObject
     {
         $sql = 'SELECT * from ' . $this->getNomTable() . ' WHERE ' . $this->getNomClePrimaire() . ' = :clefPrimTag';
@@ -60,7 +93,6 @@ abstract class AbstractDataRepository
 
         $objetFormatTableau = $pdoStatement->fetch();
         if ($objetFormatTableau == null) {
-            //echo "ERREUR MADE IN MOI";
             return null;
         }
         return $this->construireDepuisTableauSQL($objetFormatTableau);
@@ -81,4 +113,22 @@ abstract class AbstractDataRepository
         }
         return true;
     }
+
+    public function mettreAJour(AbstractDataObject $objet): bool
+    {
+        $sql = 'Update '.$this->getNomTable().' set ';
+        $colonnes = $this->getNomColonnes();
+        array_shift($colonnes);
+        foreach ($colonnes as $colonne) {
+            $setClause[] = "$colonne = :{$colonne}Tag";
+        }
+        $sql .= implode(", ", $setClause);
+        $sql .= " WHERE " . $this->getNomClePrimaire() . " = :".$this->getNomClePrimaire()."Tag";
+        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
+        $values = $this->formatTableauSQL($objet);
+        $pdoStatement->execute($values);
+        return true;
+    }
+
+
 }

@@ -1,24 +1,35 @@
 <?php
 namespace App\Sae\Modele\DataObject;
 
+use App\Sae\Modele\Repository\AgregationRepository;
+
 class Agregation extends AbstractDataObject{
     private ?int $idAgregation;
     private string $nomAgregation;
-    private float $noteAgregation;
-    private Etudiant $etudiant;
+    private ?string $loginCreateur;
+    private ?string $siretCreateur;
+
 
     /**
      * @param int|null $idAgregation
      * @param string $nomAgregation
-     * @param float $noteAgregation
-     * @param Etudiant $etudiant
      */
-    public function __construct(?int $idAgregation, string $nomAgregation, float $noteAgregation, Etudiant $etudiant)
+    public function __construct(?int $idAgregation, string $nomAgregation, ?string $loginCreateur, ?string $siretCreateur)
     {
         $this->idAgregation = $idAgregation;
         $this->nomAgregation = $nomAgregation;
-        $this->noteAgregation = $noteAgregation;
-        $this->etudiant = $etudiant;
+        $this->loginCreateur = $loginCreateur;
+        $this->siretCreateur = $siretCreateur;
+    }
+
+    public function getSiretCreateur(): ?string
+    {
+        return $this->siretCreateur;
+    }
+
+    public function setSiretCreateur(?string $siretCreateur): void
+    {
+        $this->siretCreateur = $siretCreateur;
     }
 
     public function getIdAgregation(): ?int
@@ -41,26 +52,13 @@ class Agregation extends AbstractDataObject{
         $this->nomAgregation = $nomAgregation;
     }
 
-    public function getNoteAgregation(): float
+    public function getLoginCreateur(): ?string
     {
-        return $this->noteAgregation;
+        return $this->loginCreateur;
     }
 
-    public function setNoteAgregation(float $noteAgregation): void
+    public function setLoginCreateur(?string $loginCreateur): void
     {
-        $this->noteAgregation = $noteAgregation;
+        $this->loginCreateur = $loginCreateur;
     }
-
-    public function getEtudiant(): Etudiant
-    {
-        return $this->etudiant;
-    }
-
-    public function setEtudiant(Etudiant $etudiant): void
-    {
-        $this->etudiant = $etudiant;
-    }
-
-
-
 }

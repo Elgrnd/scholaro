@@ -1,27 +1,49 @@
-
 <?php
 /**
  * @var \App\Sae\Modele\DataObject\Agregation $agregation
- */
-echo '<p> Nom agragation : '. htmlspecialchars($agregation->getNomAgregation()) .' </p> <p> Note : '. $agregation->getNoteAgregation() . "</p>";
-
-?>
-
-<?php
-/**
  * @var array $listeRessources
+ * @var float $moyenne
  */
+
+echo '<div id="agregation-details">';
+echo '<h2 class="agregation-title">' . htmlspecialchars($agregation->getNomAgregation()) . '</h2>';
+
+// Section des ressources
 if (!empty($listeRessources)) {
-    echo "<h3>liste notes :</h3>";
+    echo '<div class="ressources-section">';
+    echo '<h3 class="ressources-title">Liste des notes :</h3>';
     foreach ($listeRessources as $ressource) {
-        echo "<p> Ressource : " . $ressource[0] . ' </p> <p> Note : ' . $ressource[1] . ' </p> <p> Coefficient : ' . $ressource[2] . "</p>";
+        echo '<div class="ressource-item">';
+        echo '<p class="ressource-name">Ressource : ' . htmlspecialchars($ressource[0]) . '</p>';
+        echo '<p class="ressource-coef">Coefficient : ' . htmlspecialchars($ressource[1]) . '</p>';
+        echo '</div>';
     }
+    echo '</div>';
 }
 
-if(!empty($listeAgregations)){
-    echo "<h3>liste agregations :</h3>";
-    foreach ($listeAgregations as $agregation) {
-        echo "<div class='cont' <p> id :" . $agregation[0] . ' </p> <p> Nom :' . htmlspecialchars($agregation[1]) . ' </p> <p> Note : ' . $agregation[2] .'</p> <p> Coefficient : ' .$agregation[3] . "</p> </div>";
+// Section des agrégations
+if (!empty($listeAgregations)) {
+    echo '<div class="agregations-section">';
+    echo '<h3 class="agregations-title">Liste des agrégations :</h3>';
+    foreach ($listeAgregations as $agregations) {
+        $id = $agregations[0];
+        echo '<div class="agregation-item">';
+        echo '<p class="agregation-id">ID : <a href="controleurFrontal.php?action=afficherDetail&controleur=agregation&id=' . $id . '" class="agregation-link">' . $id . '</a></p>';
+        echo '<p class="agregation-coef">Coefficient : ' . htmlspecialchars($agregations[1]) . '</p>';
+        echo '</div>';
     }
+    echo '</div>';
 }
-?>
+
+echo "<h1> Moyenne : $moyenne  </h1>";
+
+// Bouton de suppression
+if (\App\Sae\Lib\ConnexionUtilisateur::estAdministrateur() || \App\Sae\Lib\ConnexionUtilisateur::estEcolePartenaire(\App\Sae\Lib\ConnexionUtilisateur::getLoginUtilisateurConnecte())) {
+    echo '<a href="controleurFrontal.php?action=supprimer&controleur=agregation&id=' . $agregation->getIdAgregation(). '" 
+       class="delete-agregation-link" 
+       onclick="return confirm(\'Êtes-vous sûr de vouloir supprimer cette agrégation ? \nCela peut modifier d\\\'autres agrégations.\');">';
+    echo '<div class="delete-agregation-button">Supprimer l\'agrégation</div>';
+    echo '</a>';
+
+    echo '</div>';
+}

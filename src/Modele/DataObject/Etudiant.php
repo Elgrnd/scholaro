@@ -1,7 +1,11 @@
 <?php
+
 namespace App\Sae\Modele\DataObject;
 
-class Etudiant extends AbstractDataObject{
+use App\Sae\Modele\Repository\EtudiantRepository;
+
+class Etudiant extends AbstractDataObject
+{
     private int $etudid;
     private string $codenip;
     private string $civ;
@@ -11,7 +15,8 @@ class Etudiant extends AbstractDataObject{
     private string $specialite;
     private int $rg_admis;
     private string $avis;
-    private string $mdpHache;
+
+    private string $login;
 
     /**
      * @param int $etudid
@@ -24,7 +29,7 @@ class Etudiant extends AbstractDataObject{
      * @param int $rgadmis
      * @param string $avis
      */
-    public function __construct(int $etudid, string $codenip, string $civ, string $nom, string $prenom, string $bac, string $specialite, int $rgadmis, string $avis, string $mdpHache)
+    public function __construct(int $etudid, string $codenip, string $civ, string $nom, string $prenom, string $bac, string $specialite, int $rgadmis, string $avis, string $login)
     {
         $this->etudid = $etudid;
         $this->codenip = $codenip;
@@ -35,7 +40,7 @@ class Etudiant extends AbstractDataObject{
         $this->specialite = $specialite;
         $this->rg_admis = $rgadmis;
         $this->avis = $avis;
-        $this->mdpHache = $mdpHache;
+        $this->login = $login;
     }
 
     public function getEtudid(): int
@@ -128,17 +133,47 @@ class Etudiant extends AbstractDataObject{
         $this->avis = $avis;
     }
 
-    public function getMdpHache(): string
+    public function getLogin(): string
     {
-        return $this->mdpHache;
+        return $this->login;
     }
 
-    public function setMdpHache(string $mdpHache): void
+    public function setLogin(string $login): void
     {
-        $this->mdpHache = $mdpHache;
+        $this->login = $login;
     }
 
 
+    /**
+     * @return float
+     * permet de calculer la moyenne d'un étudiant
+    */
+    public function calculerMoyenne(array $tabNom, array $tabCoeff): float
+    {
+        $etudiants = (new EtudiantRepository())->recuperer();
+        $diviseur = 0;
+        $numerateur = 0;
+        for ($i = 0; $i < count($tabNom); $i++) {
+            if ($tabNom[$i][0] === 'R') {
+                $note = (new EtudiantRepository())->existeDansNoter($this->getEtudid() , $tabNom[$i]);
+                if ($note) {
+                    $diviseur += (float) $tabCoeff[$i];
+                    $numerateur += (float) $note[0] *(float) $tabCoeff[$i];
+                }
+            } else {
+                $note = (new EtudiantRepository())->existeDansAgregationRessource($this->getEtudid(), $tabNom[$i]);
+                if ($note) {
+                    $diviseur += $tabCoeff[$i];
+                    $numerateur += $note[0] * $tabCoeff[$i];
+                }
+            }
+        }
+        if($diviseur != 0) {
+            return ($numerateur / $diviseur);
+        }else{
+            return -1;
+        }
+    }
 
 
 }
