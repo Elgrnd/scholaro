@@ -106,6 +106,36 @@ Le site est déployé à l'URL suivante :
     - Le responsable de poursuite d'étude peut géner la feuille de poursuite d'étude.
 
 5. **Gestion des utilisateurs**
-    - Connexion sécurisée avec différents rôles (enseignant, étudiant, entreprise).
+    - Connexion sécurisée avec différents rôles (enseignant, étudiant, école).
+
+---
+
+## Répartition du travail
+
+**Mattéo ( 26% )**
+
+- Agrégation
+- Trie des étudiant
+
+**Galdric ( 22% )**
+
+- Connexion Ldap
+- Importation des données d'un fichier CSV
+
+**Nicolas ( 22% )**
+
+- Connexion des école partenaire
+- Vérification par mail
+- Ecole Favoris
+
+**Gabin ( 20% )**
+
+- Génerer le pdf de poursuite d'étude
+- Connexion Administrateur
+
+**Younes ( 10% )**
+
+- Page de connexion
+- CGU
 
 ---
