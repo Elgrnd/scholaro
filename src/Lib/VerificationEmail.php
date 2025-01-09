@@ -33,7 +33,7 @@ class VerificationEmail
             $siret = rawurlencode($ecole->getSiret());
             $nonceURL = rawurlencode($ecole->getNonce());
             $URLAbsolue = ConfigurationSite::getURLAbsolue();
-            $lienValidationEmail = "http://localhost$URLAbsolue?action=validerEmail&controleur=EcolePartenaire&siret=$siret&nonce=$nonceURL";
+            $lienValidationEmail = "https://webinfo.iutmontp.univ-montp2.fr$URLAbsolue?action=validerEmail&controleur=EcolePartenaire&siret=$siret&nonce=$nonceURL";
             $mail->Body    = 'Veuillez cliquer sur le lien pour valider votre mail. <a href='.$lienValidationEmail.'>Validation</a>';
 
             $mail->send();

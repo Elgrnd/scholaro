@@ -125,7 +125,6 @@
     <?php
     if (ConnexionUtilisateur::estEcolePartenaire(ConnexionUtilisateur::getLoginUtilisateurConnecte()) && empty($etudiants)) {
         echo '<h3 class="pas-etudiant">Il n\'y a aucun étudiant qui vous a choisis en tant ecole favorite</h3>';
-        var_dump(ConnexionUtilisateur::getLoginUtilisateurConnecte());
     } else if (empty($etudiants)) {
         echo '<h3 class="pas-etudiant">Il n\'y a aucun étudiant, veuillez en importer</h3>';
     } ?>
