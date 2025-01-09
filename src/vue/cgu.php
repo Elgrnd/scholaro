@@ -1,56 +1,49 @@
 <div class="container">
-    <h1>Conditions Générales d'Utilisation (CGU)</h1>
-
-    <h2>1. Objet des CGU</h2>
-    <p>Les présentes Conditions Générales d'Utilisation (ci-après "CGU") régissent l'accès et l'utilisation du site <strong>Scholaro</strong> (ci-après "le Site"). En accédant ou en utilisant le Site, vous acceptez expressément les CGU dans leur intégralité.</p>
-
-    <h2>2. Accès au site</h2>
-    <ul>
-        <li>Le Site est accessible gratuitement à tout utilisateur disposant d’un accès à Internet.</li>
-        <li>Les frais liés à l’accès au Site (connexion Internet, matériel, etc.) sont à la charge de l’utilisateur.</li>
-        <li>L'accès à certaines sections du Site peut nécessiter la création d’un compte.</li>
-    </ul>
-
-    <h2>3. Obligations de l’utilisateur</h2>
-    <p>En utilisant le Site, l’utilisateur s’engage à :</p>
-    <ul>
-        <li>Respecter les lois et règlements en vigueur</li>
-        <li>Fournir des informations exactes lors de la création d’un compte</li>
-        <li>Ne pas tenter d’accéder de manière non autorisée aux fonctionnalités ou données du Site</li>
-        <li>Ne pas utiliser le Site à des fins illégales ou nuisibles.</li>
-    </ul>
-
-    <h2>4. Propriété intellectuelle</h2>
-    <p>Tous les contenus présents sur le Site (textes, images, vidéos, logos, etc.) sont protégés par le droit d’auteur et appartiennent à <strong>Scholaro</strong> ou à ses partenaires. Toute reproduction, modification, ou utilisation sans autorisation préalable est interdite.</p>
-
-    <h2>5. Responsabilités</h2>
-    <ul>
-        <li><strong>Responsabilité de l’utilisateur :</strong> L’utilisateur est seul responsable de l’utilisation qu’il fait du Site et des informations qu’il y partage.</li>
-        <li><strong>Responsabilité de l’éditeur :</strong> Le propriétaire du Site ne saurait être tenu responsable des dommages directs ou indirects résultant de l’utilisation du Site, notamment en cas de :
-            <ul>
-                <li>Interruption temporaire ou définitive du Site</li>
-                <li>Perte de données</li>
-                <li>Erreurs techniques.</li>
-            </ul>
-        </li>
-    </ul>
-
-    <h2>6. Protection des données personnelles</h2>
-    <p>Les données personnelles collectées sur le Site sont traitées conformément à notre Politique de Confidentialité. L’utilisateur dispose d’un droit d’accès, de modification, de rectification et de suppression de ses données conformément à la législation en vigueur (RGPD ou autre).</p>
-
-    <h2>7. Liens hypertextes</h2>
-    <p>Le Site peut contenir des liens vers des sites tiers. Nous n’assumons aucune responsabilité quant au contenu ou au fonctionnement de ces sites externes.</p>
-
-    <h2>8. Modification des CGU</h2>
-    <p>Le propriétaire du Site se réserve le droit de modifier les présentes CGU à tout moment. Les modifications prennent effet dès leur publication sur le Site. L’utilisateur est invité à consulter régulièrement les CGU pour prendre connaissance des éventuels changements.</p>
-
-    <h2>9. Loi applicable et juridiction</h2>
-    <p>Les présentes CGU sont régies par les lois de <strong>France</strong>. En cas de litige, et à défaut de résolution amiable, les tribunaux compétents seront ceux de <strong>Montpellier</strong>.</p>
-
-    <h2>10. Contact</h2>
-    <p>Pour toute question relative aux CGU, vous pouvez nous contacter à :</p>
-    <ul>
-        <li><strong>Email :</strong> scholaro@gmail.com</li>
-        <li><strong>Téléphone :</strong> 06 07 08 09 10</li>
-    </ul>
+    <section>
+        <h2>1. Préambule</h2>
+        <p>Bienvenue sur Scholaro (ci-après "le Service"). En accédant et en utilisant ce Service, vous acceptez de respecter les Conditions Générales d'Utilisation (CGU) présentes.</p>
+    </section>
+    <section>
+        <h2>2. Données Personnelles et Protection de la Vie Privée</h2>
+        <p>Conformément à la <strong>loi n° 78-17 du 6 janvier 1978</strong> relative à l'informatique, aux fichiers et aux libertés, modifiée par <strong>la loi n° 2004-801 du 6 août 2004</strong>, et au Règlement (UE) 2016/679 du 27 avril 2016 (Règlement Général sur la Protection des Données - RGPD), vos données personnelles sont collectées, traitées et protégées de manière sécurisée.</p>
+        <ul>
+            <li><strong>Finalité des données :</strong> Les données personnelles sont exclusivement utilisées pour la gestion des comptes.</li>
+            <li><strong>Stockage des données :</strong> Si les données personnelles sont stockées dans nos bases de données, celles-ci sont sécurisées conformément aux exigences de la CNIL (Commission Nationale de l'Informatique et des Libertés).</li>
+            <li><strong>Droits des utilisateurs :</strong> Conformément à l'article 15 du RGPD, vous disposez d'un droit d'accès, de rectification, de suppression, d'opposition et de portabilité de vos données personnelles. Pour exercer ces droits, veuillez nous contacter à <a class="mail" href="mailto:Scolaroiut@gmail.com">Scolaroiut@gmail.com</a>.</li>
+        </ul>
+    </section>
+    <section>
+        <h2>3. Conservation et Sécurisation des Données</h2>
+        <p>Si les données personnelles sont enregistrées dans nos bases de données, nous respectons les obligations imposées par la CNIL et le Règlement Général sur la Protection des Données (RGPD) :</p>
+        <ul>
+            <li>Les données sont conservées uniquement pour la durée nécessaire aux finalités définies <strong>(art. 5 du RGPD)</strong>.</li>
+            <li>Des mesures techniques et organisationnelles sont mises en place pour protéger les données contre les accès non autorisés, les pertes ou les altérations, conformément à l'<strong>article 32 du RGPD</strong>.</li>
+        </ul>
+    </section>
+    <section>
+        <h2>4. Obligations en cas de Cyberattaque ou de Piratage</h2>
+        <p>En cas de violation de données personnelles (hack ou perte), nous nous engageons à :</p>
+        <ul>
+            <li>Informer les utilisateurs concernés dans les 72 heures suivant la détection de l'incident, conformément à l'<strong>article 33 du Règlement (UE) 2016/679</strong>.</li>
+            <li>Collaborer avec les autorités compétentes, y compris la <strong>CNIL</strong>, pour atténuer les effets de la violation et prendre les mesures correctives nécessaires.</li>
+            <li>Appliquer une obligation de moyens, en utilisant des technologies de sécurité reconnues et en mettant régulièrement à jour nos systèmes, conformément aux exigences légales en vigueur.</li>
+        </ul>
+    </section>
+    <section>
+        <h2>5. Responsabilité des Utilisateurs</h2>
+        <p>Les <strong>utilisateurs</strong> s'engagent à :</p>
+        <ul>
+            <li>Utiliser le Service dans le respect des lois et réglementations en vigueur, notamment la loi Informatique et Libertés et le Règlement Général sur la Protection des Données (<strong>RGPD</strong>).</li>
+            <li>Ne pas tenter de contourner ou nuire aux mesures de sécurité mises en place.</li>
+        </ul>
+    </section>
+    <section>
+        <h2>6. Modification des CGU</h2>
+        <p>Ces <strong>CGU</strong> peuvent être modifiées à tout moment pour s'adapter aux évolutions légales ou techniques. Les utilisateurs seront informés de toute modification majeure par notification.</p>
+    </section>
+    <section>
+        <h2>7. Contact</h2>
+        <p>Pour toute question relative aux <strong>CGU</strong> ou à la gestion des données personnelles, veuillez nous contacter à :</p>
+        <p>Adresse email : <a class="mail" href="mailto:scolaroiut@gmail.com">Scolaroiut@gmail.com</a></p>
+    </section>
 </div>
