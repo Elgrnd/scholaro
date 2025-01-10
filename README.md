@@ -7,7 +7,7 @@
 1. **Clonage du dépôt**
     - Clonez le dépôt Git dans le conteneur `serveurWebIUT` :
       ```bash
-      git clone https://gitlabinfo.iutmontp.univ-montp2.fr/sae3a/projets/lyfoungn-desertg-tordeuxm-nedjary-laurentg/sae3a-base.git
+      git clone https://github.com/Elgrnd/scholaro.git
       cd <NOM_DU_DEPOT>
       ```  
 
