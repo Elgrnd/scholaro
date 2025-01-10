@@ -1,5 +1,7 @@
 # Projet SAE3A - Assistance à la Poursuite d'Études
 
+- Si vous êtes prof ou étudiant de l'iut informatique de montpellier, utilisez vos identifiants LDAP.
+
 ## Installation du site web
 
 1. **Clonage du dépôt**
@@ -66,28 +68,6 @@ Note : Assurez-vous que le conteneur serveurWebIUT dispose des ports réseau ouv
 
 Le site est déployé à l'URL suivante :  
 [Scolaro](https://webinfo.iutmontp.univ-montp2.fr/~lyfoungn/sae3a-base/web/controleurFrontal.php)
-
----
-
-## Informations sur la base de données
-
-- **Nom de la base de données** : `SAE3A_Q2B`
-- **Utilisateurs et mots de passe** :
-    - Responsable :
-        - Login : `laurentg`
-        - Mot de passe : `080450085GG`
-    - Enseignant :
-        - Login : `Utiliser votre login LDAP`
-        - Mot de passe : `Utiliser votre MDP LDAP`
-    - Étudiant :
-        - Login : `lyfoungn`
-        - Mot de passe : `080342376AJ`
-    - Ecole Partenaire :
-        - Login : `12342567`
-        - Mot de passe : `azer`
-- **Mail utiliser pour la validation** :
-    - Gmail : scolaroiut@gmail.com
-    - Mot de passe : azerqsdf
 
 ---
 
